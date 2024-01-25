@@ -43,3 +43,24 @@
    |
    |-- ************************************************************************
 ```
+
+```bash
+$ python -v venv .venv
+$ .\.venv\Scripts\activate
+$
+$ # Install requirements
+$ pip install -r requirements.txt
+$
+$ # Set the FLASK_APP environment variable
+$ set FLASK_APP=run.py
+$
+$ # Set up the DEBUG environment
+$ set FLASK_ENV=development
+$
+$ # Run the Jinja Template
+$ # --host=0.0.0.0 - expose the app on all network interfaces (default 127.0.0.1)
+$ # --port=5000    - specify the app port (default 5000)  
+$ flask run --host=0.0.0.0 --port=5000
+$
+$ # Access the UI in browser: http://127.0.0.1:5000/
+```
