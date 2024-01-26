@@ -6,7 +6,7 @@ from urllib.parse import quote
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 
-class Config():
+class Config:
     CSRF_ENABLED = True
 
     # Set up the App SECRET_KEY

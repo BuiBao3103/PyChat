@@ -16,10 +16,6 @@ bc = Bcrypt(app)  # flask-bcrypt
 lm = LoginManager()  # flask-loginmanager
 lm.init_app(app)  # init the login manager
 
-# Import routing and Start the App
-from app import views
+from app.routes import routes_bp
 
-if __name__ == "run":
-    with app.app_context():
-        db.create_all()
-
+app.register_blueprint(routes_bp)
