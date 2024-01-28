@@ -8,7 +8,7 @@ from werkzeug.exceptions import HTTPException, NotFound, abort
 from jinja2 import TemplateNotFound
 
 # App modules
-from app import app, lm, db, bc
+from app import app, db, bc
 
 @app.route('/')
 def index():

@@ -1,5 +1,6 @@
-from app import app, lm, db, bc
+from app import app, db, bc
 from app.controllers import UserController
+
 
 @app.route('/login')
 def login():
