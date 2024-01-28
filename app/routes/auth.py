@@ -4,4 +4,8 @@ from app.controllers import UserController
 
 @app.route('/login')
 def login():
-    return f"{UserController.get_all_user(Users).id}"
+    return UserController.login()
+
+@app.route('/logout')
+def logout():
+    return UserController.logout()

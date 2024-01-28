@@ -8,7 +8,8 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 
 class Config:
     CSRF_ENABLED = True
-    LANGUAGES = ['en', 'vi']
+    BABEL_DEFAULT_LOCALE = 'vi'
+    BABEL_TRANSLATION_DIRECTORIES = 'translations'
     # Set up the App SECRET_KEY
     SECRET_KEY = config('SECRET_KEY', default='S#perS3crEt_007')
 

@@ -4,7 +4,8 @@ from sqlalchemy import Column, Integer, Float, String, ForeignKey, Enum, DateTim
 from sqlalchemy.orm import relationship
 
 
-class User(db.Model):
+class User(db.Model, UserMixin):
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String(50), nullable=False)
     gender = Column(Boolean, nullable=False)
+    locale = Column(String(4), nullable=False)

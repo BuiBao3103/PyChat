@@ -91,3 +91,19 @@ flask run --host=0.0.0.0 --port=5000 --debug
 
 # Access the UI in browser: http://127.0.0.1:5000/
 ```
+
+```
+#get all strings for translation
+pybabel extract -F babel.cfg -k _l -o messages.pot .
+
+#init po file (first time):
+pybabel init -i messages.pot -d app/translations -l vi
+pybabel init -i messages.pot -d app/translations -l en
+
+#compile translations
+pybabel compile -d app/translations
+
+#update exist po file
+pybabel extract -F babel.cfg -k _l -o messages.pot .
+pybabel update -i messages.pot -d app.translations
+```

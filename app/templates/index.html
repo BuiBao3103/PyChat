@@ -1,0 +1,7 @@
+<h1>{{ _('Welcome to my website') }}</h1>
+<h1>{{ _('Happy new year') }}</h1>
+{% if current_user.is_authenticated %}
+Đã đăng nhập
+{% else %}
+Chưa đăng nhập
+{% endif %}

@@ -10,6 +10,7 @@ from jinja2 import TemplateNotFound
 # App modules
 from app import app, db, bc
 
+
 @app.route('/')
 def index():
-    return "oke"
+    return render_template('index.html')
