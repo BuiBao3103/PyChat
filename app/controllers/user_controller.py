@@ -7,5 +7,4 @@ from app.models import User
 class UserController:
     @staticmethod
     def get_all_user():
-        raise InvalidAPIUsage(message="lỗi", status_code=401)
         return db.session.query(User).first()

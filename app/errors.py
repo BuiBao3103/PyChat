@@ -10,11 +10,17 @@ class InvalidAPIUsage(Exception):
         self.message = message
         if status_code is not None:
             self.status_code = status_code
+        if f'status_code'.startswith('4'):
+            self.status = 'fail'
+        else:
+            self.status = 'error'
         self.payload = payload
 
     def to_dict(self):
         rv = dict(self.payload or ())
+        rv['status'] = self.status
         rv['message'] = self.message
+
         return rv
 
 
@@ -23,11 +29,11 @@ def invalid_api_usage(e):
     return jsonify(e.to_dict()), e.status_code
 
 
-@app.errorhandler(404)
-def handle_internal_server_error(e):
-    return render_template("page-404.html"), 404
-
-
 @app.errorhandler(500)
-def handle_internal_server_error(e):
-    return render_template("page-500.html"), 500
+def internal_server_error(error):
+    return render_template('page-500.html'), 500
+
+
+@app.errorhandler(404)
+def page_not_found(error):
+    return render_template('page-404.html'), 404

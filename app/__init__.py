@@ -1,5 +1,5 @@
 import os
-from flask import Flask
+from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_bcrypt import Bcrypt
@@ -16,6 +16,7 @@ bc = Bcrypt(app)  # flask-bcrypt
 # lm = LoginManager()  # flask-loginmanager
 # lm.init_app(app)  # init the login manager
 
-from app.routes import routes_bp
+# from app.routes import routes_bp
+#
+# app.register_blueprint(routes_bp)
 
-app.register_blueprint(routes_bp)
