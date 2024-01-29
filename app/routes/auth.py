@@ -1,11 +1,12 @@
 from app import app, db, bc
-from app.controllers import UserController
+from app.controllers import AuthController
 
 
-@app.route('/login')
-def login():
-    return UserController.login()
+@app.route('/api/login', methods=['POST'])
+def login_api():
+    return AuthController.login()
 
-@app.route('/logout')
-def logout():
-    return UserController.logout()
+
+@app.route('/api/logout', methods=['POST'])
+def logout_api():
+    return AuthController.logout()

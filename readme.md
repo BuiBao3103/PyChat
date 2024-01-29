@@ -30,7 +30,7 @@
    |    |    |
    |    |    |-- layouts/          # App Layouts (the master pages)
    |    |    |    |
-   |    |    |    |-- base.html    # Used by common pages like index, UI
+   |    |    |    |-- footer.html    # Used by common pages like index, UI
    |    |    |
    |    |    |-- accounts/         # Auth Pages (login, register, etc.)
    |    |    |    |
