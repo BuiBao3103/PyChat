@@ -16,12 +16,7 @@ btnLogin?.addEventListener('click', async () => {
         } else {
             const data = await response.json();
             console.log(data)
-            let type = 'error';
-            let icon = 'fa-solid fa-circle-exclamation';
-            let title = 'Error';
-            let text = data.message
-            console.log('abc')
-            createToast(type, icon, title, text);
+            createToast('error', data.message);
             console.error('Login failed:', response.statusText);
         }
     } catch (error) {
@@ -52,9 +47,6 @@ btnLogout?.addEventListener('click', async () => {
 })
 
 btnNoti?.addEventListener('click', () => {
-    let type = 'success';
-    let icon = 'fa-solid fa-circle-check';
-    let title = 'Success';
-    let text = 'This is a success toast.';
-    createToast(type, icon, title, text);
+
+    createToast('success', 'Thông báo okela');
 })
