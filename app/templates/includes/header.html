@@ -1,0 +1,8 @@
+{% if current_user.is_authenticated %}
+Đã đăng nhập
+<button id="btnLogout" type="button" class="btn btn-primary">Đăng xuất</button>
+{% else %}
+Chưa đăng nhập
+<a href="/login" class="btn btn-primary">Đăng nhập</a>
+
+{% endif %}
