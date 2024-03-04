@@ -6,7 +6,8 @@ from app.models import User
 class ViewController:
     @staticmethod
     def index():
-        return render_template('index.html')
+        users = db.session.query(User).all()
+        return render_template('index.html', users=users)
 
     @staticmethod
     def login():

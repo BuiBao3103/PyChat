@@ -8,11 +8,7 @@
    |    |-- config.py             # App Configuration
    |    |-- forms.py              # App Forms: login, registration
    |    |
-   |    |-- models/               # Folder for your models
-   |    |    |
-   |    |    |-- __init__.py       # Initialize the models package
-   |    |    |-- user.py           # Example model file
-   |    |    |-- post.py           # Example model file
+   |    |-- models.py                # Folder for your models
    |    |
    |    |-- static/
    |    |    |-- css/              # CSS files
@@ -78,13 +74,7 @@ python -v venv .venv
 # Install requirements
 pip install -r requirements.txt
 
-# Set the FLASK_APP environment variable
-set FLASK_APP=run.py
-
-# Set up the DEBUG environment
-set FLASK_ENV=development
-
-# Run the Jinja Template
+# Run the Template
 # --host=0.0.0.0 - expose the app on all network interfaces (default 127.0.0.1)
 # --port=5000    - specify the app port (default 5000)  
 flask run --host=0.0.0.0 --port=5000 --debug
@@ -105,5 +95,6 @@ pybabel compile -d app/translations
 
 #update exist po file
 pybabel extract -F babel.cfg -k _l -o messages.pot .
-pybabel update -i messages.pot -d app.translations
+pybabel update -i messages.pot -d app/translations
+pybabel compile -d app/translations
 ```

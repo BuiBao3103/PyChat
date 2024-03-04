@@ -5,11 +5,12 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, current_user
 from flask_bcrypt import Bcrypt
 from flask_babel import Babel
-
+from flask_socketio import SocketIO
 # Grabs the folder where the script runs.
 
 app = Flask(__name__)
 app.config.from_object('app.config.Config')
+socketio = SocketIO(app)
 db = SQLAlchemy(app)  # flask-sqlalchemy
 bc = Bcrypt(app)  # flask-bcrypt
 
@@ -31,4 +32,3 @@ def get_locale():
 
 
 babel = Babel(app, locale_selector=get_locale)
-from app import routes

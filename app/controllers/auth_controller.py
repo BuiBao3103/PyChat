@@ -7,8 +7,8 @@ from app.errors import InvalidAPIUsage
 class AuthController:
     @staticmethod
     def login():
-        raise InvalidAPIUsage('Mật khẩu không hợp lệ')
         user = User.query.filter_by(id=1).first()
+        raise InvalidAPIUsage(message='sai tên đăng nhập')
         login_user(user)
         return jsonify({
             'status': 'success'
