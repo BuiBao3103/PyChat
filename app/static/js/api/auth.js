@@ -9,9 +9,7 @@ btnLogin?.addEventListener('click', async () => {
                 'Content-Type': 'application/json',
             },
         });
-
         if (response.ok) {
-
             window.location.href = '/';
         } else {
             const data = await response.json();
