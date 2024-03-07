@@ -34,7 +34,7 @@
    |    |    |    |-- register.html  # Use layout `base-fullscreen.html`
    |    |    |    |-- dashboard.html  # User dashboard after login
    |    |    |
-   |    |  index.html              # The default page
+   |    |  chat.html              # The default page
    |    |  page-404.html           # Error 404 page (page not found)
    |    |  page-500.html           # Error 500 page (server error)
    |    |    *.html                # All other pages provided by the UI Kit
@@ -42,7 +42,7 @@
    |    |-- routes/                # Folder for your routes
    |    |    |
    |    |    |-- __init__.py       # Initialize the routes package
-   |    |    |-- index.py          # Example route file
+   |    |    |-- view.py          # Example route file
    |    |    |-- about.py          # Example route file
    |    |    |-- contact.py        # Example route file
    |    |    |-- auth.py           # Auth routes (login, register, logout)

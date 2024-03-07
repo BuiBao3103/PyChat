@@ -8,7 +8,8 @@ class User(db.Model, UserMixin):
     id = Column(Integer, primary_key=True)
     username = Column(String(80))
     email = Column(String(120), unique=True, nullable=False)
-    participants = relationship("Participant", backref="user")
+    password = Column(String(120), unique=True, nullable=False)
+    participants = relationship("Participant", backref="user", lazy=True)
 
 
 class Conservation(db.Model):

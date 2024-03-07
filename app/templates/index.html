@@ -1,78 +1,45 @@
 {% extends 'layouts/base.html' %}
 
-{% block title %}Home{% endblock %}
+{% block title %}Rooms{% endblock %}
 
 {% block content %}
 
-<!--<h1>{{ _('Welcome to my website') }}</h1>-->
-<!--<h1>{{ _('Happy new year') }}</h1>-->
-<!--<h1>{{ _('hello') }}</h1>-->
 
-<!--<div class="container mt-3">-->
-<!--    <h2>Basic Table</h2>-->
-<!--    <p>The .table class adds basic styling (light padding and horizontal dividers) to a table:</p>-->
-<!--    <table class="table">-->
-<!--        <thead>-->
-<!--        <tr>-->
-<!--            <th>Gender</th>-->
-<!--            <th>Lastname</th>-->
-<!--            <th>Email</th>-->
-<!--        </tr>-->
-<!--        </thead>-->
-<!--        <tbody>-->
-<!--        {% for user in users %}-->
-<!--        <tr>-->
-<!--            <td>{{user.id}}</td>-->
-<!--            <td>{{user.name}}</td>-->
-<!--            <td>{{user.gender}}</td>-->
-<!--        </tr>-->
-<!--        {% endfor %}-->
+<div class="container mt-5">
+    {% include 'includes/header.html' %}
 
-<!--        </tbody>-->
-<!--    </table>-->
-<!--</div>-->
-<!--<button id="notification" type="button" class="btn btn-primary">Thông báo</button>-->
+    <h3>Rooms</h3>
+    <ul id="roomList" class="list-group">
+        <!-- Room list will be dynamically populated here -->
+    </ul>
 
 
-<!--<div id="chat"></div>-->
-<!--<input type="text" id="message"/>-->
-<!--<button onclick="sendMessage()">Send</button>-->
+</div>
 
-<h1>Flask-SocketIO Test</h1>
-<p>
-    Async mode is: <b>{{ async_mode }}</b><br>
-    Current transport is: <b><span id="transport"></span></b><br>
-    Average ping/pong latency: <b><span id="ping-pong"></span>ms</b>
-</p>
-<h2>Send:</h2>
-<form id="emit" method="POST" action='#'>
-    <input type="text" name="emit_data" id="emit_data" placeholder="Message">
-    <input type="submit" value="Echo">
-</form>
-<form id="broadcast" method="POST" action='#'>
-    <input type="text" name="broadcast_data" id="broadcast_data" placeholder="Message">
-    <input type="submit" value="Broadcast">
-</form>
-<form id="join" method="POST" action='#'>
-    <input type="text" name="join_room" id="join_room" placeholder="Room Name">
-    <input type="submit" value="Join Room">
-</form>
-<form id="leave" method="POST" action='#'>
-    <input type="text" name="leave_room" id="leave_room" placeholder="Room Name">
-    <input type="submit" value="Leave Room">
-</form>
-<form id="send_room" method="POST" action='#'>
-    <input type="text" name="room_name" id="room_name" placeholder="Room Name">
-    <input type="text" name="room_data" id="room_data" placeholder="Message">
-    <input type="submit" value="Send to Room">
-</form>
-<form id="close" method="POST" action="#">
-    <input type="text" name="close_room" id="close_room" placeholder="Room Name">
-    <input type="submit" value="Close Room">
-</form>
-<form id="disconnect" method="POST" action="#">
-    <input type="submit" value="Disconnect">
-</form>
-<h2>Receive:</h2>
-<div id="log"></div>
+<script>
+    // Function to populate the room list
+    function populateRoomList(rooms) {
+        const roomList = document.getElementById("roomList");
+        roomList.innerHTML = "";
+        rooms.forEach(room => {
+            const listItem = document.createElement("li");
+            listItem.classList.add("list-group-item");
+            const link = document.createElement("a");
+            link.href = '/r/' + room.channel_id; // Set the link href
+            link.textContent = room.name;
+            listItem.appendChild(link);
+            roomList.appendChild(listItem);
+        });
+    }
+
+    // Example data for room list (replace this with actual data from the server)
+    const rooms = [
+        {name: "Room 1", channel_id: 1},
+        {name: "Room 2", channel_id: 2},
+        {name: "Room 3", channel_id: 3}
+    ];
+    populateRoomList(rooms);
+
+</script>
+
 {% endblock %}

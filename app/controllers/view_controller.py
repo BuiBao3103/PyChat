@@ -5,9 +5,12 @@ from app.models import User
 
 class ViewController:
     @staticmethod
-    def index():
-        users = db.session.query(User).all()
-        return render_template('index.html', users=users)
+    def room():
+        return render_template('index.html')
+
+    @staticmethod
+    def chat(channel_id):
+        render_template('chat.html')
 
     @staticmethod
     def login():

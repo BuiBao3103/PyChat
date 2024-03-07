@@ -3,8 +3,20 @@
 {% block title %}Register{% endblock %}
 
 {% block content %}
-<h1>Đây là trang đăng ký</h1>
-
-
+<div class="container" id="registerContainer">
+    <h2 class="text-center mt-4 mb-4" id="registerTitle">Register</h2>
+    <form class="p-4 border rounded shadow-sm" id="registerForm">
+        <div class="mb-3">
+            <input type="text" class="form-control" placeholder="Email" required id="emailInput">
+        </div>
+        <div class="mb-3">
+            <input type="password" class="form-control" placeholder="Password" required id="passwordInput">
+        </div>
+        <button type="submit" class="btn btn-primary btn-block" id="registerButton">Register</button>
+    </form>
+    <div class="text-center mt-3" id="loginLink">
+        <p>Already have an account? <a href="login" id="loginButton">Login</a></p>
+    </div>
+</div>
 {% endblock %}
 

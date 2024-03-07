@@ -1,0 +1,98 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+
+<!--<h1>{{ _('Welcome to my website') }}</h1>-->
+<!--<h1>{{ _('Happy new year') }}</h1>-->
+<!--<h1>{{ _('hello') }}</h1>-->
+
+<!--<div class="container mt-3">-->
+<!--    <h2>Basic Table</h2>-->
+<!--    <p>The .table class adds basic styling (light padding and horizontal dividers) to a table:</p>-->
+<!--    <table class="table">-->
+<!--        <thead>-->
+<!--        <tr>-->
+<!--            <th>Gender</th>-->
+<!--            <th>Lastname</th>-->
+<!--            <th>Email</th>-->
+<!--        </tr>-->
+<!--        </thead>-->
+<!--        <tbody>-->
+<!--        {% for user in users %}-->
+<!--        <tr>-->
+<!--            <td>{{user.id}}</td>-->
+<!--            <td>{{user.name}}</td>-->
+<!--            <td>{{user.gender}}</td>-->
+<!--        </tr>-->
+<!--        {% endfor %}-->
+
+<!--        </tbody>-->
+<!--    </table>-->
+<!--</div>-->
+<!--<button id="notification" type="button" class="btn btn-primary">Thông báo</button>-->
+
+
+<!--<div id="chat"></div>-->
+<!--<input type="text" id="message"/>-->
+<!--<button onclick="sendMessage()">Send</button>-->
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-4">
+            <h3>Rooms</h3>
+            <ul id="roomList" class="list-group">
+                <!-- Room list will be dynamically populated here -->
+            </ul>
+        </div>
+        <div class="col-md-8">
+            <h3>Messages</h3>
+            <div id="messageArea" class="border p-3 mb-3" style="height: 300px; overflow-y: auto;">
+                <!-- Messages will be displayed here -->
+            </div>
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" id="messageInput" placeholder="Type your message...">
+                <button class="btn btn-primary" id="sendMessageBtn">Send</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Function to populate the room list
+    function populateRoomList(rooms) {
+        const roomList = document.getElementById("roomList");
+        roomList.innerHTML = "";
+        rooms.forEach(room => {
+            const listItem = document.createElement("li");
+            listItem.classList.add("list-group-item");
+            listItem.textContent = room.channel_id;
+            roomList.appendChild(listItem);
+        });
+    }
+
+    // Function to display messages
+    function displayMessage(message) {
+        const messageArea = document.getElementById("messageArea");
+        const messageElement = document.createElement("div");
+        messageElement.textContent = message;
+        messageArea.appendChild(messageElement);
+    }
+
+    // Event listener for sending messages
+    document.getElementById("sendMessageBtn").addEventListener("click", function () {
+        const messageInput = document.getElementById("messageInput");
+        const message = messageInput.value.trim();
+        if (message !== "") {
+            // Here you can emit a socket event to send the message to the server
+            displayMessage(message);
+            messageInput.value = ""; // Clear input field
+        }
+    });
+
+    // Example data for room list (replace this with actual data from the server)
+    const rooms = [{channel_id: "Room 1"}, {channel_id: "Room 2"}, {channel_id: "Room 3"}];
+    populateRoomList(rooms);
+</script>
+
+{% endblock %}
