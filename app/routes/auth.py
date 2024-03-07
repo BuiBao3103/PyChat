@@ -10,3 +10,8 @@ def login_api():
 @app.route('/api/logout', methods=['POST'])
 def logout_api():
     return AuthController.logout()
+
+
+@app.route('/api/register', methods=['POST'])
+def register_api():
+    return AuthController.register()
