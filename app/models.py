@@ -5,23 +5,30 @@ from sqlalchemy.orm import relationship
 
 
 class User(db.Model, UserMixin):
-    id = Column(Integer, primary_key=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
     username = Column(String(80))
     email = Column(String(120), unique=True, nullable=False)
     password = Column(String(120), unique=True, nullable=False)
     participants = relationship("Participant", backref="user", lazy=True)
 
 
-class Conservation(db.Model):
-    id = Column(Integer, primary_key=True)
+class Conversation(db.Model):
+    id = Column(Integer, primary_key=True, autoincrement=True)
     channel_id = Column(Integer, unique=True, nullable=False)
-    participants = relationship("Participant", backref="conservation")
+    participants = relationship("Participant", backref="conversation")
+    messages = relationship("Message", backref="conversation")
 
 
 class Participant(db.Model):
-    id = Column(Integer, primary_key=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
     user_id = Column(Integer, ForeignKey('user.id'))
-    conservation_id = Column(Integer, ForeignKey('conservation.id'))
+    conversation_id = Column(Integer, ForeignKey('conversation.id'))
+
+
+class Message(db.Model):
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    message = Column(String(255), nullable=False)
+    conversation_id = Column(Integer, ForeignKey('conversation.id'))
 
 
 if __name__ == '__main__':

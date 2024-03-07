@@ -15,7 +15,7 @@ from app import app, db, bc
 def index():
     if not current_user.is_authenticated:
         return redirect(url_for('login_page'))
-    return ViewController.room()
+    return ViewController.index()
 
 
 @app.route('/login')

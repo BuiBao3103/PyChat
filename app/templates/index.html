@@ -8,38 +8,17 @@
 <div class="container mt-5">
     {% include 'includes/header.html' %}
 
-    <h3>Rooms</h3>
+    <h3>Your conversations</h3>
     <ul id="roomList" class="list-group">
-        <!-- Room list will be dynamically populated here -->
+        {% for username, channel_id in channels %}
+        <li class="list-group-item">
+            <a href="/r/{{channel_id}}">{{username}}</a>
+        </li>
+        {% endfor %}
     </ul>
 
 
 </div>
 
-<script>
-    // Function to populate the room list
-    function populateRoomList(rooms) {
-        const roomList = document.getElementById("roomList");
-        roomList.innerHTML = "";
-        rooms.forEach(room => {
-            const listItem = document.createElement("li");
-            listItem.classList.add("list-group-item");
-            const link = document.createElement("a");
-            link.href = '/r/' + room.channel_id; // Set the link href
-            link.textContent = room.name;
-            listItem.appendChild(link);
-            roomList.appendChild(listItem);
-        });
-    }
-
-    // Example data for room list (replace this with actual data from the server)
-    const rooms = [
-        {name: "Room 1", channel_id: 1},
-        {name: "Room 2", channel_id: 2},
-        {name: "Room 3", channel_id: 3}
-    ];
-    populateRoomList(rooms);
-
-</script>
 
 {% endblock %}

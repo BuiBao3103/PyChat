@@ -12,7 +12,6 @@ class AuthController:
         email = data.get('email')
         password = data.get('password')
         user = User.query.filter_by(email=email).first()
-        print(bc.check_password_hash(user.password, password))
         if not user or not bc.check_password_hash(user.password, password):
             raise InvalidAPIUsage(message='Invalid email or password', status_code=401)
 

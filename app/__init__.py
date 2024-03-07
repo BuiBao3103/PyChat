@@ -25,11 +25,10 @@ from app.models import User
 def load_user(user_id):
     return User.query.get(user_id)
 
-
-def get_locale():
-    if current_user.is_authenticated:
-        return current_user.locale
-    return 'vi'
-
-
-babel = Babel(app, locale_selector=get_locale)
+# def get_locale():
+#     if current_user.is_authenticated:
+#         return current_user.locale
+#     return 'vi'
+#
+#
+# babel = Babel(app, locale_selector=get_locale)
