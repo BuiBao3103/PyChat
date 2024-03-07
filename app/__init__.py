@@ -1,15 +1,16 @@
-import os
-
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, current_user
 from flask_bcrypt import Bcrypt
 from flask_babel import Babel
 from flask_socketio import SocketIO
+from flask_cors import CORS
+
 # Grabs the folder where the script runs.
 
 app = Flask(__name__)
 app.config.from_object('app.config.Config')
+cors = CORS(app)
 socketio = SocketIO(app)
 db = SQLAlchemy(app)  # flask-sqlalchemy
 bc = Bcrypt(app)  # flask-bcrypt
