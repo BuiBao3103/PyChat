@@ -10,13 +10,14 @@ class User(db.Model, UserMixin):
     email = Column(String(120), unique=True, nullable=False)
     password = Column(String(120), unique=True, nullable=False)
     participants = relationship("Participant", backref="user", lazy=True)
+    messages = relationship("Message", backref="user", lazy=True)
 
 
 class Conversation(db.Model):
     id = Column(Integer, primary_key=True, autoincrement=True)
     channel_id = Column(Integer, unique=True, nullable=False)
-    participants = relationship("Participant", backref="conversation")
-    messages = relationship("Message", backref="conversation")
+    participants = relationship("Participant", backref="conversation", lazy=True)
+    messages = relationship("Message", backref="conversation", lazy=True)
 
 
 class Participant(db.Model):
@@ -29,6 +30,7 @@ class Message(db.Model):
     id = Column(Integer, primary_key=True, autoincrement=True)
     message = Column(String(255), nullable=False)
     conversation_id = Column(Integer, ForeignKey('conversation.id'))
+    user_id = Column(Integer, ForeignKey('user.id'))
 
 
 if __name__ == '__main__':
