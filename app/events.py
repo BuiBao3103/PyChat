@@ -1,6 +1,7 @@
-from app import socketio
+from app import socketio, db
 from flask_socketio import join_room, leave_room, send
 from flask_login import current_user
+from app.models import Message, Conversation
 from flask import request
 
 
@@ -33,5 +34,9 @@ def handle_leave(data):
 def handle_message(data):
     message = data['message']
     channel_id = data['channel_id']
+    conversation_id = db.session.query(Conversation.id).filter(Conversation.channel_id == channel_id).scalar()
+    new_message = Message(user_id=current_user.id, message=message, conversation_id=conversation_id)
+    db.session.add(new_message)
+    db.session.commit()
     # Broadcast the message to everyone in the room except the sender
     send(message, room=channel_id, skip_sid=request.sid)
