@@ -1,22 +1,35 @@
-// Connect to the Socket.IO server
-const socket = io('http://127.0.0.1:5000');
+document.addEventListener('DOMContentLoaded', function () {
+    const channelMatch = window.location.pathname.match(/^\/r\/(\d+)$/);
+    if (!channelMatch) {
+        console.error('Invalid URL format. Expected /r/number');
+        return;
+    }
 
-// Event handler for when a user joins a room
-const joinRoom = (username, channel_id) => {
-    socket.emit('join', { username, channel_id });
-};
+    const socket = io.connect('http://127.0.0.1:5000');
+    const channel_id = channelMatch[1];
 
-// Event handler for when a user leaves a room
-const leaveRoom = (username, channel_id) => {
-    socket.emit('leave', { username, channel_id });
-};
+    socket.emit('join', {channel_id: channel_id});
 
-// Listen for user joined event
-socket.on('user_joined', (data) => {
-    console.log(`${data.username} has joined the room.`);
-});
+    const sendButton = document.querySelector('#sendButton')
+    sendButton?.addEventListener('click', function (event) {
+        const messageInput = document.querySelector('#messageInput');
+        const message = messageInput.value.trim();
+        const messageArea = document.querySelector('#messageArea');
+        const messageItem = document.createElement('div');
+        messageItem.classList.add('message', 'own')
+        messageItem.textContent = message;
+        messageArea.appendChild(messageItem);
+        if (message !== '') {
+            socket.emit('message', {channel_id, message});
+            messageInput.value = '';
+        }
+    });
 
-// Listen for user left event
-socket.on('user_left', (data) => {
-    console.log(`${data.username} has left the room.`);
+    socket.on('message', function (data) {
+        const messageArea = document.querySelector('#messageArea');
+        const messageItem = document.createElement('div');
+        messageItem.classList.add('message', 'other')
+        messageItem.textContent = data;
+        messageArea.appendChild(messageItem);
+    });
 });
