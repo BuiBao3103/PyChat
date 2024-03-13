@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', function () {
         return;
     }
 
-    const socket = io.connect('http://127.0.0.1:5000');
+    const socket = io();
     const channel_id = channelMatch[1];
 
     socket.emit('join', {channel_id: channel_id});

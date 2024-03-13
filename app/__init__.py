@@ -18,12 +18,6 @@ bc = Bcrypt(app)  # flask-bcrypt
 lm = LoginManager()  # flask-loginmanager
 lm.init_app(app)  # init the login manager
 
-from app.models import User
-
-
-@lm.user_loader
-def load_user(user_id):
-    return User.query.get(user_id)
 
 # def get_locale():
 #     if current_user.is_authenticated:
