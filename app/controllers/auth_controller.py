@@ -9,7 +9,7 @@ class AuthController:
     @staticmethod
     def login():
         data = request.get_json()
-        email = data.get('email')
+        email = data.gQet('email')
         password = data.get('password')
         user = User.query.filter_by(email=email).first()
         if not user or not bc.check_password_hash(user.password, password):
