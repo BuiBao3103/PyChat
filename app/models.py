@@ -1,6 +1,6 @@
 from app import app, db, lm
 from flask_login import UserMixin
-from sqlalchemy import Column, Integer, String, ForeignKey, Enum
+from sqlalchemy import Column, Integer, String, ForeignKey, Enum, Date
 from sqlalchemy.orm import relationship
 import enum
 
@@ -10,42 +10,124 @@ def load_user(user_id):
     return User.query.get(user_id)
 
 
+class ConversationType(enum.Enum):
+    GROUP = "group"
+    PERSONAL = "personal"
+
+
 class Conversation(db.Model):
+    __tablename__ = 'conversations'
+
     id = Column(Integer, primary_key=True, autoincrement=True)
     channel_id = Column(Integer, unique=True, nullable=False)
-    type = Column(String(20), nullable=False)
+    type = Column(Enum(ConversationType), nullable=False)
+    last_message_id = Column(Integer, ForeignKey('messages.id'), nullable=True)
     participants = relationship("Participant", backref="conversation", lazy=True)
     messages = relationship("Message", backref="conversation", lazy=True)
+    seen_conversations = relationship('SeenConversation', backref='conversation',
+                                      foreign_keys='SeenConversation.conversation_id', lazy=True)
+    deleted_conversations = relationship('DeletedConversation', backref='conversation',
+                                         foreign_keys='DeletedConversation.conversation_id', lazy=True)
 
 
 class Participant(db.Model):
+    __tablename__ = 'participants'
+
     id = Column(Integer, primary_key=True, autoincrement=True)
-    user_id = Column(Integer, ForeignKey('user.id'))
-    conversation_id = Column(Integer, ForeignKey('conversation.id'))
+    user_id = Column(Integer, ForeignKey('users.id'))
+    conversation_id = Column(Integer, ForeignKey('conversations.id'))
+
+
+class MessageType(enum.Enum):
+    Text = 'text',
+    media = 'text',
+    image = 'image',
+    voice = 'voice'
 
 
 class Message(db.Model):
+    __tablename__ = 'messages'
+
     id = Column(Integer, primary_key=True, autoincrement=True)
     message = Column(String(255), nullable=False)
-    conversation_id = Column(Integer, ForeignKey('conversation.id'))
-    user_id = Column(Integer, ForeignKey('user.id'))
+    time = Column(Date, nullable=False)
+    type = Column(Enum(MessageType), nullable=False)
+    conversation_id = Column(Integer, ForeignKey('conversations.id'))
+    user_id = Column(Integer, ForeignKey('users.id'))
+    attachments = relationship("Attachment", backref="message", lazy=True)
+    deleted_messages = relationship('DeletedMessage', backref='message',
+                                    foreign_keys='DeletedMessage.message_id', lazy=True)
+
+
+class Attachment(db.Model):
+    __tablename__ = 'attachments'
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    url = Column(String(255), nullable=False)
+    message_id = Column(Integer, ForeignKey('messages.id'))
+
+
+class FriendshipStatus(enum.Enum):
+    BLOCKED = "blocked"
+    BE_BLOCKED = "be_blocked"
+    REQUEST_SENT = "request_sent"
+    REQUEST_RECEIVED = "request_received"
+    FRIENDS = "friends"
 
 
 class Friendship(db.Model):
+    __tablename__ = 'friendships'
+
     id = Column(Integer, primary_key=True, autoincrement=True)
-    user_id = Column(Integer, ForeignKey('user.id'))
-    friend_id = Column(Integer, ForeignKey('user.id'))
+    user_id = Column(Integer, ForeignKey('users.id'))
+    friend_id = Column(Integer, ForeignKey('users.id'))
+    status = Column(Enum(FriendshipStatus), nullable=False)
+    delete_at = Column(Date, default=None)
 
 
 class User(db.Model, UserMixin):
+    __tablename__ = 'users'
+
     id = Column(Integer, primary_key=True, autoincrement=True)
     username = Column(String(80))
     email = Column(String(120), unique=True, nullable=False)
-    password = Column(String(120), unique=True, nullable=False)
+    password = Column(String(120), nullable=False)
+    last_online = Column(Date, nullable=True)
     participants = relationship("Participant", backref="user", lazy=True)
-    messages = relationship("Message", backref="user", lazy=True)
+    messages = relationship("Message", backref="user",
+                            foreign_keys='Message.user_id', lazy=True)
     friendships = relationship('Friendship', backref='user',
-                               foreign_keys='Friendship.friend_id', lazy=True)
+                               foreign_keys='Friendship.user_id', lazy=True)
+    deleted_messages = relationship('DeletedMessage', backref='user',
+                                    foreign_keys='DeletedMessage.user_id', lazy=True)
+    seen_conversations = relationship('SeenConversation', backref='user',
+                                      foreign_keys='SeenConversation.user_id', lazy=True)
+    deleted_conversations = relationship('DeletedConversation', backref='user',
+                                         foreign_keys='DeletedConversation.user_id', lazy=True)
+
+
+class DeletedMessage(db.Model):
+    __tablename__ = 'deleted_messages'
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    user_id = Column(Integer, ForeignKey('users.id'))
+    message_id = Column(Integer, ForeignKey('messages.id'))
+
+
+class SeenConversation(db.Model):
+    __tablename__ = 'seen_conversations'
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    user_id = Column(Integer, ForeignKey('users.id'))
+    conversation_id = Column(Integer, ForeignKey('conversations.id'))
+
+
+class DeletedConversation(db.Model):
+    __tablename__ = 'deleted_conversations'
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    user_id = Column(Integer, ForeignKey('users.id'))
+    conversation_id = Column(Integer, ForeignKey('conversations.id'))
 
 
 if __name__ == '__main__':
