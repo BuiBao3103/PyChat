@@ -45,7 +45,7 @@
    |    |    |-- view.py          # Example route file
    |    |    |-- about.py          # Example route file
    |    |    |-- contact.py        # Example route file
-   |    |    |-- auth.py           # Auth routes (login, register, logout)
+   |    |    |-- user.py           # Auth routes (login, register, logout)
    |    |
    |    |-- controllers/          # Folder for your controllers
    |    |    |

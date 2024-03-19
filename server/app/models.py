@@ -1,4 +1,4 @@
-from app import app, db, lm
+from server.app import app, db, lm
 from flask_login import UserMixin
 from sqlalchemy import Column, Integer, String, ForeignKey, Enum, Date
 from sqlalchemy.orm import relationship
@@ -22,8 +22,10 @@ class Conversation(db.Model):
     channel_id = Column(Integer, unique=True, nullable=False)
     type = Column(Enum(ConversationType), nullable=False)
     last_message_id = Column(Integer, ForeignKey('messages.id'), nullable=True)
-    participants = relationship("Participant", backref="conversation", lazy=True)
-    messages = relationship("Message", backref="conversation", lazy=True)
+    participants = relationship("Participant", backref="conversation",
+                                foreign_keys='Participant.conversation_id', lazy=True)
+    messages = relationship("Message", backref="conversation",
+                            foreign_keys='Message.conversation_id', lazy=True)
     seen_conversations = relationship('SeenConversation', backref='conversation',
                                       foreign_keys='SeenConversation.conversation_id', lazy=True)
     deleted_conversations = relationship('DeletedConversation', backref='conversation',
@@ -54,7 +56,8 @@ class Message(db.Model):
     type = Column(Enum(MessageType), nullable=False)
     conversation_id = Column(Integer, ForeignKey('conversations.id'))
     user_id = Column(Integer, ForeignKey('users.id'))
-    attachments = relationship("Attachment", backref="message", lazy=True)
+    attachments = relationship("Attachment", backref="message",
+                               foreign_keys='Attachment.message_id', lazy=True)
     deleted_messages = relationship('DeletedMessage', backref='message',
                                     foreign_keys='DeletedMessage.message_id', lazy=True)
 
@@ -93,7 +96,8 @@ class User(db.Model, UserMixin):
     email = Column(String(120), unique=True, nullable=False)
     password = Column(String(120), nullable=False)
     last_online = Column(Date, nullable=True)
-    participants = relationship("Participant", backref="user", lazy=True)
+    participants = relationship("Participant", backref="user",
+                                foreign_keys='Participant.user_id', lazy=True)
     messages = relationship("Message", backref="user",
                             foreign_keys='Message.user_id', lazy=True)
     friendships = relationship('Friendship', backref='user',
@@ -104,6 +108,9 @@ class User(db.Model, UserMixin):
                                       foreign_keys='SeenConversation.user_id', lazy=True)
     deleted_conversations = relationship('DeletedConversation', backref='user',
                                          foreign_keys='DeletedConversation.user_id', lazy=True)
+
+    def as_dict(self):
+        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
 
 
 class DeletedMessage(db.Model):

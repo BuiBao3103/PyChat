@@ -3,14 +3,14 @@ flask/
 .env
 dev
 node_modules
-app/database.db
-app/build
+server/app/database.db
+server/app/build
 yarn.lock
 yarn-error.log
 *.psd
 env/
 env__/
 .vscode/symbols.json
-app/db.sqlite3
+server/app/db.sqlite3
 .venv
 .idea

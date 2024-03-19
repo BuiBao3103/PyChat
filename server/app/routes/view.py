@@ -2,13 +2,12 @@ import os
 import logging
 
 # Flask modules
-from flask import render_template, request, url_for, redirect, send_from_directory, flash
-from flask_login import login_user, logout_user, current_user, login_required
-from werkzeug.exceptions import HTTPException, NotFound, abort
+from flask import render_template, request, url_for, redirect, flash
+from flask_login import login_user, current_user
 from jinja2 import TemplateNotFound
-from app.controllers.view_controller import ViewController
+from server.app.controllers.view_controller import ViewController
 # App modules
-from app import app, db, bc
+from server.app import app, db, bc
 
 
 @app.route('/')

@@ -1,7 +1,7 @@
-from app import socketio, db
+from server.app import socketio, db
 from flask_socketio import join_room, leave_room, send
 from flask_login import current_user
-from app.models import Message, Conversation
+from server.app.models import Message, Conversation
 from flask import request
 
 

@@ -1,5 +1,5 @@
 from flask import jsonify, render_template
-from app import app
+from server.app import app
 
 
 class InvalidAPIUsage(Exception):
@@ -37,3 +37,9 @@ def internal_server_error(error):
 @app.errorhandler(404)
 def page_not_found(error):
     return render_template('page-404.html'), 404
+
+
+@app.errorhandler(Exception)
+def handle_unhandled_exception(error):
+    app.logger.error(f'Unhandled Exception: {error}')
+    return jsonify({'error': 'Internal Server Error', 'message': 'An unexpected error occurred'}), 500

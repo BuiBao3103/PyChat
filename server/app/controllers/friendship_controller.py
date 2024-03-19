@@ -1,8 +1,9 @@
 from flask import jsonify, request
-from app import db
-from app.errors import InvalidAPIUsage
-from app.models import Friendship
+from server.app import db
+from server.app.errors import InvalidAPIUsage
+from server.app.models import Friendship
 from sqlalchemy.exc import IntegrityError
+
 
 class FriendshipController:
     @staticmethod

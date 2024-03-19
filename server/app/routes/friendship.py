@@ -1,5 +1,5 @@
-from app import app
-from app.controllers import FriendshipController
+from server.app import app
+from server.app import FriendshipController
 
 
 @app.route('/api/friendships', methods=['POST'])
