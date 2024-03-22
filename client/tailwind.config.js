@@ -18,7 +18,8 @@ export default {
 					700: '#76ceb3',
 					800: '#5dc7a9',
 					900: '#3fbf9e',
-				}
+				},
+				"light-gray" : "#efeff1"
 			}
 		},
 		fontFamily: {

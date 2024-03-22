@@ -8,7 +8,7 @@ const SocialMediaButton = ({ name, Icon, color }) => {
 		</button>
 	)	
 }
-SocialMediaButton.prototype = {
+SocialMediaButton.propTypes = {
 	name: PropTypes.string,
 	Icon: PropTypes.element,
 	color: PropTypes.string
