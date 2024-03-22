@@ -88,6 +88,8 @@ class Friendship(db.Model, SerializerMixin):
     status = Column(Enum(FriendshipStatus), nullable=False)
     delete_at = Column(Date, default=None)
 
+    serialize_rules = ('-user',)
+
 
 class User(db.Model, UserMixin, SerializerMixin):
     __tablename__ = 'users'
@@ -112,7 +114,7 @@ class User(db.Model, UserMixin, SerializerMixin):
 
     serialize_rules = ('-participants', '-friendships', '-messages',
                        '-deleted_messages', '-seen_conversations',
-                       '-deleted_conversations', '-password')
+                       '-deleted_conversations', '-password',)
 
 
 class DeletedMessage(db.Model):

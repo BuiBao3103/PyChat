@@ -25,13 +25,19 @@ class FriendshipController:
     @staticmethod
     def update(id):
         data = request.get_json()
-        if 'status' in data:
-            data['status'] = FriendshipStatus(data['status'])
+        status_value = data.get('status')
+        if status_value:
+            try:
+                data['status'] = FriendshipStatus(status_value)
+            except ValueError:
+                raise InvalidAPIUsage(message='Invalid status value', status_code=400)
+
         num_updated = Friendship.query.filter_by(id=id).update(data)
 
         if num_updated:
             db.session.commit()
-            return jsonify({'status': 'success'}), 200
+            updated_friendship = Friendship.query.get(id)
+            return jsonify({'status': 'success', 'data': updated_friendship.to_dict()}), 200
         else:
             raise InvalidAPIUsage(message='Friendship not found', status_code=404)
 
