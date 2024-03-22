@@ -1,3 +1,5 @@
+import traceback
+
 from flask import jsonify, render_template
 from server.app import app
 
@@ -41,5 +43,9 @@ def page_not_found(error):
 
 @app.errorhandler(Exception)
 def handle_unhandled_exception(error):
-    app.logger.error(f'Unhandled Exception: {error}')
-    return jsonify({'status': 'fail', 'error': 'Internal Server Error', 'message': 'An unexpected error occurred'}), 500
+    trace = traceback.format_exc()
+    app.logger.error(f'Unhandled Exception: {error}\n{trace}')
+    return jsonify({
+        'status': 'fail',
+        'error': 'Internal Server Error',
+    }), 500

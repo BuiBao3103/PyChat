@@ -4,6 +4,8 @@ from server.app.errors import InvalidAPIUsage
 from server.app.models import Friendship, User, FriendshipStatus
 from datetime import datetime
 
+from server.app.util.api_features import APIFeatures
+
 
 class FriendshipController:
     @staticmethod
@@ -60,6 +62,11 @@ class FriendshipController:
 
     @staticmethod
     def get_all():
-        friendships = Friendship.query.all()
+        args = request.args
+        query = db.session.query(Friendship)
+        api_features = APIFeatures(query, args)
+        api_features.filter().sort().limit_fields().paginate()
+        results = api_features.query.all()
+        print(results)
         return jsonify(
-            {'status': 'success', 'friendships': [friendship.to_dict() for friendship in friendships]}), 200
+            {'status': 'success', 'friendships': [friendship.to_dict() for friendship in results]}), 200
