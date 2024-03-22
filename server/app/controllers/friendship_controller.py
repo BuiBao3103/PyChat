@@ -51,10 +51,8 @@ class FriendshipController:
             raise InvalidAPIUsage(message='Friendship not found', status_code=404)
 
     @staticmethod
-    def get_one():
-        data = request.get_json()
-        friendship_id = data.get('friendshipID')
-        friendship = Friendship.query.get(friendship_id)
+    def get_one(id):
+        friendship = Friendship.query.get(id)
         if friendship:
             return jsonify({'status': 'success', 'friendship': friendship.to_dict()}), 200
         else:

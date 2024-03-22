@@ -16,7 +16,7 @@ def friendships_api():
 def friendships_id_api(id):
     match request.method:
         case 'GET':
-            return FriendshipController.get_one()
+            return FriendshipController.get_one(id)
         case 'PATCH':
             return FriendshipController.update(id)
         case 'DELETE':
