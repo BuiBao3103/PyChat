@@ -2,7 +2,7 @@ from flask import jsonify, request
 from server.app import db, app
 from server.app.errors import InvalidAPIUsage
 from server.app.models import Friendship, User, FriendshipStatus
-from sqlalchemy.exc import IntegrityError
+from datetime import datetime
 
 
 class FriendshipController:
@@ -41,33 +41,27 @@ class FriendshipController:
         else:
             raise InvalidAPIUsage(message='Friendship not found', status_code=404)
 
+    @staticmethod
+    def delete(id):
+        num_deleted = Friendship.query.filter_by(id=id).update({'delete_at': datetime.now()})
+        if num_deleted:
+            db.session.commit()
+            return jsonify({'status': 'success', 'data': None}), 204
+        else:
+            raise InvalidAPIUsage(message='Friendship not found', status_code=404)
 
-@staticmethod
-def delete():
-    data = request.get_json()
-    friendship_id = data.get('friendshipID')
-    friendship = Friendship.query.get(friendship_id)
-    if friendship:
-        db.session.delete(friendship)
-        db.session.commit()
-        return jsonify({'status': 'success'}), 200
-    else:
-        raise InvalidAPIUsage(message='Friendship not found', status_code=404)
+    @staticmethod
+    def get_one():
+        data = request.get_json()
+        friendship_id = data.get('friendshipID')
+        friendship = Friendship.query.get(friendship_id)
+        if friendship:
+            return jsonify({'status': 'success', 'friendship': friendship.to_dict()}), 200
+        else:
+            raise InvalidAPIUsage(message='Friendship not found', status_code=404)
 
-
-@staticmethod
-def get_one():
-    data = request.get_json()
-    friendship_id = data.get('friendshipID')
-    friendship = Friendship.query.get(friendship_id)
-    if friendship:
-        return jsonify({'status': 'success', 'friendship': friendship.to_dict()}), 200
-    else:
-        raise InvalidAPIUsage(message='Friendship not found', status_code=404)
-
-
-@staticmethod
-def get_all():
-    friendships = Friendship.query.all()
-    return jsonify(
-        {'status': 'success', 'friendships': [friendship.to_dict() for friendship in friendships]}), 200
+    @staticmethod
+    def get_all():
+        friendships = Friendship.query.all()
+        return jsonify(
+            {'status': 'success', 'friendships': [friendship.to_dict() for friendship in friendships]}), 200

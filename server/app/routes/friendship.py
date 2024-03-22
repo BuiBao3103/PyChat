@@ -20,4 +20,4 @@ def friendships_id_api(id):
         case 'PATCH':
             return FriendshipController.update(id)
         case 'DELETE':
-            return FriendshipController.delete()
+            return FriendshipController.delete(id)
