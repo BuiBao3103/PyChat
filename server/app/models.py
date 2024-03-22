@@ -2,6 +2,7 @@ from server.app import app, db, lm
 from flask_login import UserMixin
 from sqlalchemy import Column, Integer, String, ForeignKey, Enum, Date
 from sqlalchemy.orm import relationship
+from sqlalchemy_serializer import SerializerMixin
 import enum
 
 
@@ -78,17 +79,17 @@ class FriendshipStatus(enum.Enum):
     FRIENDS = "friends"
 
 
-class Friendship(db.Model):
+class Friendship(db.Model, SerializerMixin):
     __tablename__ = 'friendships'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    user_id = Column(Integer, ForeignKey('users.id'))
-    friend_id = Column(Integer, ForeignKey('users.id'))
+    user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
+    friend_id = Column(Integer, ForeignKey('users.id'), nullable=False)
     status = Column(Enum(FriendshipStatus), nullable=False)
     delete_at = Column(Date, default=None)
 
 
-class User(db.Model, UserMixin):
+class User(db.Model, UserMixin, SerializerMixin):
     __tablename__ = 'users'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
@@ -109,8 +110,9 @@ class User(db.Model, UserMixin):
     deleted_conversations = relationship('DeletedConversation', backref='user',
                                          foreign_keys='DeletedConversation.user_id', lazy=True)
 
-    def as_dict(self):
-        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
+    serialize_rules = ('-participants', '-friendships', '-messages',
+                       '-deleted_messages', '-seen_conversations',
+                       '-deleted_conversations', '-password')
 
 
 class DeletedMessage(db.Model):

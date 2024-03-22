@@ -42,4 +42,4 @@ def page_not_found(error):
 @app.errorhandler(Exception)
 def handle_unhandled_exception(error):
     app.logger.error(f'Unhandled Exception: {error}')
-    return jsonify({'error': 'Internal Server Error', 'message': 'An unexpected error occurred'}), 500
+    return jsonify({'status': 'fail', 'error': 'Internal Server Error', 'message': 'An unexpected error occurred'}), 500

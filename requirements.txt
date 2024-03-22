@@ -29,6 +29,7 @@ python-socketio==5.11.1
 pytz==2023.3.post1
 simple-websocket==1.0.0
 SQLAlchemy==2.0.25
+SQLAlchemy-serializer==1.4.1
 typing_extensions==4.9.0
 Werkzeug==3.0.1
 wsproto==1.2.0

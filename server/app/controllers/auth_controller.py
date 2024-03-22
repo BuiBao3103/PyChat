@@ -17,7 +17,7 @@ class AuthController:
             raise InvalidAPIUsage(message='Invalid email or password', status_code=400)
 
         login_user(user)
-        return jsonify({'status': 'success', 'data': user.as_dict()}), 200
+        return jsonify({'status': 'success', 'data': user.to_dict()}), 200
 
     @staticmethod
     def register():
@@ -32,10 +32,10 @@ class AuthController:
             db.session.commit()
             login_user(new_user)
             db.session.refresh(new_user)
-        except IntegrityError  as e:
+        except IntegrityError as e:
             db.session.rollback()
             raise InvalidAPIUsage(message='Email exist!', status_code=400)
-        return jsonify({'status': 'success', 'data': new_user.as_dict()}), 200
+        return jsonify({'status': 'success', 'data': new_user.to_dict()}), 200
 
     @staticmethod
     def logout():

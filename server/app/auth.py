@@ -1,18 +1,14 @@
 from flask_login import current_user
 from functools import wraps
-from flask import redirect, url_for
+from server.app.errors import InvalidAPIUsage
 
 
-def restrict_to_roles(allowed_roles, next_url='index'):
+def protect():
     def decorator(f):
         @wraps(f)
         def decorated_function(*args, **kwargs):
-            # check is login
             if not current_user.is_authenticated:
-                return redirect(url_for('login'))
-            # check role
-            if current_user.user_role not in allowed_roles:
-                return redirect(f"{url_for('login')}?next_url={next_url}")
+                raise InvalidAPIUsage(message='You are not logged in! Please log in to get access.', status_code=401)
             return f(*args, **kwargs)
 
         return decorated_function

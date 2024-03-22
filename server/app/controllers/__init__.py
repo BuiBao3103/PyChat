@@ -2,6 +2,9 @@
 
 # Import any controllers you want to expose from this package
 from server.app.controllers.friendship_controller import FriendshipController
+from server.app.controllers.auth_controller import AuthController
+from server.app.controllers.user_controller import UserController
+from server.app.controllers.view_controller import ViewController
 # Additional initialization code for the controllers package, if needed
 # For example, you might set up some global configurations here
 

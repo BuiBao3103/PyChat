@@ -1,5 +1,6 @@
 from server.app import app
-from server.app.controllers.auth_controller import AuthController
+from server.app.controllers import AuthController, UserController
+from server.app.auth import protect
 
 
 @app.route('/api/v1/users/login', methods=['POST'])
@@ -15,3 +16,9 @@ def logout_api():
 @app.route('/api/v1/users/register', methods=['POST'])
 def register_api():
     return AuthController.register()
+
+
+@app.route('/api/v1/users/me', methods=['GET'])
+@protect()
+def get_me_api():
+    return UserController.get_me()
