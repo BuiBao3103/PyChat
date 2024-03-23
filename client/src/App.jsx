@@ -4,6 +4,7 @@ import AuthLayout from './layouts/AuthLayout'
 import Login from './auth/login'
 import Signup from './auth/signup'
 import Search from './pages/Search'
+import FriendList from './pages/FriendList'
 import DefaultLayout from './layouts/DefaultLayout'
 const router = createBrowserRouter([
 	{
@@ -11,9 +12,13 @@ const router = createBrowserRouter([
 		element: <DefaultLayout />,
 		children: [
 			{
-				index: true,
-				// path: ROUTE.SEARCH,
+				path: ROUTE.SEARCH,
 				element: <Search />
+			},
+			{
+				index: true,
+				// path: ROUTE.FRIEND_LIST,
+				element: <FriendList />
 			}
 		]
 	},

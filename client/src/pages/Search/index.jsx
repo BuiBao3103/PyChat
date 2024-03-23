@@ -9,7 +9,7 @@ const Index = () => {
 				<h1 className='font-bold text-2xl'>Search</h1>
 			</section>
 			<div className="w-[345px] h-[50px]">
-				<CustomizeInput placeholder={"search for something"} />
+				<CustomizeInput placeholder={"Search for something"} />
 			</div>
 			<div className="w-full h-full flex gap-3 overflow-hidden">
 				<section className='w-[320px] h-full border-r pr-3 flex flex-col'>
