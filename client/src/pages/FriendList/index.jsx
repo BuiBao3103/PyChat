@@ -15,7 +15,7 @@ const Index = () => {
 				<div className="w-full h-full grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-3 overflow-y-scroll pr-3">
 					{
 						Array.from({ length: 32 }, (_, index) => (
-							<FriendItem />
+							<FriendItem className={'border hover:border-[#666666] hover:shadow-lg transition-all w-full h-full'} />
 						))
 					}
 				</div>
