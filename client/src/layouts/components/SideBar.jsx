@@ -23,7 +23,7 @@ const SideBar = () => {
 			icon: FaRegUser
 		},
 		{
-			to: "/friend-list",
+			to: "/friend_list",
 			title: "Friends List",
 			icon: PiUserListBold
 		},
