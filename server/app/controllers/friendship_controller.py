@@ -1,7 +1,7 @@
 from flask import jsonify, request
 from server.app import db, app
 from server.app.errors import InvalidAPIUsage
-from server.app.models import Friendship, User, FriendshipStatus
+from server.app.models import Friendship, User, FriendshipStatus, Conversation, ConversationType, Participant
 from datetime import datetime
 
 from server.app.util.api_features import APIFeatures
@@ -63,12 +63,12 @@ class FriendshipController:
     @staticmethod
     def get_all():
         args = request.args
-        query = db.session.query(Friendship)
+        query = db.session.query(User)
         api_features = APIFeatures(query, args)
-        api_features.filter().sort().limit_fields().paginate()
-        results = api_features.query.all()
+        results, total_count = api_features.filter().sort().limit_fields().paginate()
         return jsonify(
-            {'status': 'success', 'friendships': [friendship.to_dict() for friendship in results]}), 200
+            {'status': 'success', 'total_count': total_count,
+             'friendships': [friendship.to_dict() for friendship in results]}), 200
 
     @staticmethod
     def request():
@@ -79,8 +79,10 @@ class FriendshipController:
                        .filter(Friendship.delete_at is not None).all())
         if friendships:
             raise InvalidAPIUsage(message='Friendships is exist!', status_code=400)
-        friendship_user = Friendship(user_id=user_id, friend_id=friend_id, status=FriendshipStatus.REQUEST_SENT)
-        friendship_friend = Friendship(user_id=friend_id, friend_id=user_id, status=FriendshipStatus.REQUEST_RECEIVED)
+        friendship_user = Friendship(user_id=user_id, friend_id=friend_id,
+                                     status=FriendshipStatus.REQUEST_SENT)
+        friendship_friend = Friendship(user_id=friend_id, friend_id=user_id,
+                                       status=FriendshipStatus.REQUEST_RECEIVED)
         try:
             db.session.add(friendship_user)
             db.session.add(friendship_friend)
@@ -108,13 +110,21 @@ class FriendshipController:
             raise InvalidAPIUsage(message='Friend is not request!', status_code=400)
         friendship_user.status = FriendshipStatus.FRIENDS
         friendship_friend.status = FriendshipStatus.FRIENDS
+        conversation = Conversation(type=ConversationType.PERSONAL)
         try:
             db.session.add(friendship_user)
             db.session.add(friendship_friend)
+            db.session.add(conversation)
+            db.session.commit()
+            db.session.refresh(conversation)
+            participant_user = Participant(user_id=user_id, conversation_id=conversation.id)
+            participant_friend = Participant(user_id=friend_id, conversation_id=conversation.id)
+            db.session.add(participant_user)
+            db.session.add(participant_friend)
             db.session.commit()
         except Exception as e:
             db.session.rollback()
             app.logger.error(f'Exception: {e}')
-            raise InvalidAPIUsage(message='Error creating request friendship', status_code=400)
+            raise InvalidAPIUsage(message='Error creating accept friendship', status_code=400)
         return jsonify(
             {'status': 'success', }), 200
