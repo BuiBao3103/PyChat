@@ -67,6 +67,54 @@ class FriendshipController:
         api_features = APIFeatures(query, args)
         api_features.filter().sort().limit_fields().paginate()
         results = api_features.query.all()
-        print(results)
         return jsonify(
             {'status': 'success', 'friendships': [friendship.to_dict() for friendship in results]}), 200
+
+    @staticmethod
+    def request():
+        data = request.get_json()
+        user_id = data.get('userID')
+        friend_id = data.get('friendID')
+        friendships = (Friendship.query.filter_by(user_id=user_id, friend_id=friend_id)
+                       .filter(Friendship.delete_at is not None).all())
+        if friendships:
+            raise InvalidAPIUsage(message='Friendships is exist!', status_code=400)
+        friendship_user = Friendship(user_id=user_id, friend_id=friend_id, status=FriendshipStatus.REQUEST_SENT)
+        friendship_friend = Friendship(user_id=friend_id, friend_id=user_id, status=FriendshipStatus.REQUEST_RECEIVED)
+        try:
+            db.session.add(friendship_user)
+            db.session.add(friendship_friend)
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            app.logger.error(f'Exception: {e}')
+            raise InvalidAPIUsage(message='Error creating request friendship', status_code=400)
+        return jsonify(
+            {'status': 'success'}), 200
+
+    @staticmethod
+    def accept():
+        data = request.get_json()
+        user_id = data.get('userID')
+        friend_id = data.get('friendID')
+        friendship_user = (Friendship.query.filter_by(user_id=user_id, friend_id=friend_id)
+                           .filter(Friendship.delete_at is not None).first())
+        friendship_friend = (Friendship.query.filter_by(user_id=friend_id, friend_id=user_id)
+                             .filter(Friendship.delete_at is not None).first())
+        if not friendship_friend or not friendship_user:
+            raise InvalidAPIUsage(message='Friendships is not exist!', status_code=400)
+        if (friendship_user.status != FriendshipStatus.REQUEST_RECEIVED
+                and friendship_friend.status != FriendshipStatus.REQUEST_SENT):
+            raise InvalidAPIUsage(message='Friend is not request!', status_code=400)
+        friendship_user.status = FriendshipStatus.FRIENDS
+        friendship_friend.status = FriendshipStatus.FRIENDS
+        try:
+            db.session.add(friendship_user)
+            db.session.add(friendship_friend)
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            app.logger.error(f'Exception: {e}')
+            raise InvalidAPIUsage(message='Error creating request friendship', status_code=400)
+        return jsonify(
+            {'status': 'success', }), 200
