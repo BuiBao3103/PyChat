@@ -1,6 +1,6 @@
 from server.app import app, db, lm
 from flask_login import UserMixin
-from sqlalchemy import Column, Integer, String, ForeignKey, Enum, Date
+from sqlalchemy import Column, Integer, String, ForeignKey, Enum, DateTime
 from sqlalchemy.orm import relationship
 from sqlalchemy_serializer import SerializerMixin
 import enum
@@ -16,20 +16,19 @@ class ConversationType(enum.Enum):
     PERSONAL = "personal"
 
 
-class Conversation(db.Model):
+class Conversation(db.Model, SerializerMixin):
     __tablename__ = 'conversations'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    channel_id = Column(Integer, unique=True, nullable=False)
     type = Column(Enum(ConversationType), nullable=False)
     last_message_id = Column(Integer, ForeignKey('messages.id'), nullable=True)
-    participants = relationship("Participant", backref="conversation",
+    participants = relationship("Participant", backref="conversation.py",
                                 foreign_keys='Participant.conversation_id', lazy=True)
-    messages = relationship("Message", backref="conversation",
+    messages = relationship("Message", backref="conversation.py",
                             foreign_keys='Message.conversation_id', lazy=True)
-    seen_conversations = relationship('SeenConversation', backref='conversation',
+    seen_conversations = relationship('SeenConversation', backref='conversation.py',
                                       foreign_keys='SeenConversation.conversation_id', lazy=True)
-    deleted_conversations = relationship('DeletedConversation', backref='conversation',
+    deleted_conversations = relationship('DeletedConversation', backref='conversation.py',
                                          foreign_keys='DeletedConversation.conversation_id', lazy=True)
 
 
@@ -53,7 +52,7 @@ class Message(db.Model):
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     message = Column(String(255), nullable=False)
-    time = Column(Date, nullable=False)
+    time = Column(DateTime, nullable=False)
     type = Column(Enum(MessageType), nullable=False)
     conversation_id = Column(Integer, ForeignKey('conversations.id'))
     user_id = Column(Integer, ForeignKey('users.id'))
@@ -86,7 +85,7 @@ class Friendship(db.Model, SerializerMixin):
     user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
     friend_id = Column(Integer, ForeignKey('users.id'), nullable=False)
     status = Column(Enum(FriendshipStatus), nullable=False)
-    delete_at = Column(Date, default=None)
+    delete_at = Column(DateTime, default=None)
 
     # serialize_rules = ('-user',)
 
@@ -98,7 +97,7 @@ class User(db.Model, UserMixin, SerializerMixin):
     username = Column(String(80))
     email = Column(String(120), unique=True, nullable=False)
     password = Column(String(120), nullable=False)
-    last_online = Column(Date, nullable=True)
+    last_online = Column(DateTime, nullable=True)
     participants = relationship("Participant", backref="user",
                                 foreign_keys='Participant.user_id', lazy=True)
     messages = relationship("Message", backref="user",
