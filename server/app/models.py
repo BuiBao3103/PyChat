@@ -88,7 +88,7 @@ class Friendship(db.Model, SerializerMixin):
     status = Column(Enum(FriendshipStatus), nullable=False)
     delete_at = Column(Date, default=None)
 
-    serialize_rules = ('-user',)
+    # serialize_rules = ('-user',)
 
 
 class User(db.Model, UserMixin, SerializerMixin):
@@ -103,8 +103,8 @@ class User(db.Model, UserMixin, SerializerMixin):
                                 foreign_keys='Participant.user_id', lazy=True)
     messages = relationship("Message", backref="user",
                             foreign_keys='Message.user_id', lazy=True)
-    friendships = relationship('Friendship', backref='user',
-                               foreign_keys='Friendship.user_id', lazy=True)
+    friendships = relationship('Friendship', backref='friend',
+                               foreign_keys='Friendship.friend_id', lazy=True)
     deleted_messages = relationship('DeletedMessage', backref='user',
                                     foreign_keys='DeletedMessage.user_id', lazy=True)
     seen_conversations = relationship('SeenConversation', backref='user',
