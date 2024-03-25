@@ -27,7 +27,7 @@ const Index = () => {
 					<div className="w-full h-[100px] absolute bottom-8">
 						<div className="w-full h-full flex justify-between items-center px-10">
 							<section className="h-full flex gap-4 items-center">
-								<div className="size-32 overflow-hidden rounded-full">
+								<div className="size-32 overflow-hidden rounded-full border-[5px] border-white">
 									<img src="https://source.unsplash.com/random" alt="" className='w-full h-full object-cover' />
 								</div>
 								<div className="w-fit h-full flex flex-col place-content-end pb-4">
@@ -82,7 +82,7 @@ const Index = () => {
 									))
 								}
 							</div>
-							<button className='absolute w-fit px-6 py-3 bg-primary text-white font-bold bottom-7 right-9 rounded-md hidden group-hover:block'>
+							<button className='absolute w-fit px-6 py-3 bg-primary text-white font-bold -bottom-16 right-9 rounded-md group-hover:bottom-7 transition-all duration-300 hover:opacity-60'>
 								View All
 							</button>
 						</div>
