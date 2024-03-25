@@ -9,10 +9,10 @@ from flask_cors import CORS
 # Grabs the folder where the script runs.
 
 app = Flask(__name__)
-app.config.from_object('app.config.Config')
+app.config.from_object('server.app.config.Config')
 cors = CORS(app)
 socketio = SocketIO(app)
-db = SQLAlchemy(app)  # flask-sqlalchemy
+db = SQLAlchemy(app)  # flask-sqlaSlchemy
 bc = Bcrypt(app)  # flask-bcrypt
 
 lm = LoginManager()  # flask-loginmanager

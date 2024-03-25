@@ -6,7 +6,11 @@
 # routes_bp = Blueprint('routes', __name__)
 
 # Import your route files to register them with the Blueprint
-from server.app.routes import view, user, friendship
+import server.app.routes.user
+import server.app.routes.friendship
+import server.app.routes.conversation
+import server.app.routes.view
+
 
 # Additional initialization code for the routes package, if needed
 # For example, you might add before_request or after_request hooks here
