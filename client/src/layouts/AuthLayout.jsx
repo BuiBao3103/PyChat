@@ -38,9 +38,11 @@ export const action = async ({ request }) => {
 		console.log(userInformaiton)
 	}
 	const response = await Axios.post("/api/v1/users/login", userInformaiton)
+	console.log(response)
 	if (response.status === 400 || response.status === 401) {
 		return response
 	}
+	console.log(response.ok)
 	if (!response.ok) {
 		throw json(
 			{
