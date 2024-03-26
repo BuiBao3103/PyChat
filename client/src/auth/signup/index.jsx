@@ -2,7 +2,7 @@ import React from 'react'
 import { FaFacebook, FaInstagram } from 'react-icons/fa'
 import { FcGoogle } from 'react-icons/fc'
 import SocialMediaButton from '../../components/button/SocialMediaButton'
-import { Link } from 'react-router-dom'
+import { Link, Form } from 'react-router-dom'
 
 const Index = () => {
 
@@ -32,7 +32,7 @@ const Index = () => {
 				<h4 className='text-base'>Be part of something great, join us!</h4>
 			</header>
 			<main className='mt-4 md:mt-8'>
-				<form className='space-y-3 md:space-y-5' action="#" method='POST'>
+				<Form className='space-y-3 md:space-y-5' method='POST'>
 					<div className="w-full flex justify-between gap-4">
 						<div className='w-full'>
 							<label htmlFor="firstName" className="block font-medium leading-6 text-gray-900">First Name</label>
@@ -83,7 +83,7 @@ const Index = () => {
 					<button className='w-full border border-primary py-3 rounded-lg bg-primary transition-all hover:bg-transparent group block' type="submit">
 						<span className='font-medium text-white group-hover:text-primary'>Sign up</span>
 					</button>
-				</form>
+				</Form>
 				<div className="space-y-3 md:space-y-6 mt-5">
 					<div className="w-full flex justify-center items-center">
 						<span className='h-px w-full bg-gray-400'></span>

@@ -2,7 +2,7 @@ import { RouterProvider, createBrowserRouter } from 'react-router-dom'
 import * as ROUTE from './constants/routes'
 
 import { tokenLoader, authChecker } from "./utils/auth"
-
+import { action as authAction } from "./layouts/AuthLayout"
 // Layout
 import AuthLayout from './layouts/AuthLayout'
 import DefaultLayout from './layouts/DefaultLayout'
@@ -16,12 +16,15 @@ import Search from './pages/Search'
 import FriendList from './pages/FriendList'
 import Profile from './pages/Profile'
 import ChatConversation from './pages/ChatConversation'
+
+import { ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css';
 const router = createBrowserRouter([
 	{
 		path: ROUTE.HOME,
 		element: <DefaultLayout />,
 		id: "root",
-		loader: tokenLoader,
+		loader: authChecker,
 		children: [
 			{
 				index: true,
@@ -43,16 +46,19 @@ const router = createBrowserRouter([
 		]
 	},
 	{
-		path: "/auth",
+		path: "/",
 		element: <AuthLayout />,
 		children: [
 			{
-				index: true,
-				element: <Login />
+				path: ROUTE.LOGIN,
+				element: <Login />,
+				action: authAction,
+
 			},
 			{
 				path: ROUTE.SIGNUP,
-				element: <Signup />
+				element: <Signup />,
+				action: authAction,
 			}
 		]
 	}
@@ -62,6 +68,11 @@ function App() {
 	return (
 		<main className='flex h-screen'>
 			<RouterProvider router={router} />
+			<ToastContainer
+				autoClose={2500}
+				pauseOnFocusLoss={false}
+				position="top-right"
+			/>
 		</main>
 	)
 }
