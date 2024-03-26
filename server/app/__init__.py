@@ -10,14 +10,13 @@ from flask_cors import CORS
 
 app = Flask(__name__)
 app.config.from_object('server.app.config.Config')
-cors = CORS(app)
+cors = CORS(app, supports_credentials=True)
 socketio = SocketIO(app)
 db = SQLAlchemy(app)  # flask-sqlaSlchemy
 bc = Bcrypt(app)  # flask-bcrypt
 
 lm = LoginManager()  # flask-loginmanager
 lm.init_app(app)  # init the login manager
-
 
 # def get_locale():
 #     if current_user.is_authenticated:
