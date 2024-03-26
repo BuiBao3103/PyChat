@@ -38,7 +38,6 @@ export const action = async ({ request }) => {
 		console.log(userInformaiton)
 	}
 	const response = await Axios.post("/api/v1/users/login", userInformaiton)
-	console.log(response)
 	if (response.status === 400 || response.status === 401) {
 		return response
 	}
@@ -55,8 +54,6 @@ export const action = async ({ request }) => {
 	const resData = await response.json();
 	const token = resData.token;
 	const user = resData.user;
-	sessionStorage.setItem("user", JSON.stringify(user))
-	sessionStorage.setItem("token", token)
 	console.log(response)
 	return redirect("/")
 }
