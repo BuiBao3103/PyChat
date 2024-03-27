@@ -1,11 +1,11 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { FcGoogle } from "react-icons/fc";
 import { FaFacebook, FaInstagram } from "react-icons/fa";
 import SocialMediaButton from '../../components/button/SocialMediaButton';
+import { PiEye, PiEyeClosed } from "react-icons/pi";
 import { Link, Form } from 'react-router-dom';
-import { toast } from 'react-toastify';
 const Index = () => {
-
+	const [isVisiblePassword, setIsVisiblePassword] = useState(false)
 	const logWithApp = [
 		{
 			name: "Google",
@@ -26,7 +26,7 @@ const Index = () => {
 	return (
 		<div className='w-full md:px-10 md:py-20 p-10 h-full'>
 			<header className="w-full flex flex-col justify-center items-center gap-px">
-				<h1	className="text-6xl font-oleo-script-regular">
+				<h1 className="text-6xl font-oleo-script-regular">
 					Welcome back
 				</h1>
 				<h4 className='text-base'>Chat, share and do more.</h4>
@@ -46,13 +46,20 @@ const Index = () => {
 					</div>
 					<div>
 						<label htmlFor="password" className="block font-medium leading-6 text-gray-900">Password</label>
-						<div className="mt-2">
+						<div className="mt-2 relative h-full">
 							<input
 								id="password"
 								name="password" placeholder='Enter your password'
-								type="password"
+								type={!isVisiblePassword ? 'password' : 'text'}
 								autoComplete="password" required
 								className="block w-full rounded-md p-3 border focus:outline-primary" />
+							<span
+								onClick={() => setIsVisiblePassword(!isVisiblePassword)}
+								className='block absolute top-[28%] right-4'>
+								{
+									!isVisiblePassword ? <PiEye size={25} /> : <PiEyeClosed size={25} />
+								}
+							</span>
 						</div>
 					</div>
 					<div className="w-full flex justify-between items-center">
@@ -86,7 +93,7 @@ const Index = () => {
 			<footer className='w-full text-center mt-3 md:mt-6 font-medium'>
 				<p>
 					Don't have account?
-					<Link to={"/auth/signup"}>
+					<Link to={"/signup"}>
 						<span className='text-primary hover:underline'> Register now</span>
 					</Link>
 				</p>
