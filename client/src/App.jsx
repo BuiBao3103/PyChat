@@ -19,6 +19,8 @@ import ChatConversation from './pages/ChatConversation'
 
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
+
+
 const router = createBrowserRouter([
 	{
 		path: ROUTE.HOME,
@@ -66,14 +68,14 @@ const router = createBrowserRouter([
 
 function App() {
 	return (
-		<main className='flex h-screen'>
+		<div className='flex h-screen'>
 			<RouterProvider router={router} />
 			<ToastContainer
 				autoClose={2500}
 				pauseOnFocusLoss={false}
 				position="top-right"
 			/>
-		</main>
+		</div>
 	)
 }
 

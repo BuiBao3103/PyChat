@@ -2,9 +2,11 @@ import React, { useState } from 'react'
 import { FaRegUser } from "react-icons/fa";
 import { PiUserListBold, PiGearSixBold, PiChatCenteredDotsBold, PiMagnifyingGlassBold, PiSignOutBold } from "react-icons/pi";
 import IconMenu from '../../components/iconmenu/IconMenu';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import LogoIcon from '../../assets/LogoIcon';
 import Setting from '../../pages/Setting'
+import { customToast } from '../../utils/customToast';
+import Axios from '../../api/index'
 const SideBar = () => {
 	const [visibleSetting, setVisibleSetting] = useState(false)
 	const sideMenu = [
@@ -34,7 +36,19 @@ const SideBar = () => {
 			onClick: () => { setVisibleSetting(!visibleSetting) }
 		}
 	]
-	console.log(visibleSetting)
+	const navigate = useNavigate()
+	const logoutUser = async () => {
+		await Axios.post('/api/v1/users/logout').then(res => {
+			if (res.status === 200) {
+				localStorage.removeItem('auth')
+				customToast({ type: "success", message: "Log out success" })
+			}
+			navigate('/login')
+		}).catch(err => {
+			console.log(err)
+		})
+	};
+
 	return (
 		<>
 			<div className='h-full w-20 bg-white rounded-xl'>
@@ -57,7 +71,9 @@ const SideBar = () => {
 								className='w-full h-full object-cover'
 								src="https://images.unsplash.com/photo-1552058544-f2b08422138a?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8cGVyc29ufGVufDB8fDB8fHww" alt="User Avatar" />
 						</div>
-						<Link className="w-[55px] h-[55px] flex justify-center items-center hover:bg-primary group rounded-xl transition-all">
+						<Link
+							onClick={logoutUser}
+							className="w-[55px] h-[55px] flex justify-center items-center hover:bg-primary group rounded-xl transition-all">
 							<PiSignOutBold size={29} className='group-hover:text-white' />
 						</Link>
 					</section>

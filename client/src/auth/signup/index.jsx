@@ -102,7 +102,7 @@ const Index = () => {
 			<footer className='w-full text-center mt-3 md:mt-6 font-medium'>
 				<p>
 					Don't have account?
-					<Link to={"/auth"}>
+					<Link to={"/login"}>
 						<span className='text-primary hover:underline'> Login now</span>
 					</Link>
 				</p>
