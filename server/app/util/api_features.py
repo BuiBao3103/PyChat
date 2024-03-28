@@ -7,7 +7,11 @@ class APIFeatures:
         for key, value in self.args.items():
             if hasattr(self.query.column_descriptions[0]['type'], key):
                 column = getattr(self.query.column_descriptions[0]['type'], key)
-                self.query = self.query.filter(column.like(f'%{value}%'))
+                if "id" in str(column):
+                    print(value)
+                    self.query = self.query.filter(column.__eq__(value))
+                else:
+                    self.query = self.query.filter(column.like(f'%{value}%'))
         return self
 
     def sort(self):
