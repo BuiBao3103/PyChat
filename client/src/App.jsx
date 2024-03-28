@@ -3,6 +3,7 @@ import * as ROUTE from './constants/routes'
 
 import { tokenLoader, authChecker } from "./utils/auth"
 import { action as authAction } from "./layouts/AuthLayout"
+import Axios from './api/index'
 // Layout
 import AuthLayout from './layouts/AuthLayout'
 import DefaultLayout from './layouts/DefaultLayout'
@@ -30,7 +31,6 @@ const router = createBrowserRouter([
 		children: [
 			{
 				index: true,
-				// path: ROUTE
 				element: <ChatConversation />
 			},
 			{
@@ -39,7 +39,10 @@ const router = createBrowserRouter([
 			},
 			{
 				path: ROUTE.FRIEND_LIST,
-				element: <FriendList />
+				element: <FriendList />,
+				loader: async () => {
+					return (await Axios.get('/api/v1/users?')).data.data
+				}
 			},
 			{
 				path: ROUTE.PROFILE,

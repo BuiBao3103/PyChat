@@ -1,11 +1,14 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { FaFacebook, FaInstagram } from 'react-icons/fa'
 import { FcGoogle } from 'react-icons/fc'
 import SocialMediaButton from '../../components/button/SocialMediaButton'
-import { Link, Form } from 'react-router-dom'
+import { Link, Form, useNavigation } from 'react-router-dom'
+import { PiEye, PiEyeClosed } from "react-icons/pi";
 
 const Index = () => {
-
+	const [isVisiblePassword, setIsVisiblePassword] = useState(false)
+	const navigate = useNavigation()
+	let isSigningup = navigate.formData?.get("email") != null && navigate.formData?.get("password") != null && navigate.formData?.get("firstName") && navigate.formData?.get("lastName")
 	const logWithApp = [
 		{
 			name: "Google",
@@ -71,17 +74,28 @@ const Index = () => {
 					</div>
 					<div>
 						<label htmlFor="password" className="block font-medium leading-6 text-gray-900">Password</label>
-						<div className="mt-2">
+						<div className="mt-2 relative">
 							<input
 								id="password"
 								name="password" placeholder='Enter your password'
 								type="password"
 								autoComplete="password" required
 								className="block w-full rounded-md p-3 border focus:outline-primary" />
+							<span
+								onClick={() => setIsVisiblePassword(!isVisiblePassword)}
+								className='block absolute top-[28%] right-4'>
+								{
+									!isVisiblePassword ? <PiEye size={25} /> : <PiEyeClosed size={25} />
+								}
+							</span>
 						</div>
 					</div>
 					<button className='w-full border border-primary py-3 rounded-lg bg-primary transition-all hover:bg-transparent group block' type="submit">
-						<span className='font-medium text-white group-hover:text-primary'>Sign up</span>
+						<span className='font-medium text-white group-hover:text-primary'>
+							{
+								isSigningup ? "Signing up..." : "Sign up"
+							}
+						</span>
 					</button>
 				</Form>
 				<div className="space-y-3 md:space-y-6 mt-5">
