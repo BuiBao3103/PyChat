@@ -22,7 +22,8 @@ class Conversation(db.Model, SerializerMixin):
     id = Column(Integer, primary_key=True, autoincrement=True)
     type = Column(Enum(ConversationType), nullable=False)
     last_message_id = Column(Integer, ForeignKey('messages.id'), nullable=True)
-    participants = relationship("Participant", backref="conversation.py",
+    last_message = relationship('Message', foreign_keys='Conversation.last_message_id', lazy=True)
+    participants = relationship("Participant", backref="conversation",
                                 foreign_keys='Participant.conversation_id', lazy=True)
     # messages = relationship("Message", backref="conversation.py",
     #                         foreign_keys='Message.conversation_id', lazy=True)
@@ -30,9 +31,10 @@ class Conversation(db.Model, SerializerMixin):
     #                                   foreign_keys='SeenConversation.conversation_id', lazy=True)
     # deleted_conversations = relationship('DeletedConversation', backref='conversation.py',
     #                                      foreign_keys='DeletedConversation.conversation_id', lazy=True)
+    serialize_rules = ('-participants.conversation',)
 
 
-class Participant(db.Model):
+class Participant(db.Model, SerializerMixin):
     __tablename__ = 'participants'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
@@ -41,13 +43,13 @@ class Participant(db.Model):
 
 
 class MessageType(enum.Enum):
-    Text = 'text',
-    media = 'text',
-    image = 'image',
-    voice = 'voice'
+    TEXT = 'text',
+    MEDIA = 'media',
+    IMAGE = 'image',
+    VOICE = 'voice'
 
 
-class Message(db.Model):
+class Message(db.Model, SerializerMixin):
     __tablename__ = 'messages'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
@@ -58,8 +60,9 @@ class Message(db.Model):
     user_id = Column(Integer, ForeignKey('users.id'))
     attachments = relationship("Attachment", backref="message",
                                foreign_keys='Attachment.message_id', lazy=True)
-    deleted_messages = relationship('DeletedMessage', backref='message',
-                                    foreign_keys='DeletedMessage.message_id', lazy=True)
+    # deleted_messages = relationship('DeletedMessage', backref='message',
+    #                                 foreign_keys='DeletedMessage.message_id', lazy=True)
+    serialize_rules = ('-participants.conversation', '-user', '-user_id')
 
 
 class Attachment(db.Model):
