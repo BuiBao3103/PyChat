@@ -7,7 +7,7 @@ const Index = ({ children, onClick }) => {
 			<div
 				onClick={() => onClick(false)}
 				className='w-screen h-screen fixed top-0 left-0 bg-black/30 z-[9] cursor-pointer' />
-			<div className="bg-white fixed inset-0 m-auto w-fit h-fit p-6 rounded-xl z-10">
+			<div className="bg-white dark:bg-primary-dark fixed inset-0 m-auto w-fit h-fit p-6 rounded-xl z-10">
 				<div className="flex justify-end items-center">
 					{children}
 					<button

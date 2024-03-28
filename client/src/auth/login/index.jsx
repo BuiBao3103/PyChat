@@ -3,10 +3,12 @@ import { FcGoogle } from "react-icons/fc";
 import { FaFacebook, FaInstagram } from "react-icons/fa";
 import SocialMediaButton from '../../components/button/SocialMediaButton';
 import { PiEye, PiEyeClosed } from "react-icons/pi";
-import { Link, Form, useNavigation } from 'react-router-dom';
+import { Link, Form, useNavigation, useActionData } from 'react-router-dom';
+import { toast } from 'react-toastify';
 const Index = () => {
 	const [isVisiblePassword, setIsVisiblePassword] = useState(false)
 	const navigate = useNavigation()
+	const data = useActionData()
 	let isLoggingin = navigate.formData?.get("email") != null && navigate.formData?.get("password") != null
 	const logWithApp = [
 		{
@@ -24,7 +26,7 @@ const Index = () => {
 			color: "#ff3d43"
 		}
 	]
-
+	console.log(data)
 	return (
 		<div className='w-full md:px-10 md:py-20 p-10 h-full'>
 			<header className="w-full flex flex-col justify-center items-center gap-px">
@@ -46,7 +48,7 @@ const Index = () => {
 								className="block w-full rounded-md p-3 border focus:outline-primary" />
 						</div>
 					</div>
-					<div>
+					<div className='relative'>
 						<label htmlFor="password" className="block font-medium leading-6 text-gray-900">Password</label>
 						<div className="mt-2 relative h-full">
 							<input
@@ -73,10 +75,13 @@ const Index = () => {
 							<span className='hover:underline text-primary font-medium'>Forgot password?</span>
 						</button>
 					</div>
+					{
+						data && data.invalidEmailOrPassword && <p className="text-sm text-red-500"><span className='text-red-400'>*</span>{data.invalidEmailOrPassword}</p>
+					}
 					<button className='w-full border border-primary py-3 rounded-lg bg-primary transition-all hover:bg-transparent group' type="submit">
 						<span className='font-medium text-white group-hover:text-primary'>
 							{
-								isLoggingin ? "Logging in ..." : "Sign in"
+								isLoggingin ? "Logging in ..." : "Log in"
 							}
 						</span>
 					</button>

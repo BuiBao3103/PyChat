@@ -41,12 +41,15 @@ const router = createBrowserRouter([
 				path: ROUTE.FRIEND_LIST,
 				element: <FriendList />,
 				loader: async () => {
-					return (await Axios.get('/api/v1/users?')).data.data
+					return (await Axios.get(`/api/v1/friendships?user_id=1`)).data.data
 				}
 			},
 			{
-				path: ROUTE.PROFILE,
-				element: <Profile />
+				path: "profile/:id",
+				element: <Profile />,
+				loader: async ({ params }) => {
+					return (await Axios.get(`/api/v1/users?id=${params.id}`)).data.data
+				}
 			}
 		]
 	},
