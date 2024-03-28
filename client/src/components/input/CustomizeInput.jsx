@@ -11,7 +11,7 @@ const CustomizeInput = ({ placeholder, onChange }) => {
 				type="text"
 				placeholder={placeholder}
 				onChange={(e) => onChange(e.target.value)}
-				className='w-full h-full outline-none placeholder:text-[#c6c7ca] group-hover:placeholder:text-primary' />
+				className='w-full h-full outline-none placeholder:text-[#c6c7ca] dark:bg-primary-dark dark:text-white group-hover:placeholder:text-primary' />
 		</div>
 	)
 }

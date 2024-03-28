@@ -2,11 +2,13 @@ import React, { useState } from 'react'
 import { FaFacebook, FaInstagram } from 'react-icons/fa'
 import { FcGoogle } from 'react-icons/fc'
 import SocialMediaButton from '../../components/button/SocialMediaButton'
-import { Link, Form, useNavigation } from 'react-router-dom'
+import { Link, Form, useNavigation, useActionData, redirect } from 'react-router-dom'
 import { PiEye, PiEyeClosed } from "react-icons/pi";
-
+import { customToast } from '../../utils/customToast'
+import Axios from '../../api/index'
 const Index = () => {
 	const [isVisiblePassword, setIsVisiblePassword] = useState(false)
+	const data = useActionData()
 	const navigate = useNavigation()
 	let isSigningup = navigate.formData?.get("email") != null && navigate.formData?.get("password") != null && navigate.formData?.get("firstName") && navigate.formData?.get("lastName")
 	const logWithApp = [
@@ -25,7 +27,6 @@ const Index = () => {
 			color: "#ff3d43"
 		}
 	]
-
 	return (
 		<div className="w-full md:px-10 md:py-20 px-10 py-5 h-full">
 			<header className="w-full flex flex-col justify-center items-center gap-px">
@@ -37,8 +38,8 @@ const Index = () => {
 			<main className='mt-4 md:mt-8'>
 				<Form className='space-y-3 md:space-y-5' method='POST'>
 					<div className="w-full flex justify-between gap-4">
-						<div className='w-full'>
-							<label htmlFor="firstName" className="block font-medium leading-6 text-gray-900">First Name</label>
+						<div className='w-full relative'>
+							<label htmlFor="firstName" className="block font-medium leading-6 text-gray-900"><span className='text-red-400'>*</span>First Name</label>
 							<div className="mt-2">
 								<input
 									id="firstName"
@@ -47,10 +48,17 @@ const Index = () => {
 									autoComplete="firstName" required
 									className="block w-full rounded-md p-3 border focus:outline-primary" />
 							</div>
+							{
+								data && data.emptyField && (
+									<p className='text-[12px] text-red-500 absolute top-1 right-0'>
+										*{data.emptyField}
+									</p>
+								)
+							}
 						</div>
 						<span className='w-px bg-gray-400 py-1'></span>
-						<div className='w-full'>
-							<label htmlFor="lastName" className="block font-medium leading-6 text-gray-900">Last Name</label>
+						<div className='w-full relative'>
+							<label htmlFor="lastName" className="block font-medium leading-6 text-gray-900"><span className='text-red-400'>*</span>Last Name</label>
 							<div className="mt-2">
 								<input
 									id="lastName"
@@ -59,10 +67,17 @@ const Index = () => {
 									autoComplete="lastName" required
 									className="block w-full rounded-md p-3 border focus:outline-primary" />
 							</div>
+							{
+								data && data.emptyField && (
+									<p className='text-[12px] text-red-500 absolute top-1 right-0'>
+										*{data.emptyField}
+									</p>
+								)
+							}
 						</div>
 					</div>
-					<div>
-						<label htmlFor="email" className="block font-medium leading-6 text-gray-900">Email</label>
+					<div className='relative'>
+						<label htmlFor="email" className="block font-medium leading-6 text-gray-900"><span className='text-red-400'>*</span>Email</label>
 						<div className="mt-2">
 							<input
 								id="email"
@@ -71,14 +86,21 @@ const Index = () => {
 								autoComplete="email" required
 								className="block w-full rounded-md p-3 border focus:outline-primary" />
 						</div>
+						{
+							data && data.emailExist && (
+								<p className='text-[12px] text-red-500 absolute top-1 right-0'>
+									*{data.emailExist}
+								</p>
+							)
+						}
 					</div>
-					<div>
-						<label htmlFor="password" className="block font-medium leading-6 text-gray-900">Password</label>
+					<div className='relative'>
+						<label htmlFor="password" className="block font-medium leading-6 text-gray-900"><span className='text-red-400'>*</span>Password</label>
 						<div className="mt-2 relative">
 							<input
 								id="password"
 								name="password" placeholder='Enter your password'
-								type="password"
+								type={!isVisiblePassword ? 'password' : 'text'}
 								autoComplete="password" required
 								className="block w-full rounded-md p-3 border focus:outline-primary" />
 							<span
@@ -89,6 +111,13 @@ const Index = () => {
 								}
 							</span>
 						</div>
+						{
+							data && data.invalidPassword && (
+								<p className='text-[12px] text-red-500 absolute top-1 right-0'>
+									*{data.invalidPassword}
+								</p>
+							)
+						}
 					</div>
 					<button className='w-full border border-primary py-3 rounded-lg bg-primary transition-all hover:bg-transparent group block' type="submit">
 						<span className='font-medium text-white group-hover:text-primary'>

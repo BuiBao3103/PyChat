@@ -37,9 +37,3 @@ const Index = () => {
 };
 
 export default Index;
-
-export const getAllFriend = async () => {
-	await Axios.get('/api/v1/users?').then(res => {
-		console.log(res)
-	})
-}

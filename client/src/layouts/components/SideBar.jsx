@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { FaRegUser } from "react-icons/fa";
 import { PiUserListBold, PiGearSixBold, PiChatCenteredDotsBold, PiMagnifyingGlassBold, PiSignOutBold } from "react-icons/pi";
 import IconMenu from '../../components/iconmenu/IconMenu';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
 import LogoIcon from '../../assets/LogoIcon';
 import Setting from '../../pages/Setting'
 import { customToast } from '../../utils/customToast';
@@ -21,7 +21,7 @@ const SideBar = () => {
 			icon: PiMagnifyingGlassBold
 		},
 		{
-			to: "/profile",
+			to: "/profile/1",
 			title: "Profile",
 			icon: FaRegUser
 		},
@@ -29,11 +29,6 @@ const SideBar = () => {
 			to: "/friend_list",
 			title: "Friends List",
 			icon: PiUserListBold
-		},
-		{
-			title: "Setting",
-			icon: PiGearSixBold,
-			onClick: () => { setVisibleSetting(!visibleSetting) }
 		}
 	]
 	const navigate = useNavigate()
@@ -51,7 +46,7 @@ const SideBar = () => {
 
 	return (
 		<>
-			<div className='h-full w-20 bg-white rounded-xl'>
+			<div className='h-full w-20 bg-white rounded-xl dark:bg-primary-dark'>
 				<div className="p-1.5 w-full h-full flex flex-col justify-between items-center">
 					<section className="w-full h-full flex flex-col gap-6">
 						<div className="w-[60px] h-[60px]">
@@ -63,6 +58,15 @@ const SideBar = () => {
 									<IconMenu key={index} to={item.to} title={item.title} Icon={item.icon} onClick={item.onClick} />
 								))
 							}
+							<Link
+								data-tooltip-id="my-tooltip"
+								data-tooltip-content={"Setting"}
+								data-tooltip-place="right"
+								data-tooltip-offset={20}
+								onClick={() => setVisibleSetting(!visibleSetting)}
+								className={`w-[55px] h-[55px] flex justify-center items-center rounded-lg hover:bg-primary group transition-all`}>
+								<PiGearSixBold size={29} className="group-hover:text-white dark:text-dark-gray" />
+							</Link>
 						</div>
 					</section>
 					<section className='w-full flex flex-col items-center gap-3'>
@@ -74,7 +78,7 @@ const SideBar = () => {
 						<Link
 							onClick={logoutUser}
 							className="w-[55px] h-[55px] flex justify-center items-center hover:bg-primary group rounded-xl transition-all">
-							<PiSignOutBold size={29} className='group-hover:text-white' />
+							<PiSignOutBold size={29} className='group-hover:text-white dark:text-dark-gray' />
 						</Link>
 					</section>
 				</div>
