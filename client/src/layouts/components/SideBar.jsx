@@ -11,7 +11,7 @@ const SideBar = () => {
 	const [visibleSetting, setVisibleSetting] = useState(false)
 	const sideMenu = [
 		{
-			to: "/chat",
+			to: "/",
 			title: "Chat",
 			icon: PiChatCenteredDotsBold
 		},

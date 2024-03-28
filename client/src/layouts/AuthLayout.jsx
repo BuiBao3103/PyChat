@@ -1,5 +1,5 @@
 import React from 'react'
-import { Outlet, json, redirect } from 'react-router-dom'
+import { Outlet, redirect } from 'react-router-dom'
 import { LoginImg } from '../assets'
 import Axios from '../api/index'
 import { customToast } from "../utils/customToast";
@@ -46,7 +46,8 @@ export const action = async ({ request }) => {
 	}
 	console.log(response)
 	if (response.status === 400 || response.status === 401) {
-		return response
+		customToast({type: "errror",message: response.data.message})
+		return;
 	}
 	const resData = response.data.data;
 	localStorage.setItem("auth", true)

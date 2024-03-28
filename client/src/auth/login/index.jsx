@@ -3,9 +3,11 @@ import { FcGoogle } from "react-icons/fc";
 import { FaFacebook, FaInstagram } from "react-icons/fa";
 import SocialMediaButton from '../../components/button/SocialMediaButton';
 import { PiEye, PiEyeClosed } from "react-icons/pi";
-import { Link, Form } from 'react-router-dom';
+import { Link, Form, useNavigation } from 'react-router-dom';
 const Index = () => {
 	const [isVisiblePassword, setIsVisiblePassword] = useState(false)
+	const navigate = useNavigation()
+	let isLoggingin = navigate.formData?.get("email") != null && navigate.formData?.get("password") != null
 	const logWithApp = [
 		{
 			name: "Google",
@@ -72,7 +74,11 @@ const Index = () => {
 						</button>
 					</div>
 					<button className='w-full border border-primary py-3 rounded-lg bg-primary transition-all hover:bg-transparent group' type="submit">
-						<span className='font-medium text-white group-hover:text-primary'>Sign in</span>
+						<span className='font-medium text-white group-hover:text-primary'>
+							{
+								isLoggingin ? "Logging in ..." : "Sign in"
+							}
+						</span>
 					</button>
 				</Form>
 				<div className="space-y-3 md:space-y-6 mt-5">
