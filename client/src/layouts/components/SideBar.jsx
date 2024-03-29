@@ -58,15 +58,15 @@ const SideBar = () => {
 									<IconMenu key={index} to={item.to} title={item.title} Icon={item.icon} onClick={item.onClick} />
 								))
 							}
-							<Link
+							<div
 								data-tooltip-id="my-tooltip"
 								data-tooltip-content={"Setting"}
 								data-tooltip-place="right"
 								data-tooltip-offset={20}
 								onClick={() => setVisibleSetting(!visibleSetting)}
 								className={`w-[55px] h-[55px] flex justify-center items-center rounded-lg hover:bg-primary group transition-all`}>
-								<PiGearSixBold size={29} className="group-hover:text-white dark:text-dark-gray" />
-							</Link>
+								<PiGearSixBold size={29} className="group-hover:text-white dark:text-dark-gray cursor-pointer" />
+							</div>
 						</div>
 					</section>
 					<section className='w-full flex flex-col items-center gap-3'>

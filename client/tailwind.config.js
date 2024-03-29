@@ -21,8 +21,9 @@ export default {
 					900: '#3fbf9e',
 				},
 				"light-gray": "#efeff1",
-				"primary-dark" : "#18191a",
-				"dark-gray" : "#737373"
+				"primary-dark" : "#1d1f27",
+				"dark-gray" : "#57585d",
+				"ebony-clay" : "#2a2b36"
 			}
 		},
 		fontFamily: {
