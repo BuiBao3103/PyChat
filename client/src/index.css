@@ -30,5 +30,5 @@
 }
 
 .active .activeIcon {
-	@apply dark:text-white
+	@apply text-white dark:text-white
 }

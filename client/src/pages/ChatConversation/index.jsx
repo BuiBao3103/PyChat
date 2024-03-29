@@ -1,6 +1,7 @@
 import React from 'react'
 import { PiPhone, PiVideoCamera, PiNotePencil, PiPlus, PiMinusCircle, PiMicrophoneBold, PiPaperPlaneTiltBold } from "react-icons/pi";
 import ChatBrief from '../../components/chatBrief/ChatBrief';
+import MessageContainer from '../../components/message/MessageContainer';
 const Index = () => {
 	return (
 		<div className='w-full h-full flex gap-3'>
@@ -23,8 +24,7 @@ const Index = () => {
 				</div>
 			</div>
 			<div className="w-full h-full bg-white dark:bg-primary-dark rounded-xl p-3 flex flex-col">
-				<h1 className='w-full border-b border-black pb-2 text-lg dark:text-white dark:border-ebony-clay'>Name</h1>
-				<div className="w-full h-full"></div>
+				<MessageContainer />
 				<div className="w-full h-16 flex items-center gap-3">
 					<span className='size-12 bg-primary flex justify-center items-center rounded-md p-2.5 cursor-pointer hover:opacity-75 transition-all'>
 						<PiMicrophoneBold size={22} className='text-white size-full' />
@@ -35,7 +35,7 @@ const Index = () => {
 					</span>
 				</div>
 			</div>
-			<div className="min-w-[300px] h-full rounded-xl bg-white dark:bg-primary-dark">
+			<div className="min-w-[300px] w-[300px] h-full rounded-xl bg-white dark:bg-primary-dark">
 				<div className="w-full flex flex-col justify-center items-center gap-3">
 					<div className="w-full flex flex-col justify-center items-center gap-1 p-3">
 						<div className="size-36 rounded-xl overflow-hidden">
@@ -62,19 +62,19 @@ const Index = () => {
 						<section className='w-full flex justify-between items-center border-y border-[#ababab] p-2 hover:bg-light-gray dark:hover:bg-white/30  cursor-pointer'>
 							<span className='dark:text-white'>Recent File</span>
 							<span>
-								<PiPlus size={20} className='dark:text-white'/>
+								<PiPlus size={20} className='dark:text-white' />
 							</span>
 						</section>
 						<section className='w-full flex justify-between items-center border-b border-[#ababab] p-2 hover:bg-light-gray dark:hover:bg-white/30  cursor-pointer'>
 							<span className='dark:text-white'>Recent Uploaded Photos</span>
 							<span>
-								<PiPlus size={20} className='dark:text-white'/>
+								<PiPlus size={20} className='dark:text-white' />
 							</span>
 						</section>
 						<section className='w-full flex justify-between items-center border-b border-[#ababab] p-2 hover:bg-light-gray dark:hover:bg-white/30 cursor-pointer'>
 							<span className='dark:text-white'>Block</span>
 							<span>
-								<PiMinusCircle size={20} className='dark:text-white'/>
+								<PiMinusCircle size={20} className='dark:text-white' />
 							</span>
 						</section>
 					</div>

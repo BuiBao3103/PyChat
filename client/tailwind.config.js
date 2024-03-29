@@ -21,9 +21,9 @@ export default {
 					900: '#3fbf9e',
 				},
 				"light-gray": "#efeff1",
-				"primary-dark" : "#1d1f27",
-				"dark-gray" : "#57585d",
-				"ebony-clay" : "#2a2b36"
+				"primary-dark": "#1d1f27",
+				"dark-gray": "#57585d",
+				"ebony-clay": "#2a2b36"
 			}
 		},
 		fontFamily: {
@@ -32,5 +32,8 @@ export default {
 			'oleo-script-bold': 'Oleo Script Bold'
 		}
 	},
-	plugins: [],
+	plugins: [require("daisyui")],
+	daisyui: {
+		darkTheme: 'light',
+	}
 }
