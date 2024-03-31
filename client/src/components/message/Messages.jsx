@@ -3,7 +3,7 @@ import Message from './Message'
 
 const Messages = () => {
 	return (
-		<div className='w-full h-full'>
+		<div className='w-full h-full overflow-auto'>
 			<Message />
 			<Message />
 			<Message />

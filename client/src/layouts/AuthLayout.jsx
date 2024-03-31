@@ -3,7 +3,8 @@ import { Outlet, redirect, useActionData } from 'react-router-dom'
 import { LoginImg } from '../assets'
 import Axios from '../api/index'
 import { customToast } from "../utils/customToast";
-import { toast } from 'react-toastify';
+import { useAuthContext } from '../hooks/useAuthContext'
+
 const AuthLayout = () => {
 
 	return (
@@ -25,6 +26,7 @@ const AuthLayout = () => {
 export default AuthLayout
 
 export const action = async ({ request }) => {
+	// const [state, dispatch] = useAuthContext()
 	const data = await request.formData();
 	const action = request.url.includes("login") ? "login" : "signup"
 	let userInformaiton = {}
@@ -72,8 +74,9 @@ export const action = async ({ request }) => {
 			emailExist: error.response.data.message
 		}
 	}
-
+	console.log(response)
+	localStorage.setItem("user", JSON.stringify(response.data.data))
 	localStorage.setItem("auth", true)
 	customToast({ type: "success", message: action === 'login' ? "Login successfully" : "Sign up successfully" })
-	return redirect("/")
+	return redirect("/conversation")
 }

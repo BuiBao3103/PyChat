@@ -1,4 +1,4 @@
-import { createContext, useEffect, useMemo, useReducer, useState } from 'react'
+import { createContext, useEffect, useState } from 'react'
 
 const initialState = {
 	themeColor: "light"

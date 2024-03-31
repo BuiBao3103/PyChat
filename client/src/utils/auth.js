@@ -10,7 +10,7 @@ import { customToast } from "./customToast";
 
 export const getAuthToken = () => {
 	const auth = localStorage.getItem("auth");
-	const cookie = document.cookie
+	
 	if (!auth) {
 		return null;
 	}
