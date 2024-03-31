@@ -12,7 +12,7 @@ const Message = () => {
 				<h1 className=''>Jack Phat</h1>
 				<time className="text-xs flex items-center">12:45</time>
 			</div>
-			<div className="chat-bubble w-fit rounded-md text-white bg-primary-600 text-right">Hi! What is up?</div>
+			<div className="chat-bubble w-fit rounded-md text-white bg-primary text-right">Hi! What is up?</div>
 		</div>
 	)
 }

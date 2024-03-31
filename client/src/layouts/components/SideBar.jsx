@@ -7,11 +7,13 @@ import LogoIcon from '../../assets/LogoIcon';
 import Setting from '../../pages/Setting'
 import { customToast } from '../../utils/customToast';
 import Axios from '../../api/index'
+import { useAuthContext } from '../../hooks/useAuthContext';
 const SideBar = () => {
 	const [visibleSetting, setVisibleSetting] = useState(false)
+	const [state, dispatch] = useAuthContext()
 	const sideMenu = [
 		{
-			to: "/",
+			to: "/conversation",
 			title: "Chat",
 			icon: PiChatCenteredDotsBold
 		},
@@ -35,7 +37,9 @@ const SideBar = () => {
 	const logoutUser = async () => {
 		await Axios.post('/api/v1/users/logout').then(res => {
 			if (res.status === 200) {
+				localStorage.removeItem('user')
 				localStorage.removeItem('auth')
+				dispatch({ type: "LOGOUT" })
 				customToast({ type: "success", message: "Log out success" })
 			}
 			navigate('/login')

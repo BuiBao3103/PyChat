@@ -5,6 +5,7 @@ export const SIGNUP = 'signup'
 
 //home page route
 export const HOME = '/'
+export const CHAT = '/conversation'
 export const FORGOT_PASSWORD = '/forgot_password'
 export const PROFILE = '/profile/:id'
 export const FRIEND_LIST = '/friend_list'

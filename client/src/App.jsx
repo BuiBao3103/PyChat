@@ -17,6 +17,7 @@ import Search from './pages/Search'
 import FriendList from './pages/FriendList'
 import Profile from './pages/Profile'
 import ChatConversation from './pages/ChatConversation'
+import NewConversation from './pages/NewConversation'
 
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
@@ -30,8 +31,17 @@ const router = createBrowserRouter([
 		loader: authChecker,
 		children: [
 			{
-				index: true,
-				element: <ChatConversation />
+				path: ROUTE.CHAT,
+				element: <ChatConversation />,
+				children: [
+					{
+						path: "to",
+						element: <NewConversation />
+					},
+					{
+						path: ":id"
+					}
+				]
 			},
 			{
 				path: ROUTE.SEARCH,
