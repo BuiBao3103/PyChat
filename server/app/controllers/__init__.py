@@ -6,6 +6,7 @@ from server.app.controllers.auth_controller import AuthController
 from server.app.controllers.user_controller import UserController
 from server.app.controllers.view_controller import ViewController
 from server.app.controllers.conversation_controller import ConversationController
+from server.app.controllers.message_controller import MessageController
 # Additional initialization code for the controllers package, if needed
 # For example, you might set up some global configurations here
 
