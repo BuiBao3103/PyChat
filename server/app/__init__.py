@@ -1,10 +1,11 @@
-from flask import Flask
+from flask import Flask, session
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, current_user
 from flask_bcrypt import Bcrypt
 from flask_babel import Babel
 from flask_socketio import SocketIO
 from flask_cors import CORS
+from datetime import timedelta
 
 # Grabs the folder where the script runs.
 
@@ -17,6 +18,10 @@ bc = Bcrypt(app)  # flask-bcrypt
 
 lm = LoginManager()  # flask-loginmanager
 lm.init_app(app)  # init the login manager
+@app.before_request
+def before_request():
+    session.permanent = True
+    app.permanent_session_lifetime = timedelta(minutes=5)
 
 # def get_locale():
 #     if current_user.is_authenticated:

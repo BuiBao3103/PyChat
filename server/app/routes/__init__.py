@@ -10,6 +10,7 @@ import server.app.routes.user
 import server.app.routes.friendship
 import server.app.routes.conversation
 import server.app.routes.view
+import server.app.routes.message
 
 
 # Additional initialization code for the routes package, if needed

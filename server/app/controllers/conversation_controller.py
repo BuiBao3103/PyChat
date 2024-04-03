@@ -37,7 +37,7 @@ class ConversationController:
                 friend_user_index = 0
                 if conversation['participants'][0]['user']['id'] == current_user.id:
                     friend_user_index = 1
-                conversation['friend'] =  conversation['participants'][friend_user_index]['user']
+                conversation['friend'] = conversation['participants'][friend_user_index]['user']
                 del conversation['participants']
         return jsonify(
             {'status': 'success', 'total_count': total_count,
