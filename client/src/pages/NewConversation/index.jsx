@@ -1,7 +1,11 @@
 import React from 'react'
-import { Form } from 'react-router-dom'
+import { Form, useLoaderData } from 'react-router-dom'
 
 const Index = () => {
+
+	const data = useLoaderData()
+	console.log(data)
+
 	return (
 		<div className='w-full h-full rounded-xl bg-white dark:bg-primary-dark p-3'>
 			<form className='w-full h-[50px] flex items-center gap-1 border-b border-black p-2'>

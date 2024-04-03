@@ -4,10 +4,12 @@ import ChatBrief from '../../components/chatBrief/ChatBrief';
 import MessageContainer from '../../components/message/MessageContainer';
 import { Link, useLocation } from 'react-router-dom';
 import NewConversation from '../NewConversation'
+import { useSocketContext } from '../../context/SocketContext';
 const Index = () => {
 
 	const location = useLocation()
-
+	const {socket} = useSocketContext()
+	console.log(socket)
 	return (
 		<div className='w-full h-full flex gap-3'>
 			<div className="w-[320px] max-w-[400px] min-w-[320px] h-full bg-white dark:bg-primary-dark rounded-xl flex flex-col">

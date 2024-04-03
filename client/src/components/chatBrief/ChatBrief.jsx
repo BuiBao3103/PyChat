@@ -1,10 +1,11 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import DefaultAvatar from '../../assets/defaultAvatar.jpg'
 const ChatBrief = ({ className = '' }) => {
 	return (
 		<div className={`${className} w-full h-auto p-3 flex gap-2 border-b dark:border-ebony-clay hover:bg-light-gray dark:hover:bg-white/30 transition-all cursor-pointer`}>
 			<div className="size-[60px] rounded-full relative">
-				<img src="https://source.unsplash.com/random/300x300" alt="" className='w-full h-full object-cover object-center rounded-full' />
+				<img src={DefaultAvatar} alt="" className='w-full h-full object-cover object-center rounded-full' />
 				<div className='size-4 border-[3px] border-white bg-primary-900 absolute bottom-0 right-0 rounded-full' />
 			</div>
 			<div className="flex-1 h-full flex flex-col justify-center items-center">

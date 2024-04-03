@@ -1,8 +1,9 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import InformationLine from '../../components/generalInfomationLine/InformationLine'
 import { ContactItem } from '../../components/contactItem/ContactItem'
 import { PiPhone, PiEnvelopeSimple } from "react-icons/pi";
 import FriendItem from '../../components/friendItem/FriendItem';
+import Axios from '../../api/index'
 import { useLoaderData } from 'react-router-dom';
 const Index = () => {
 	const data = useLoaderData()
@@ -18,6 +19,19 @@ const Index = () => {
 			value: data[0].email
 		}
 	]
+
+	useEffect(() => {
+		const test = async () => {
+			try {
+				await Axios.get('api/v1/users/me').then((res) => {
+					console.log(res.data.data)
+				})
+			} catch (error) {
+				console.log(error)
+			}
+		}
+		test()
+	}, [])
 
 	return (
 		<div className='w-full h-full rounded-xl bg-white dark:bg-primary-dark p-3 overflow-hidden'>

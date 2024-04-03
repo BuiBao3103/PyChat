@@ -36,7 +36,10 @@ const router = createBrowserRouter([
 				children: [
 					{
 						path: "to",
-						element: <NewConversation />
+						element: <NewConversation />,
+						loader: async () => {
+							return (await Axios.get('/api/v1/users')).data.data
+						}
 					},
 					{
 						path: ":id"
