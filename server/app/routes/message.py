@@ -5,7 +5,7 @@ from server.app.auth import protect
 
 
 @app.route('/api/v1/messages', methods=['GET', 'POST'])
-@protect()
+# @protect()
 def messages_api():
     match request.method:
         case 'GET':
@@ -15,6 +15,6 @@ def messages_api():
 
 
 @app.route('/api/v1/conversations/<int:conversation_id>/messages', methods=['GET'])
-@protect()
+# @protect()
 def messages_on_conversation_api(conversation_id):
     return MessageController.get_all_on_conversation(conversation_id)

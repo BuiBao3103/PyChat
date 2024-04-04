@@ -24,6 +24,6 @@ def users_api():
 
 
 @app.route('/api/v1/users/me', methods=['GET'])
-@protect()
+# @protect()
 def get_me_api():
     return UserController.get_me()

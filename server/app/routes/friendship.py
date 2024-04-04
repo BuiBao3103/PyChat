@@ -5,7 +5,7 @@ from server.app.auth import protect
 
 
 @app.route('/api/v1/friendships', methods=['GET', 'POST'])
-@protect()
+# @protect()
 def friendships_api():
     match request.method:
         case 'GET':
@@ -15,7 +15,7 @@ def friendships_api():
 
 
 @app.route('/api/v1/friendships/<int:id>', methods=['GET', 'PATCH', 'DELETE'])
-@protect()
+# @protect()
 def friendships_id_api(id):
     match request.method:
         case 'GET':
@@ -27,12 +27,12 @@ def friendships_id_api(id):
 
 
 @app.route('/api/v1/friendships/request', methods=['POST'])
-@protect()
+# @protect()
 def friendships_request_api():
     return FriendshipController.request()
 
 
 @app.route('/api/v1/friendships/accept', methods=['POST'])
-@protect()
+# @protect()
 def friendships_accept_api():
     return FriendshipController.accept()
