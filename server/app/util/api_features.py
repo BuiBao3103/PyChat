@@ -3,7 +3,7 @@ from sqlalchemy import desc
 
 
 class APIFeatures:
-    def __init__(self, model, args):
+    def __init__(self, model, args, query=None):
         args = args.to_dict()
         self.model = model
         self.sort_by = args.pop('sort_by', None)
@@ -61,10 +61,10 @@ class APIFeatures:
         """Paginate the query."""
         return query.paginate(page=page, per_page=per_page)
 
-    def perform_query(self):
+    def perform_query(self, query=None):
         """Perform the query with optional filtering, sorting, field selection, and pagination."""
-        query = db.session.query(self.model)
-
+        if query is None:
+            query = db.session.query(self.model)
         if self.filters:
             query = self.filter_query(query, self.filters)
         if self.sort_by:

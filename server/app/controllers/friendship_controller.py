@@ -1,19 +1,12 @@
-from flask import jsonify, request
 from server.app import db, app
 from server.app.errors import InvalidAPIUsage
-from server.app.models import Friendship, User, FriendshipStatus, Conversation, ConversationType, Participant
+from server.app.models import Friendship, FriendshipStatus, Conversation, ConversationType, Participant
 from datetime import datetime
-
 from server.app.util.api_features import APIFeatures
-from flask import request
 from server.app.errors import InvalidAPIUsage
 from server.app import db
-from server.app.models import User
-from server.app.auth import protect
-from server.app.util.api_features import APIFeatures
-
 from flask_restful import Resource
-from flask import jsonify, request, make_response
+from flask import request, make_response
 
 
 class Friendships(Resource):
