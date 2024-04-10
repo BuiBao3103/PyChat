@@ -3,7 +3,7 @@ from sqlalchemy import desc
 
 
 class APIFeatures:
-    def __init__(self, model, args, query=None):
+    def __init__(self, model, args):
         args = args.to_dict()
         self.model = model
         self.sort_by = args.pop('sort_by', None)
@@ -11,7 +11,6 @@ class APIFeatures:
         self.page = int(args.pop('page', 1))
         self.per_page = int(args.pop('per_page', 100))
         self.filters = args
-        print(args)
 
     def filter_query(self, query, filters):
         """Apply filters to the query."""

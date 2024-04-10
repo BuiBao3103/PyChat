@@ -1,7 +1,5 @@
 from server.app.controllers import Friendships,FriendshipsRequest,FriendshipsAccept
-
 from flask import Blueprint
-from server.app.controllers import Users, Me
 from flask_restful import Api
 
 friendship_bp = Blueprint('friendship', __name__,
