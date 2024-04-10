@@ -1,7 +1,7 @@
 import os
 from decouple import config
 from urllib.parse import quote
-
+from datetime import timedelta
 # Grabs the folder where the script runs.
 basedir = os.path.abspath(os.path.dirname(__file__))
 
@@ -22,3 +22,7 @@ class Config:
     SQLALCHEMY_DATABASE_URI = f'mysql+pymysql://{MYSQL_USER}:%s@{MYSQL_HOST}:{MYSQL_PORT}/{MYSQL_DB}?charset=utf8mb4' % quote(
         MYSQL_PASSWORD)
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    # Configure JWT settings
+    JWT_SECRET_KEY = config('JWT_SECRET_KEY')
+    JWT_ACCESS_TOKEN_EXPIRES= timedelta(days=1)  # Token expiration time
+
