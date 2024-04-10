@@ -1,15 +1,12 @@
 import traceback
-from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
-from flask import jsonify, request
-from flask_login import login_user, logout_user
-from server.app import app, db, bc
+from flask_jwt_extended import create_access_token
+from flask import request
+from server.app import db, bc
 from server.app.models import User
 from server.app.errors import InvalidAPIUsage
 from sqlalchemy.exc import IntegrityError
 from flask import make_response
-# controllers/auth_controller.py
-
-from flask_restful import Resource, reqparse
+from flask_restful import Resource
 
 
 class Login(Resource):

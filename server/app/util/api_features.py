@@ -1,46 +1,79 @@
+from server.app import db
+from sqlalchemy import desc
+
+
 class APIFeatures:
-    def __init__(self, query, args):
-        self.query = query
-        self.args = args
+    def __init__(self, model, args):
+        args = args.to_dict()
+        self.model = model
+        self.sort_by = args.pop('sort_by', None)
+        self.fields = args.pop('fields', None)
+        self.page = int(args.pop('page', 1))
+        self.per_page = int(args.pop('per_page', 100))
+        self.filters = args
+        print(args)
 
-    def filter(self):
-        for key, value in self.args.items():
-            if hasattr(self.query.column_descriptions[0]['type'], key):
-                column = getattr(self.query.column_descriptions[0]['type'], key)
-                if "id" in str(column):
-                    print(value)
-                    self.query = self.query.filter(column.__eq__(value))
-                else:
-                    self.query = self.query.filter(column.like(f'%{value}%'))
-        return self
+    def filter_query(self, query, filters):
+        """Apply filters to the query."""
+        operators = {
+            'eq': lambda field, val: getattr(self.model, field) == val,
+            'ne': lambda field, val: getattr(self.model, field) != val,
+            'lt': lambda field, val: getattr(self.model, field) < val,
+            'le': lambda field, val: getattr(self.model, field) <= val,
+            'gt': lambda field, val: getattr(self.model, field) > val,
+            'ge': lambda field, val: getattr(self.model, field) >= val,
+            'in': lambda field, val: getattr(self.model, field).in_(val.split(',')),
+            'like': lambda field, val: getattr(self.model, field).like(val),
+            'ilike': lambda field, val: getattr(self.model, field).ilike(val),
+            'is_null': lambda field, val: getattr(self.model, field).is_(None) if val.lower() == 'true' else getattr(self.model, field).isnot(None)
+            # Add more cases as needed
+        }
 
-    def sort(self):
-        sort_by = self.args.get('sort')
+        for field, value in filters.items():
+            if isinstance(value, str) and ':' in value:
+                op, val = value.split(':')
+                if op in operators:
+                    query = query.filter(operators[op](field, val))
+            else:
+                # Default to equality operator
+                query = query.filter(getattr(self.model, field) == value)
+
+        return query
+
+    def sort_query(self, query, sort_by):
+        """Apply sorting to the query."""
         if sort_by:
             if sort_by.startswith('-'):
-                sort_by = sort_by[1:]
-                column = getattr(self.query.column_descriptions[0]['type'], sort_by)
-                self.query = self.query.order_by(column.desc())
+                query = query.order_by(desc(sort_by[1:]))
             else:
-                column = getattr(self.query.column_descriptions[0]['type'], sort_by)
-                self.query = self.query.order_by(column)
-        return self
+                query = query.order_by(sort_by)
+        return query
 
-    def limit_fields(self):
-        fields = self.args.get('fields', None)
+    def select_fields(self, query, fields):
+        """Select specific fields from the query."""
         if fields:
-            fields_list = fields.split(',')
-            self.query = self.query.with_entities(
-                *[getattr(self.query.column_descriptions[0]['type'], field) for field in fields_list])
-        return self
+            fields = fields.split(',')
+            query = query.with_entities(
+                *[getattr(self.model, field) for field in fields])
+        return query
 
-    def paginate(self):
-        page = int(self.args.get('page', 1))
-        limit = int(self.args.get('limit', 100))
-        offset = (page - 1) * limit
+    def paginate_query(self, query, page=1, per_page=100):
+        """Paginate the query."""
+        return query.paginate(page=page, per_page=per_page)
 
-        # Fetch total count before applying pagination
-        total_count = self.query.count()
+    def perform_query(self):
+        """Perform the query with optional filtering, sorting, field selection, and pagination."""
+        query = db.session.query(self.model)
 
-        self.query = self.query.offset(offset).limit(limit)
-        return self.query.all(), total_count
+        if self.filters:
+            query = self.filter_query(query, self.filters)
+        if self.sort_by:
+            query = self.sort_query(query, self.sort_by)
+        if self.fields:
+            query = self.select_fields(query, self.fields)
+
+        paginated_query = self.paginate_query(query, self.page, self.per_page)
+        items = paginated_query.items
+        total_count = paginated_query.total
+
+        return items, total_count
