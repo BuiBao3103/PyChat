@@ -38,3 +38,5 @@ app.register_blueprint(auth_bp)
 app.register_blueprint(friendship_bp)
 app.register_blueprint(conversation_dp)
 app.register_blueprint(view_dp)
+
+import server.app.events

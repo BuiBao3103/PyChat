@@ -7,4 +7,8 @@ from server.app.models import Conversation, Participant, User
 class ViewController:
     @staticmethod
     def index(room_id):
-        return render_template('index.html')
+        user = db.session.query(User).get(1)
+        conversation = Conversation.query.get(room_id)
+        messages = conversation.messages
+       
+        return render_template('index.html', user=user, messages=messages)
