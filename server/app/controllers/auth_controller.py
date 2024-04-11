@@ -22,9 +22,10 @@ class Login(Resource):
 
         access_token = create_access_token(identity=user.id)
         response = make_response(
-            {'status': 'sucess', 'data': user.to_dict()}, 200)  
+            {'status': 'sucess', 'data': user.to_dict()}, 200)
 
-        response.set_cookie('jwt', access_token, max_age = 365*24*60*60, secure=True)
+        response.set_cookie('jwt', access_token,
+                            max_age=365*24*60*60, samesite='lax')
 
         return response
 
