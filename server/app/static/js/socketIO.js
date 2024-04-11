@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const socket = io('http://localhost:5000');
     const channel_id = channelMatch[1];
-    const user_send_id = 1
+    const user_send_id = 1 // get in client
     const type = 'text'
 
     socket.emit('join', { channel_id: channel_id });
