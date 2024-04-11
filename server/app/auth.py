@@ -11,7 +11,6 @@ def protect():
         @wraps(f)
         def decorated_function(*args, **kwargs):
             jwt_token = get_jwt_token(request)
-            print('abc')
             if not jwt_token:
                 raise InvalidAPIUsage(
                     message='You are not logged in! Please log in to get access.', status_code=401)
@@ -33,6 +32,5 @@ def get_jwt_token(request):
         return authorization_header.split(' ')[1]
 
     # If not found in headers, check for JWT token in cookies
-    print(request.cookies)
     jwt_token = request.cookies.get('jwt')
     return jwt_token
