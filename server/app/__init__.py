@@ -13,7 +13,7 @@ app = Flask(__name__)
 app.config.from_object('server.app.config.Config')
 
 # Initialize Flask extensions
-cors = CORS(app, supports_credentials=True)
+cors = CORS(app, resources={r"/api/*": {"origins": "http://localhost:5173"}}, supports_credentials=True)
 jwt = JWTManager(app)
 socketio = SocketIO(app)
 db = SQLAlchemy(app)
