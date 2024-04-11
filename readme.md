@@ -29,6 +29,13 @@ Install the required Python packages using `pip`:
 ```
 pip install -r requirements.txt
 ```
+
+### Step 5: Create Database
+Create table in database (MySQL):
+```
+cd server && python database.py
+```
+
 ## Client Setup
 
 ### Step 1: Install Dependencies
