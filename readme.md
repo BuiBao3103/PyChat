@@ -1,100 +1,98 @@
 
-```bash
-< PROJECT ROOT >
-   |
-   |-- app/
-   |    |
-   |    |-- __init__.py           # Initialize the app package
-   |    |-- config.py             # App Configuration
-   |    |-- forms.py              # App Forms: login, registration
-   |    |
-   |    |-- models.py                # Folder for your models
-   |    |
-   |    |-- static/
-   |    |    |-- css/              # CSS files
-   |    |    |-- js/               # JavaScript files
-   |    |    |-- images/           # Image files
-   |    |
-   |    |-- templates/            # HTML templates
-   |    |    |
-   |    |    |-- includes/         # Page chunks, components
-   |    |    |    |
-   |    |    |    |-- navigation.html  # Top bar
-   |    |    |    |-- sidebar.html     # Left sidebar
-   |    |    |    |-- scripts.html     # JS scripts common to all pages
-   |    |    |    |-- footer.html      # The common footer
-   |    |    |
-   |    |    |-- layouts/          # App Layouts (the master pages)
-   |    |    |    |
-   |    |    |    |-- footer.html    # Used by common pages like index, UI
-   |    |    |
-   |    |    |-- accounts/         # Auth Pages (login, register, etc.)
-   |    |    |    |
-   |    |    |    |-- login.html   # Use layout `base-fullscreen.html`
-   |    |    |    |-- register.html  # Use layout `base-fullscreen.html`
-   |    |    |    |-- dashboard.html  # User dashboard after login
-   |    |    |
-   |    |  chat.html              # The default page
-   |    |  page-404.html           # Error 404 page (page not found)
-   |    |  page-500.html           # Error 500 page (server error)
-   |    |    *.html                # All other pages provided by the UI Kit
-   |    |
-   |    |-- routes/                # Folder for your routes
-   |    |    |
-   |    |    |-- __init__.py       # Initialize the routes package
-   |    |    |-- view.py          # Example route file
-   |    |    |-- about.py          # Example route file
-   |    |    |-- contact.py        # Example route file
-   |    |    |-- user.py           # Auth routes (login, register, logout)
-   |    |
-   |    |-- controllers/          # Folder for your controllers
-   |    |    |
-   |    |    |-- __init__.py       # Initialize the controllers package
-   |    |    |-- index_controller.py  # Example controller file
-   |    |    |-- about_controller.py  # Example controller file
-   |    |    |-- contact_controller.py  # Example controller file
-   |    |    |-- auth_controller.py    # Auth controller file
-   |    |
-   |    |-- socketio/             # Folder for your Socket.IO events
-   |    |    |
-   |    |    |-- __init__.py       # Initialize the socketio package
-   |    |    |-- events.py          # File for Socket.IO event handlers
-   |    |
-   |    |-- requirements.txt       # Application Dependencies
-   |    |
-   |    |-- run.py                 # Start the app in development and production
-   |
-   |-- ************************************************************************
+
+
+# Project Setup Guide
+
+This guide will walk you through setting up the project environment for both the server and client components.
+
+## Server Setup
+
+### Step 1: Set Up Virtual Environment
+
+Create a virtual environment named `.venv` in the server directory:
 ```
+python -m venv .venv
+```
+### Step 2: Activate the Virtual Environment
 
-```bash
-python -v venv .venv
-.\.venv\Scripts\activate
+Activate the virtual environment (for Window):
+```
+.venv\Scripts\activate
+```
+### Step 3: Create `.env` File
 
-# Install requirements
+Create a file named `.env` in the server folder and configure it as needed.
+
+### Step 4: Install Requirements
+
+Install the required Python packages using `pip`:
+```
 pip install -r requirements.txt
-
-# Run the Template
-# --host=localhost - expose the app on all network interfaces (default 127.0.0.1)
-# --port=5000    - specify the app port (default 5000)  
-flask --app run run --host=localhost --port=5000 --with-threads --debug
-
-# Access the UI in browser: http://127.0.0.1:5000/
 ```
+## Client Setup
 
+### Step 1: Install Dependencies
+
+Install the required Node.js dependencies:
 ```
-#get all strings for translation
-pybabel extract -F babel.cfg -k _l -o messages.pot .
+cd client && npm install
+```
+## Running the Project
 
-#init po file (first time):
-pybabel init -i messages.pot -d app/translations -l vi
-pybabel init -i messages.pot -d app/translations -l en
 
-#compile translations
-pybabel compile -d app/translations
+In a separate terminal, navigate to the client directory and start the client:
+```
+cd client && npm start
+```
+The project should now be up and running! Access the client application in your web browser.
 
-#update exist po file
-pybabel extract -F babel.cfg -k _l -o messages.pot .
-pybabel update -i messages.pot -d app/translations
-pybabel compile -d app/translations
+## Contributing
+
+Feel free to contribute to this project by submitting bug reports, feature requests, or pull requests.
+
+## License
+
+This project is licensed under the MIT License.
+
+# Project Structure
+
+## Server
+```bash
+< server >
+│   .env
+│   .env.example
+│   database.py
+│   run.py
+│
+└───src
+    │   auth.py
+    │   config.py
+    │   errors.py
+    │   events.py
+    │   forms.py
+    │   models.py
+    │   __init__.py
+    │
+    ├───controllers
+    │   │   auth_controller.py
+    │   │   conversation_controller.py
+    │   │   friendship_controller.py
+    │   │   message_controller.py
+    │   │   user_controller.py
+    │   │   view_controller.py
+    │   └───__init__.py
+
+    │
+    ├───routes
+    │   │   auth_routes.py
+    │   │   conversation_routes.py
+    │   │   friendship_routes.py
+    │   │   message.py
+    │   │   user_routes.py
+    │   │   view_routes.py
+    │   └───init__.py
+    │
+    └───util
+        │   api_features.py
+        └───util.py
 ```
