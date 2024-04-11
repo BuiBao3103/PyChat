@@ -5,31 +5,44 @@ document.addEventListener('DOMContentLoaded', function () {
         return;
     }
 
-    const socket = io();
+    const socket = io('http://localhost:5000');
     const channel_id = channelMatch[1];
+    const user_send_id = 1
+    const type = 'text'
 
-    socket.emit('join', {channel_id: channel_id});
+    socket.emit('join', { channel_id: channel_id });
 
     const sendButton = document.querySelector('#sendButton')
-    sendButton?.addEventListener('click', function (event) {
+    sendButton?.addEventListener('click', function () {
         const messageInput = document.querySelector('#messageInput');
         const message = messageInput.value.trim();
-        const messageArea = document.querySelector('#messageArea');
-        const messageItem = document.createElement('div');
-        messageItem.classList.add('message', 'own')
-        messageItem.textContent = message;
-        messageArea.appendChild(messageItem);
+        const messageContainer = document.querySelector('#messageContainer');
         if (message !== '') {
-            socket.emit('message', {channel_id, message});
+            socket.emit('message',
+                {
+                    user_id: user_send_id,
+                    channel_id,
+                    message,
+                    time: Date.now(),
+                    type
+                });
             messageInput.value = '';
+            messageContainer.appendChild(createMessDiv(message, 'end'));
         }
     });
 
     socket.on('message', function (data) {
-        const messageArea = document.querySelector('#messageArea');
-        const messageItem = document.createElement('div');
-        messageItem.classList.add('message', 'other')
-        messageItem.textContent = data;
-        messageArea.appendChild(messageItem);
+        messageContainer.appendChild(createMessDiv(data.message, 'start'));
     });
+
 });
+const createMessDiv = (message, location) => {
+    const outerDiv = document.createElement('div');
+    outerDiv.classList.add('d-flex', `justify-content-${location}`, 'mt-1');
+
+    const innerDiv = document.createElement('div');
+    innerDiv.classList.add('bg-primary', 'text-white', 'p-2', 'rounded');
+    innerDiv.textContent = message;
+    outerDiv.appendChild(innerDiv);
+    return outerDiv
+}

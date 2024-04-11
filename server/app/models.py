@@ -25,8 +25,8 @@ class Conversation(db.Model, SerializerMixin):
     last_message = relationship('Message', foreign_keys='Conversation.last_message_id', lazy=True)
     participants = relationship("Participant", backref="conversation",
                                 foreign_keys='Participant.conversation_id', lazy=True)
-    # messages = relationship("Message", backref="conversation.py",
-    #                         foreign_keys='Message.conversation_id', lazy=True)
+    messages = relationship("Message", backref="conversation.py",
+                            foreign_keys='Message.conversation_id', lazy=True)
     # seen_conversations = relationship('SeenConversation', backref='conversation.py',
     #                                   foreign_keys='SeenConversation.conversation_id', lazy=True)
     # deleted_conversations = relationship('DeletedConversation', backref='conversation.py',
@@ -43,9 +43,9 @@ class Participant(db.Model, SerializerMixin):
 
 
 class MessageType(enum.Enum):
-    TEXT = 'text',
-    MEDIA = 'media',
-    IMAGE = 'image',
+    TEXT = 'text'
+    MEDIA = 'media'
+    IMAGE = 'image'
     VOICE = 'voice'
 
 

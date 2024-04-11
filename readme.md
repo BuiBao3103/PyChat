@@ -75,9 +75,9 @@ python -v venv .venv
 pip install -r requirements.txt
 
 # Run the Template
-# --host=0.0.0.0 - expose the app on all network interfaces (default 127.0.0.1)
+# --host=localhost - expose the app on all network interfaces (default 127.0.0.1)
 # --port=5000    - specify the app port (default 5000)  
-flask run --host=0.0.0.0 --port=5000 --debug
+flask --app run run --host=localhost --port=5000 --with-threads --debug
 
 # Access the UI in browser: http://127.0.0.1:5000/
 ```

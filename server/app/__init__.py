@@ -32,8 +32,11 @@ api = Api(app)
 # Initialize Flask-Restful Api
 
 # Add RESTful resource to the API
-from server.app.routes import user_bp, auth_bp, friendship_bp, conversation_dp
+from server.app.routes import user_bp, auth_bp, friendship_bp, conversation_dp, view_dp
 app.register_blueprint(user_bp)
 app.register_blueprint(auth_bp)
 app.register_blueprint(friendship_bp)
 app.register_blueprint(conversation_dp)
+app.register_blueprint(view_dp)
+
+import server.app.events
