@@ -1,5 +1,5 @@
 from flask import Blueprint
-from server.app.controllers import  ConversationMessages
+from src.controllers import  ConversationMessages
 from flask_restful import Api
 
 conversation_dp = Blueprint('conversation', __name__, url_prefix='/api/v1/conversations')

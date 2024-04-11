@@ -1,9 +1,9 @@
 from flask import request
 from functools import wraps
 from flask_jwt_extended import get_jwt_identity, jwt_required, decode_token
-from server.app.errors import InvalidAPIUsage
-from server.app.models import User
-from server.app import db
+from src.errors import InvalidAPIUsage
+from src.models import User
+from src import db
 
 
 def protect():

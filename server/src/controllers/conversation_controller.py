@@ -1,10 +1,10 @@
-from server.app.errors import InvalidAPIUsage
-from server.app.models import Conversation, Participant, ConversationType
-from server.app.util.api_features import APIFeatures
-from server.app import db
+from src.errors import InvalidAPIUsage
+from src.models import Conversation, Participant, ConversationType
+from src.util.api_features import APIFeatures
+from src import db
 from flask_restful import Resource
 from flask import request, make_response
-from server.app.auth import protect
+from src.auth import protect
 
 # class Conversations:
 

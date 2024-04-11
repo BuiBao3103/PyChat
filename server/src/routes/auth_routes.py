@@ -1,7 +1,7 @@
 from flask import Blueprint
-from server.app import app
-from server.app.controllers import Login, Register, Logout
-from server.app.auth import protect
+from src import app
+from src.controllers import Login, Register, Logout
+from src.auth import protect
 from flask_restful import Api
 
 auth_bp = Blueprint('auth', __name__, url_prefix='/api/v1/')

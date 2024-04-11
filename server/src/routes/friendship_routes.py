@@ -1,4 +1,4 @@
-from server.app.controllers import Friendships, FriendshipsRequest, FriendshipsAccept
+from src.controllers import Friendships, FriendshipsRequest, FriendshipsAccept
 from flask import Blueprint
 from flask_restful import Api
 

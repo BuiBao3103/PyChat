@@ -1,6 +1,6 @@
-from server.app import socketio, db
+from src import socketio, db
 from flask_socketio import join_room, leave_room, send, emit
-from server.app.models import Message, Conversation, MessageType
+from src.models import Message, Conversation, MessageType
 from flask import request
 from datetime import datetime
 

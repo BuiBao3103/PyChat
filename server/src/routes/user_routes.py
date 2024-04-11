@@ -1,5 +1,5 @@
 from flask import Blueprint
-from server.app.controllers import Users, Me, UserConversations
+from src.controllers import Users, Me, UserConversations
 from flask_restful import Api
 
 user_bp = Blueprint('user', __name__, url_prefix='/api/v1/users')

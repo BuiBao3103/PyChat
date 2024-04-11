@@ -1,9 +1,9 @@
 from flask import request
-from server.app.errors import InvalidAPIUsage
-from server.app import db
-from server.app.models import User
-from server.app.auth import protect
-from server.app.util.api_features import APIFeatures
+from src.errors import InvalidAPIUsage
+from src import db
+from src.models import User
+from src.auth import protect
+from src.util.api_features import APIFeatures
 
 from flask_restful import Resource
 from flask import jsonify, request, make_response

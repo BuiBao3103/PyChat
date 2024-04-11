@@ -1,4 +1,4 @@
-from server.app import app, db, lm
+from src import db, lm
 from flask_login import UserMixin
 from sqlalchemy import Column, Integer, String, ForeignKey, Enum, DateTime
 from sqlalchemy.orm import relationship
@@ -144,7 +144,3 @@ class DeletedConversation(db.Model):
     user_id = Column(Integer, ForeignKey('users.id'))
     conversation_id = Column(Integer, ForeignKey('conversations.id'))
 
-
-if __name__ == '__main__':
-    with app.app_context():
-        db.create_all()

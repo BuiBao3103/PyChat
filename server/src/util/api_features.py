@@ -1,4 +1,4 @@
-from server.app import db
+from src import db
 from sqlalchemy import desc
 
 

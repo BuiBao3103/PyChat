@@ -1,10 +1,10 @@
-from server.app import db, app
-from server.app.errors import InvalidAPIUsage
-from server.app.models import Friendship, FriendshipStatus, Conversation, ConversationType, Participant
+from src import db, app
+from src.errors import InvalidAPIUsage
+from src.models import Friendship, FriendshipStatus, Conversation, ConversationType, Participant
 from datetime import datetime
-from server.app.util.api_features import APIFeatures
-from server.app.errors import InvalidAPIUsage
-from server.app import db
+from src.util.api_features import APIFeatures
+from src.errors import InvalidAPIUsage
+from src import db
 from flask_restful import Resource
 from flask import request, make_response
 

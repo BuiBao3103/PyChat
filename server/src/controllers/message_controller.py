@@ -1,10 +1,10 @@
 from flask import jsonify, request
-from server.app import db, app
-from server.app.errors import InvalidAPIUsage
-from server.app.models import Message, MessageType
+from src import db, app
+from src.errors import InvalidAPIUsage
+from src.models import Message, MessageType
 from datetime import datetime
 from flask import request, make_response
-from server.app.util.api_features import APIFeatures
+from src.util.api_features import APIFeatures
 
 from flask_restful import Resource
 

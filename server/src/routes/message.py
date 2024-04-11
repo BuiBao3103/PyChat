@@ -1,7 +1,7 @@
-from server.app import app
+from src import app
 from flask import request
-from server.app.controllers import MessageController
-from server.app.auth import protect
+from src.controllers import MessageController
+from src.auth import protect
 
 
 @app.route('/api/v1/messages', methods=['GET', 'POST'])

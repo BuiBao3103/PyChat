@@ -1,7 +1,7 @@
 import traceback
 
 from flask import jsonify, render_template
-from server.app import app
+from src import app
 
 
 class InvalidAPIUsage(Exception):

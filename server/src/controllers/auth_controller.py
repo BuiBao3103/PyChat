@@ -1,9 +1,9 @@
 import traceback
 from flask_jwt_extended import create_access_token
 from flask import request
-from server.app import db, bc
-from server.app.models import User
-from server.app.errors import InvalidAPIUsage
+from src import db, bc
+from src.models import User
+from src.errors import InvalidAPIUsage
 from sqlalchemy.exc import IntegrityError
 from flask import make_response
 from flask_restful import Resource
