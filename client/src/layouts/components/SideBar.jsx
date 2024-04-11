@@ -35,7 +35,7 @@ const SideBar = () => {
 	]
 	const navigate = useNavigate()
 	const logoutUser = async () => {
-		await Axios.post('/api/v1/users/logout').then(res => {
+		await Axios.post('/api/v1/logout').then(res => {
 			if (res.status === 200) {
 				localStorage.removeItem('user')
 				localStorage.removeItem('auth')

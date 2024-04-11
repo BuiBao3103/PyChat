@@ -51,17 +51,12 @@ export const action = async ({ request }) => {
 		}
 		console.log(userInformaiton)
 	}
-	// if (userInformaiton.password.length < 8) {
-	// 	return {
-	// 		invalidPassword: "Password length must be greater than 8 characters"
-	// 	}
-	// }
 	let response
 	try {
 		if (action === 'login') {
-			response = await Axios.post("/api/v1/users/login", userInformaiton)
+			response = await Axios.post("/api/v1/login", userInformaiton)
 		} else {
-			response = await Axios.post("/api/v1/users/register", userInformaiton)
+			response = await Axios.post("/api/v1/register", userInformaiton)
 		}
 	} catch (error) {
 		console.log(error)
@@ -78,5 +73,5 @@ export const action = async ({ request }) => {
 	localStorage.setItem("user", JSON.stringify(response.data.data))
 	localStorage.setItem("auth", true)
 	customToast({ type: "success", message: action === 'login' ? "Login successfully" : "Sign up successfully" })
-	return redirect("/conversation")
+	return redirect(`/conversation/${response.data.data.id}`)
 }

@@ -3,18 +3,19 @@ import CustomizeInput from '../../components/input/CustomizeInput';
 import FriendItem from '../../components/friendItem/FriendItem';
 import { useLoaderData } from 'react-router-dom';
 import useDebounce from '../../hooks/useDebounce';
-
+import Axios from '../../api/index'
 const Index = () => {
 
 	let friendList = useLoaderData()
 	const [search, setSearch] = useState('')
-	const [loading,setLoading] = useState(false)
-	const [users, setUsers] = useState([])
+	const [loading, setLoading] = useState(false)
 	const debounceSearch = useDebounce(search, 500)
 
-	useEffect(() => {
-
-	}, [debounceSearch])
+	// useEffect(() => {
+	// 	const filterFriendList = async () => {
+	// 		const res = await Axios.post()
+	// 	}
+	// }, [debounceSearch])
 
 
 	return (

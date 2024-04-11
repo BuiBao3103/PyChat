@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import DefaultAvatar from '../../assets/defaultAvatar.jpg'
-const ChatBrief = ({ className = '' }) => {
+const ChatBrief = ({ className = '', user }) => {
 	return (
 		<div className={`${className} w-full h-auto p-3 flex gap-2 border-b dark:border-ebony-clay hover:bg-light-gray dark:hover:bg-white/30 transition-all cursor-pointer`}>
 			<div className="size-[60px] rounded-full relative">
@@ -10,7 +10,7 @@ const ChatBrief = ({ className = '' }) => {
 			</div>
 			<div className="flex-1 h-full flex flex-col justify-center items-center">
 				<div className="w-full flex justify-between items-center">
-					<span className='font-medium font-inter dark:text-white'>Name</span>
+					<span className='font-medium font-inter dark:text-white'>{user.username}</span>
 					<span className='text-sm text-[#ababab]'>Time</span>
 				</div>
 				<div className="w-full flex justify-between items-center gap-1">

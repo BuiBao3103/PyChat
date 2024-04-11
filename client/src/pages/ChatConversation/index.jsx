@@ -2,13 +2,14 @@ import React from 'react'
 import { PiPhone, PiVideoCamera, PiNotePencil, PiPlus, PiMinusCircle } from "react-icons/pi";
 import ChatBrief from '../../components/chatBrief/ChatBrief';
 import MessageContainer from '../../components/message/MessageContainer';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLoaderData, useLocation } from 'react-router-dom';
 import NewConversation from '../NewConversation'
 import { useSocketContext } from '../../context/SocketContext';
 const Index = () => {
 
 	const location = useLocation()
-	const {socket} = useSocketContext()
+	const conversations = useLoaderData()
+	const { socket } = useSocketContext()
 	console.log(socket)
 	return (
 		<div className='w-full h-full flex gap-3'>
@@ -26,8 +27,8 @@ const Index = () => {
 				</div>
 				<div className="w-full h-full flex flex-col overflow-y-scroll pb-3 scrollChatConversions">
 					{
-						Array.from({ length: 20 }, (_, index) => (
-							<ChatBrief key={index} className='first:border-t' />
+						conversations.map((item, index) => (
+							<ChatBrief key={index} className='first:border-t' user={item} />
 						))
 					}
 				</div>

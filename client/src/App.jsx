@@ -31,8 +31,11 @@ const router = createBrowserRouter([
 		loader: authChecker,
 		children: [
 			{
-				path: ROUTE.CHAT,
+				path: "conversation/:id",
 				element: <ChatConversation />,
+				loader: async ({ params }) => {
+					return (await Axios.get(`/api/v1/users/${params.id}/conversations`)).data.data
+				},
 				children: [
 					{
 						path: "to",
@@ -54,7 +57,7 @@ const router = createBrowserRouter([
 				path: ROUTE.FRIEND_LIST,
 				element: <FriendList />,
 				loader: async () => {
-					return (await Axios.get(`/api/v1/friendships?user_id=1`)).data.data
+					return (await Axios.get(`/api/v1/friendships?user_id=1`)).data.friendships
 				}
 			},
 			{
