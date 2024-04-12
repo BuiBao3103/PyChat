@@ -7,14 +7,14 @@
 {% block content %}
   <div class="container mt-5">
     <div class="mb-3">
-      <label for="username" class="form-label">{{ user.email }}</label>
+      <label for="username" class="form-label">me: {{ user.email }}</label>
     </div>
   </div>
   <div class="container mt-5">
     <div class="chat-container border p-3">
       <div id="messageContainer" class="mb-3">
         {% for message in messages %}
-          {% if message.user_id == 1 %}
+          {% if message.user_id == user.id %}
             <div class="d-flex justify-content-end mt-1">
               <div class="bg-primary text-white p-2 rounded">{{ message.message }}</div>
             </div>

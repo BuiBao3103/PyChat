@@ -10,6 +10,6 @@ from src import app, db, bc
 view_dp = Blueprint('view', __name__, url_prefix='/')
 
 
-@app.route('/r/<room_id>')
-def index(room_id):
-    return ViewController.index(room_id)
+@app.route('/r/<room_id>/<user_id>')
+def index(room_id, user_id):
+    return ViewController.index(room_id,user_id)

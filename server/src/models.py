@@ -62,7 +62,7 @@ class Message(db.Model, SerializerMixin):
                                foreign_keys='Attachment.message_id', lazy=True)
     # deleted_messages = relationship('DeletedMessage', backref='message',
     #                                 foreign_keys='DeletedMessage.message_id', lazy=True)
-    serialize_rules = ('-participants.conversation', '-user', '-user_id')
+    serialize_rules = ('-participants.conversation', '-user',)
 
 
 class Attachment(db.Model):

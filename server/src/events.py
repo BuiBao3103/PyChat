@@ -32,6 +32,7 @@ def handle_leave(data):
 
 @socketio.on('message')
 def handle_message(data):
+    print(data)
     message = data['message']
     channel_id = data['channel_id']
     user_id = data['user_id']
@@ -44,6 +45,7 @@ def handle_message(data):
                           type=message_type)
     db.session.add(new_message)
     db.session.commit()
+    db.session.refresh(new_message)
     # Broadcast the message to everyone in the room except the sender
-    emit('message', data, room=channel_id, include_self=False)
+    emit('message', new_message.to_dict(), room=channel_id)
 
