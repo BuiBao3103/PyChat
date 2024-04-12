@@ -2,15 +2,21 @@ import React from 'react'
 import { PiPhone, PiVideoCamera, PiNotePencil, PiPlus, PiMinusCircle } from "react-icons/pi";
 import ChatBrief from '../../components/chatBrief/ChatBrief';
 import MessageContainer from '../../components/message/MessageContainer';
-import { Link, useLoaderData, useLocation } from 'react-router-dom';
+import { Link, Outlet, useLoaderData, useLocation } from 'react-router-dom';
 import NewConversation from '../NewConversation'
 import { useSocketContext } from '../../context/SocketContext';
+import useConversation from '../../zustand/useConversation';
+import { useAuthContext } from '../../hooks/useAuthContext';
 const Index = () => {
 
 	const location = useLocation()
+	const { selectedConversation, setSelectedConversation } = useConversation()
 	const conversations = useLoaderData()
 	const { socket } = useSocketContext()
-	console.log(socket)
+	const joinRoom = (conversationID) => {
+		socket.emit('join', { channel_id: conversationID })
+	}
+
 	return (
 		<div className='w-full h-full flex gap-3'>
 			<div className="w-[320px] max-w-[400px] min-w-[320px] h-full bg-white dark:bg-primary-dark rounded-xl flex flex-col">
@@ -28,7 +34,7 @@ const Index = () => {
 				<div className="w-full h-full flex flex-col overflow-y-scroll pb-3 scrollChatConversions">
 					{
 						conversations.map((item, index) => (
-							<ChatBrief key={index} className='first:border-t' user={item} />
+							<ChatBrief key={index} className='first:border-t' currentConversation={item} joinRoom={joinRoom} />
 						))
 					}
 				</div>
@@ -37,53 +43,14 @@ const Index = () => {
 				location.pathname.includes("to") ? <NewConversation /> :
 					(
 						<>
-							<div className="w-full h-full bg-white dark:bg-primary-dark rounded-xl p-3 flex flex-col">
-								<MessageContainer />
-							</div>
-							<div className="min-w-[300px] w-[300px] h-full rounded-xl bg-white dark:bg-primary-dark">
-								<div className="w-full flex flex-col justify-center items-center gap-3">
-									<div className="w-full flex flex-col justify-center items-center gap-1 p-3">
-										<div className="size-36 rounded-xl overflow-hidden">
-											<img src="https://source.unsplash.com/random" alt="" className='size-full object-cover' />
-										</div>
-										<span className='text-lg dark:text-white'>Name</span>
-										<span className='text-sm dark:text-white'>status</span>
-									</div>
-									<div className="w-full flex justify-center items-center gap-3">
-										<PiPhone
-											data-tooltip-id="my-tooltip"
-											data-tooltip-content={"Call"}
-											data-tooltip-place="bottom"
-											data-tooltip-offset={20}
-											size={25} className='size-fit p-3 border border-black rounded-md hover:bg-black hover:text-white transition-all cursor-pointer dark:border-[#aaaaaf] dark:hover:bg-white dark:hover:text-black dark:text-[#aaaaaf]' />
-										<PiVideoCamera
-											data-tooltip-id="my-tooltip"
-											data-tooltip-content={"Video Call"}
-											data-tooltip-place="bottom"
-											data-tooltip-offset={20}
-											size={25} className='size-fit p-3 border border-black rounded-md hover:bg-black hover:text-white transition-all cursor-pointer dark:border-[#aaaaaf] dark:hover:bg-white dark:hover:text-black dark:text-[#aaaaaf]' />
-									</div>
-									<div className="w-full flex flex-col">
-										<section className='w-full flex justify-between items-center border-y border-[#ababab] p-2 hover:bg-light-gray dark:hover:bg-white/30  cursor-pointer'>
-											<span className='dark:text-white'>Recent File</span>
-											<span>
-												<PiPlus size={20} className='dark:text-white' />
-											</span>
-										</section>
-										<section className='w-full flex justify-between items-center border-b border-[#ababab] p-2 hover:bg-light-gray dark:hover:bg-white/30  cursor-pointer'>
-											<span className='dark:text-white'>Recent Uploaded Photos</span>
-											<span>
-												<PiPlus size={20} className='dark:text-white' />
-											</span>
-										</section>
-										<section className='w-full flex justify-between items-center border-b border-[#ababab] p-2 hover:bg-light-gray dark:hover:bg-white/30 cursor-pointer'>
-											<span className='dark:text-white'>Block</span>
-											<span>
-												<PiMinusCircle size={20} className='dark:text-white' />
-											</span>
-										</section>
-									</div>
-								</div>
+							<div className="w-full h-full rounded-xl flex flex-col">
+								{
+									!selectedConversation ? (
+										<NoChatSelected />
+									) : (
+										<Outlet />
+									)
+								}
 							</div>
 						</>
 					)
@@ -91,5 +58,19 @@ const Index = () => {
 		</div>
 	)
 }
+
+const NoChatSelected = () => {
+	const [state, dispatch] = useAuthContext()
+	return (
+		<div className='flex items-center justify-center w-full h-full bg-white rounded-xl'>
+			<div className='px-4 text-center sm:text-lg md:text-3xl text-black dark:text-gray-200 font-semibold flex flex-col items-center gap-2'>
+				<p>Welcome 👋 {state.user.username} ❄</p>
+				<p>Select a chat to start messaging</p>
+				{/* <TiMessages className='text-3xl md:text-6xl text-center' /> */}
+			</div>
+		</div>
+	);
+};
+
 
 export default Index

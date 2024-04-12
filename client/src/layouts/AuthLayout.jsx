@@ -4,6 +4,7 @@ import { LoginImg } from '../assets'
 import Axios from '../api/index'
 import { customToast } from "../utils/customToast";
 import { useAuthContext } from '../hooks/useAuthContext'
+import useConversation from '../zustand/useConversation';
 
 const AuthLayout = () => {
 
@@ -73,5 +74,5 @@ export const action = async ({ request }) => {
 	localStorage.setItem("user", JSON.stringify(response.data.data))
 	localStorage.setItem("auth", true)
 	customToast({ type: "success", message: action === 'login' ? "Login successfully" : "Sign up successfully" })
-	return redirect(`/conversation/${response.data.data.id}`)
+	return redirect(`/conversation`)
 }

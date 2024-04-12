@@ -21,7 +21,7 @@ import NewConversation from './pages/NewConversation'
 
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
-
+import MessageContainer from './components/message/MessageContainer'
 
 const router = createBrowserRouter([
 	{
@@ -31,10 +31,10 @@ const router = createBrowserRouter([
 		loader: authChecker,
 		children: [
 			{
-				path: "conversation/:id",
+				path: "conversation",
 				element: <ChatConversation />,
-				loader: async ({ params }) => {
-					return (await Axios.get(`/api/v1/users/${params.id}/conversations`)).data.data
+				loader: async () => {
+					return (await Axios.get(`/api/v1/users/me/conversations`)).data.data
 				},
 				children: [
 					{
@@ -45,7 +45,11 @@ const router = createBrowserRouter([
 						}
 					},
 					{
-						path: ":id"
+						path: ":conversationID",
+						element: <MessageContainer />,
+						loader: async ({ params }) => {
+							return (await Axios.get(`/api/v1/conversations/${params.conversationID}/messages?sort_by=-time`)).data.data
+						}
 					}
 				]
 			},

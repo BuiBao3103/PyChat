@@ -1,4 +1,4 @@
-import { createContext, useMemo, useReducer } from "react";
+import { createContext, useEffect, useMemo, useReducer } from "react";
 
 export const AuthContext = createContext()
 
@@ -29,6 +29,10 @@ const reducer = (state, action) => {
 export const AuthProvider = ({ children }) => {
 	const [state, dispatch] = useReducer(reducer, initialState)
 	const value = useMemo(() => ({ state, dispatch }), [state, dispatch])
+
+	useEffect(() => {
+	}, [localStorage.getItem('auth')])
+
 	return (
 		<AuthContext.Provider value={value}>
 			{children}
