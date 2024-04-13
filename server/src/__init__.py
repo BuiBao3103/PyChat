@@ -6,10 +6,15 @@ from flask_babel import Babel
 from flask_socketio import SocketIO
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
+import cloudinary
 # Initialize Flask app
 app = Flask(__name__)
 app.config.from_object('src.config.Config')
-
+cloudinary.config(
+    cloud_name=app.config['CLOUDINARY_CLOUD_NAME'],
+    api_key=app.config['CLOUDINARY_API_KEY'],
+    api_secret=app.config['CLOUDINARY_API_SECRET']
+)
 # Initialize Flask extensions
 cors = CORS(app, resources={
             r"/api/*": {"origins": "http://localhost:5173"}}, supports_credentials=True)

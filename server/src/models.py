@@ -103,6 +103,8 @@ class User(db.Model, UserMixin, SerializerMixin):
     last_online = Column(DateTime, nullable=True)
     first_name = Column(String(120), nullable=False)
     last_name = Column(String(120), nullable=False)
+    avatar = Column(String(255), nullable=True)
+    background = Column(String(255), nullable=True)
     participants = relationship("Participant", backref="user",
                                 foreign_keys='Participant.user_id', lazy=True)
     messages = relationship("Message", backref="user",
