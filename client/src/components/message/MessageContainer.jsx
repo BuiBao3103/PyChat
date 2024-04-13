@@ -12,7 +12,7 @@ const MessageContainer = () => {
 
 	return (
 		<div className='w-full h-full flex flex-row gap-3'>
-			<div className="w-full flex flex-col gap-2 bg-white p-3 rounded-xl">
+			<div className="w-full h-full flex flex-col gap-2 bg-white p-3 rounded-xl">
 				<Messages msgConversation={loader} />
 				<MessageInput />
 			</div>
