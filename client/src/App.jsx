@@ -3,6 +3,7 @@ import * as ROUTE from './constants/routes'
 
 import { tokenLoader, authChecker } from "./utils/auth"
 import { action as authAction } from "./layouts/AuthLayout"
+import { action as getMessages } from './components/message/MessageContainer'
 import Axios from './api/index'
 // Layout
 import AuthLayout from './layouts/AuthLayout'
@@ -47,9 +48,7 @@ const router = createBrowserRouter([
 					{
 						path: ":conversationID",
 						element: <MessageContainer />,
-						loader: async ({ params }) => {
-							return (await Axios.get(`/api/v1/conversations/${params.conversationID}/messages?sort_by=-time`)).data.data
-						}
+						loader: getMessages
 					}
 				]
 			},

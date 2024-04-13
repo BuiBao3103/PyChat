@@ -6,8 +6,7 @@ import useConversation from '../../zustand/useConversation'
 const ChatBrief = ({ className = '', currentConversation, joinRoom }) => {
 	// console.log(currentConversation)
 	const navigate = useNavigate()
-	const { setSelectedConversation, } = useConversation()
-
+	const { setSelectedConversation, selectedConversation } = useConversation()
 	return (
 		<div
 			onClick={() => {
