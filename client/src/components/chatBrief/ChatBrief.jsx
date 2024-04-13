@@ -25,7 +25,7 @@ const ChatBrief = ({ className = '', currentConversation, joinRoom }) => {
 					<span className='text-sm text-[#ababab]'>Time</span>
 				</div>
 				<div className="w-full flex justify-between items-center gap-1">
-					<p className={`text-sm w-[180px] truncate text-[#ababab]`}>{currentConversation.last_message != null ? "" : "Hello world"}</p>
+					<p className={`text-sm w-[180px] truncate text-[#ababab]`}>{currentConversation.last_message != null ? currentConversation.last_message : "Hello world"}</p>
 					<span className='text-sm bg-black text-white rounded-full size-[6px]' />
 				</div>
 			</div>

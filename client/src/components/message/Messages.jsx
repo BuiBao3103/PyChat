@@ -15,7 +15,6 @@ const Messages = ({ msgConversation }) => {
 			messageEnd.current?.scrollIntoView({ behavior: "smooth" });
 		}, 100);
 	}, [msgConversation])
-	// useEffect(() =. )
 	useEffect(() => {
 		socket.on('message', (data) => {
 			setMessages(oldMsg => [data, ...oldMsg])

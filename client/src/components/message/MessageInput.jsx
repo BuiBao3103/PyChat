@@ -8,25 +8,24 @@ const MessageInput = () => {
 	const { selectedConversation } = useConversation()
 	const [message, setMessage] = useState('')
 	const { socket } = useSocketContext()
-	const sendMessage = (msg) => {
+	const sendMessage = () => {
 		socket.emit('message', {
 			user_id: state.user.id,
 			channel_id: selectedConversation.id,
-			message: msg,
+			message: message,
 			time: Date.now(),
 			type: 'text'
 		})
 		setMessage('')
 	}
 	const handleSendMessage = (e) => {
-		const messageInput = message.trim()
-		if (messageInput !== '') {
-			sendMessage(messageInput)
+		if (message !== '') {
+			sendMessage(message)
 		}
 	}
 	const onEnterPress = (e) => {
 		if (e.keyCode == 13 && e.shiftKey == false) {
-			sendMessage()
+			sendMessage(message)
 		}
 	}
 
