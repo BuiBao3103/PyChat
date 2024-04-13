@@ -6,7 +6,22 @@ from flask_restful import Resource
 from flask import request, make_response
 from src.auth import protect
 
-# class Conversations:
+class Conversations(Resource):
+    def get(self, conversation_id=None):
+        if conversation_id == None:
+            api_freatures = APIFeatures(Conversation, request.args)
+            items, total_count = api_freatures.perform_query()
+            response = make_response(
+                {'status': 'sucess', 'total_count': total_count, 'data': [item.to_dict() for item in items]}, 200)
+            return response
+        else:
+            conversation = Conversation.query.get(conversation_id)
+            if not conversation:
+                raise InvalidAPIUsage(
+                message='Conversation does not exist!', status_code=400)
+            response = make_response(
+                {'status': 'sucess', 'data': conversation.to_dict()}, 200)
+            return response
 
 #     # @staticmethod
 #     # def create():

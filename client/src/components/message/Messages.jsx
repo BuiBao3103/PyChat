@@ -34,7 +34,6 @@ const Messages = ({ msgConversation }) => {
 						<Message message={item} />
 					</div>
 				))}
-				\
 			</div>
 		</div>
 	)

@@ -1,5 +1,6 @@
 from src import app, db
 import src.models
-if __name__ == '__main__':
-    with app.app_context():
-        db.create_all()
+with app.app_context():
+    print('Creating all tables in the database...')
+    db.create_all()
+    print('Created all tables in the database successfully!')
