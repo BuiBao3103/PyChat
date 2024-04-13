@@ -1,6 +1,6 @@
 import traceback
 from flask_jwt_extended import create_access_token
-from flask import request
+from flask import request, session
 from src import db, bc
 from src.models import User
 from src.errors import InvalidAPIUsage
@@ -62,6 +62,11 @@ class Register(Resource):
 
 class Logout(Resource):
     def post(self):
+        user_id = session.get('user_id')  # Retrieve user_id from session
+        if user_id:
+            user = User.query.get(user_id)
+            user.last_online = datetime.now()
+            db.session.commit()
         response = make_response(
             {'status': 'sucess'}, 200)
         response.set_cookie('jwt', '', httponly=True, max_age=10)
