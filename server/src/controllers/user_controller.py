@@ -68,3 +68,23 @@ class MeAvatar(Resource):
         response = make_response(
             {'status': 'sucess', 'data': user.to_dict()}, 200)
         return response
+    
+class MeBackground(Resource):
+    @protect()
+    def patch(self):
+        user = request.user
+        if 'background' in request.files:
+            if user.background:
+                public_id = user.background.split('/')[-1].split('.')[0]
+                uploader.destroy(f'background_user/{public_id}', invalidate=True)
+            file = request.files['background']
+            upload_result = uploader.upload(
+                file, folder="background_user", resource_type="image")
+            user.background = upload_result['url']
+            db.session.commit()
+        else:
+            raise InvalidAPIUsage(
+                message='File not found!', status_code=400)
+        response = make_response(
+            {'status': 'sucess', 'data': user.to_dict()}, 200)
+        return response

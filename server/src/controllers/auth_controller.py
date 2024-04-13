@@ -38,8 +38,8 @@ class Register(Resource):
         last_name = data.get('lastName')
         first_name = data.get('firstName')
         username = f"{first_name} {last_name}"
-        avatar = "avt.jpg"
-        background  = "avt.jpg"
+        avatar = "https://res.cloudinary.com/dloeqfbwm/image/upload/v1713013364/avatar_user/default_avatar.jpg"
+        background  = "https://res.cloudinary.com/dloeqfbwm/image/upload/v1713016596/background_user/default_background.png"
         new_user = None
         try:
             hashed_password = bc.generate_password_hash(password, 10)
