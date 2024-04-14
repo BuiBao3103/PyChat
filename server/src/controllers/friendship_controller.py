@@ -78,6 +78,7 @@ class Friendships(Resource):
         response = make_response({'status': 'success', 'data': None}, 204)
         return response
 
+
 class FriendshipsRequest(Resource):
     def post(self):
         data = request.get_json()
@@ -99,8 +100,37 @@ class FriendshipsRequest(Resource):
             db.session.rollback()
             app.logger.exception("Error creating request friendship")
             raise InvalidAPIUsage(
-                message="Error creating request friendship", status_code=400) from e
-        response = make_response({"status": "success"}, 201)
+                message="Error creating request friendship", status_code=400)
+        response = make_response(
+            {"status": "success", 'data': friendship_user.to_dict()}, 201)
+        return response
+    
+    def delete(self):
+        data = request.get_json()
+        user_id = data.get('userID')
+        friend_id = data.get('friendID')
+        friendship_user = Friendship.query.filter_by(
+            user_id=user_id, friend_id=friend_id, delete_at=None).first()
+        friendship_friend = Friendship.query.filter_by(
+            user_id=friend_id, friend_id=user_id, delete_at=None).first()
+        if not friendship_user or not friendship_friend:
+            raise InvalidAPIUsage(
+                message='Friendships is not exist!', status_code=400)
+        if (friendship_user.status != FriendshipStatus.REQUEST_SENT
+                or friendship_friend.status != FriendshipStatus.REQUEST_RECEIVED):
+            raise InvalidAPIUsage(
+                message='Friend is not request!', status_code=400)
+        try:
+            db.session.delete(friendship_user)
+            db.session.delete(friendship_friend)
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            app.logger.error(f'Exception: {e}')
+            raise InvalidAPIUsage(
+                message='Error creating delete request friendship', status_code=400)
+        response = make_response(
+            {"status": "success", 'data': None}, 204)
         return response
 
 
@@ -141,5 +171,34 @@ class FriendshipsAccept(Resource):
             app.logger.error(f'Exception: {e}')
             raise InvalidAPIUsage(
                 message='Error creating accept friendship', status_code=400)
-        response = make_response({"status": "success"}, 200)
+        response = make_response(
+            {"status": "success", 'data': friendship_user.to_dict()}, 200)
+        return response
+    
+    def delete(self):
+        data = request.get_json()
+        user_id = data.get('userID')
+        friend_id = data.get('friendID')
+        friendship_user = Friendship.query.filter_by(
+            user_id=user_id, friend_id=friend_id, delete_at=None).first()
+        friendship_friend = Friendship.query.filter_by(
+            user_id=friend_id, friend_id=user_id, delete_at=None).first()
+        if not friendship_user or not friendship_friend:
+            raise InvalidAPIUsage(
+                message='Friendships is not exist!', status_code=400)
+        if (friendship_user.status != FriendshipStatus.REQUEST_RECEIVED
+                or friendship_friend.status != FriendshipStatus.REQUEST_SENT):
+            raise InvalidAPIUsage(
+                message='Friend is not request!', status_code=400)
+        try:
+            db.session.delete(friendship_user)
+            db.session.delete(friendship_friend)
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            app.logger.error(f'Exception: {e}')
+            raise InvalidAPIUsage(
+                message='Error creating delete request friendship', status_code=400)
+        response = make_response(
+            {"status": "success", 'data': None}, 204)
         return response
