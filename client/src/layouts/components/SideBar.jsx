@@ -8,12 +8,14 @@ import Setting from '../../pages/Setting'
 import { customToast } from '../../utils/customToast';
 import Axios from '../../api/index'
 import { useAuthContext } from '../../hooks/useAuthContext';
+import useConversation from '../../zustand/useConversation';
 const SideBar = () => {
 	const [visibleSetting, setVisibleSetting] = useState(false)
+	const { selectedConversation, setSelectedConversation } = useConversation()
 	const [state, dispatch] = useAuthContext()
 	const sideMenu = [
 		{
-			to: "/conversation",
+			to: selectedConversation === null ? '/conversation' : `/conversation/${selectedConversation.id}`,
 			title: "Chat",
 			icon: PiChatCenteredDotsBold
 		},
