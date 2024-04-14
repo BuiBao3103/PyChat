@@ -52,8 +52,22 @@ class Me(Resource):
 class SearchUsers(Resource):
     @protect()
     def get(self):
-        api_freatures = APIFeatures(User, request.args)
-        items, total_count = api_freatures.perform_query()
+        q = request.args.get('q')
+        if not q:
+            raise InvalidAPIUsage(
+                message='Query parameter is required!', status_code=400)
+        query = (db.session.query(User, Friendship.status)
+                 .join(Friendship, ((Friendship.user_id == User.id) & (
+                     Friendship.friend_id == request.user.id)), isouter=True))
+        if '@gmail.com' in q:
+            query = query.filter(User.email == q)
+        else:
+            query = query.filter(User.username.ilike(f'%{q}%'))
+        query = query.filter(User.id != request.user.id)
+        users = query.all()
+        users = [{**user.to_dict(), 'status': status.value if status else 'not_friend'}
+                 for user, status in users]
+        print(users)
         response = make_response(
-            {'status': 'sucess', 'total_count': total_count, 'data': [item.to_dict() for item in items]}, 200)
+            {'status': 'sucess', 'total_count': len(users), 'data': users}, 200)
         return response
