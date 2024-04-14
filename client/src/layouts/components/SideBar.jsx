@@ -25,7 +25,7 @@ const SideBar = () => {
 			icon: PiMagnifyingGlassBold
 		},
 		{
-			to: "/profile/1",
+			to: `/profile/${JSON.parse(localStorage.getItem('user')).id}`,
 			title: "Profile",
 			icon: FaRegUser
 		},

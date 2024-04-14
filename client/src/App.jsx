@@ -1,10 +1,11 @@
 import { lazy, Suspense } from 'react';
-import { RouterProvider, createBrowserRouter } from 'react-router-dom';
+import { RouterProvider, createBrowserRouter, json } from 'react-router-dom';
 import * as ROUTE from './constants/routes';
 
 import { tokenLoader, authChecker } from "./utils/auth";
 import { action as authAction } from "./layouts/AuthLayout";
 import { action as getMessages } from './components/message/MessageContainer';
+import Spinner from './components/spinner/Spinner.jsx'
 import Axios from './api/index';
 // Layout
 import AuthLayout from './layouts/AuthLayout';
@@ -35,40 +36,61 @@ const router = createBrowserRouter([
 		children: [
 			{
 				path: "conversation",
-				element: <ChatConversation />,
+				element: (
+					<Suspense fallback={<Spinner />}>
+						<ChatConversation />
+					</Suspense>
+				),
 				loader: getChatBriefs,
 				children: [
 					{
 						path: "to",
-						element: <NewConversation />,
+						element: (
+							<Suspense fallback={<Spinner />}>
+								<NewConversation />
+							</Suspense>
+						),
 						loader: async () => {
 							return (await Axios.get('/api/v1/users')).data.data;
 						}
 					},
 					{
 						path: ":conversationID",
-						element: <MessageContainer />,
+						element: (
+							<Suspense fallback={<Spinner />}>
+								<MessageContainer />
+							</Suspense>
+						),
 						loader: getMessages
 					}
 				]
 			},
 			{
 				path: ROUTE.SEARCH,
-				element: <Search />,
-				loader: async () => {
-					return (await Axios.get('/api/v1/users')).data.data;
-				}
+				element: (
+					<Suspense fallback={<Spinner />}>
+						<Search />
+					</Suspense>
+				)
 			},
 			{
 				path: ROUTE.FRIEND_LIST,
-				element: <FriendList />,
+				element: (
+					<Suspense fallback={<Spinner />}>
+						<FriendList />
+					</Suspense>
+				),
 				loader: async () => {
-					return (await Axios.get(`/api/v1/friendships?user_id=1`)).data.data;
+					return (await Axios.get(`/api/v1/friendships?user_id=${JSON.parse(localStorage.getItem('user')).id}`)).data.data;
 				}
 			},
 			{
-				path: "profile/:id",
-				element: <Profile />,
+				path: ROUTE.PROFILE,
+				element: (
+					<Suspense fallback={<Spinner />}>
+						<Profile />
+					</Suspense>
+				),
 				loader: async ({ params }) => {
 					return (await Axios.get(`/api/v1/users?id=${params.id}`)).data.data;
 				}
@@ -81,13 +103,21 @@ const router = createBrowserRouter([
 		children: [
 			{
 				path: ROUTE.LOGIN,
-				element: <Login />,
+				element: (
+					<Suspense fallback={<Spinner />}>
+						<Login />
+					</Suspense>
+				),
 				action: authAction,
 
 			},
 			{
 				path: ROUTE.SIGNUP,
-				element: <Signup />,
+				element: (
+					<Suspense fallback={<Spinner />}>
+						<Signup />
+					</Suspense>
+				),
 				action: authAction,
 			}
 		]
