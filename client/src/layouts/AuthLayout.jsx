@@ -27,7 +27,6 @@ const AuthLayout = () => {
 export default AuthLayout
 
 export const action = async ({ request }) => {
-	// const [state, dispatch] = useAuthContext()
 	const data = await request.formData();
 	const action = request.url.includes("login") ? "login" : "signup"
 	let userInformaiton = {}

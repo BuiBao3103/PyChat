@@ -1,0 +1,32 @@
+import React, { useEffect, useState } from 'react'
+import ChatBrief from '../chatBrief/ChatBrief'
+import { useSocketContext } from '../../context/SocketContext'
+import useConversation from '../../zustand/useConversation'
+
+const Conversations = ({ conversationsUser }) => {
+	const [conversations, setConversations] = useState([])
+	const { loadConversation } = useConversation()
+	const { socket } = useSocketContext()
+	// console.log(conversationsUser)
+	useEffect(() => {
+		setConversations(conversationsUser)
+	}, [conversationsUser])
+
+	const joinRoom = (conversationID) => {
+		socket.emit('join', { channel_id: conversationID })
+	}
+	const leaveRoom = (conversationID) => {
+		socket.emit('leave', { channel_id: conversationID })
+	}
+	return (
+		<div className="w-full h-full flex flex-col overflow-y-scroll pb-3 scrollChatConversions">
+			{
+				conversations.map((item, index) => (
+					<ChatBrief key={index} className='first:border-t' currentConversation={item} joinRoom={joinRoom} leaveRoom={leaveRoom} />
+				))
+			}
+		</div>
+	)
+}
+
+export default Conversations

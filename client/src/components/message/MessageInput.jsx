@@ -3,9 +3,9 @@ import { PiPaperPlaneTiltBold } from 'react-icons/pi'
 import { useSocketContext } from '../../context/SocketContext'
 import { useAuthContext } from '../../hooks/useAuthContext'
 import useConversation from '../../zustand/useConversation'
-const MessageInput = () => {
+const MessageInput = ({ scroll }) => {
 	const [state, dispatch] = useAuthContext()
-	const { selectedConversation } = useConversation()
+	const { selectedConversation, setLoadConversations } = useConversation()
 	const [message, setMessage] = useState('')
 	const { socket } = useSocketContext()
 	const sendMessage = () => {
@@ -16,7 +16,12 @@ const MessageInput = () => {
 			time: Date.now(),
 			type: 'text'
 		})
+		setLoadConversations(true)
+		setTimeout(() => {
+			setLoadConversations(false)
+		}, 500)
 		setMessage('')
+		scroll.current.scrollIntoView({ behavior: "smooth" });
 	}
 	const handleSendMessage = (e) => {
 		if (message !== '') {
