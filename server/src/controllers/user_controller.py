@@ -54,7 +54,7 @@ class MeAvatar(Resource):
     def patch(self):
         user = request.user
         if 'avatar' in request.files:
-            if user.avatar:
+            if user.avatar and 'default' not in user.avatar:
                 public_id = user.avatar.split('/')[-1].split('.')[0]
                 uploader.destroy(f'avatar_user/{public_id}', invalidate=True)
             file = request.files['avatar']
@@ -74,7 +74,7 @@ class MeBackground(Resource):
     def patch(self):
         user = request.user
         if 'background' in request.files:
-            if user.background:
+            if user.background and 'default' not in user.background:
                 public_id = user.background.split('/')[-1].split('.')[0]
                 uploader.destroy(f'background_user/{public_id}', invalidate=True)
             file = request.files['background']
