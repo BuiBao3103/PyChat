@@ -29,6 +29,9 @@ class APIFeatures:
         }
 
         for field, value in filters.items():
+            # check field is enum
+            if hasattr(self.model, field) and hasattr(getattr(self.model, field).property, 'columns'):
+                value = value.upper()
             if isinstance(value, str) and ':' in value:
                 op, val = value.split(':')
                 if op in operators:
@@ -52,6 +55,7 @@ class APIFeatures:
         """Select specific fields from the query."""
         if fields:
             fields = fields.split(',')
+
             query = query.with_entities(
                 *[getattr(self.model, field) for field in fields])
         return query
