@@ -4,9 +4,9 @@ from src import db
 from src.models import User, Friendship
 from src.auth import protect
 from src.util.api_features import APIFeatures
-
 from flask_restful import Resource
-from flask import jsonify, request, make_response
+from flask import request, make_response
+from cloudinary import uploader, api
 
 
 class Users(Resource):
@@ -49,6 +49,46 @@ class Me(Resource):
         return response
 
 
+class MeAvatar(Resource):
+    @protect()
+    def patch(self):
+        user = request.user
+        if 'avatar' in request.files:
+            if user.avatar:
+                public_id = user.avatar.split('/')[-1].split('.')[0]
+                uploader.destroy(f'avatar_user/{public_id}', invalidate=True)
+            file = request.files['avatar']
+            upload_result = uploader.upload(
+                file, folder="avatar_user", resource_type="image")
+            user.avatar = upload_result['url']
+            db.session.commit()
+        else:
+            raise InvalidAPIUsage(
+                message='File not found!', status_code=400)
+        response = make_response(
+            {'status': 'sucess', 'data': user.to_dict()}, 200)
+        return response
+    
+class MeBackground(Resource):
+    @protect()
+    def patch(self):
+        user = request.user
+        if 'background' in request.files:
+            if user.background:
+                public_id = user.background.split('/')[-1].split('.')[0]
+                uploader.destroy(f'background_user/{public_id}', invalidate=True)
+            file = request.files['background']
+            upload_result = uploader.upload(
+                file, folder="background_user", resource_type="image")
+            user.background = upload_result['url']
+            db.session.commit()
+        else:
+            raise InvalidAPIUsage(
+                message='File not found!', status_code=400)
+        response = make_response(
+            {'status': 'sucess', 'data': user.to_dict()}, 200)
+        return response
+
 class SearchUsers(Resource):
     @protect()
     def get(self):
@@ -67,7 +107,6 @@ class SearchUsers(Resource):
         users = query.all()
         users = [{**user.to_dict(), 'status': status.value if status else 'not_friend'}
                  for user, status in users]
-        print(users)
         response = make_response(
             {'status': 'sucess', 'total_count': len(users), 'data': users}, 200)
         return response

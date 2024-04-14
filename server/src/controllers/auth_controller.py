@@ -38,12 +38,14 @@ class Register(Resource):
         last_name = data.get('lastName')
         first_name = data.get('firstName')
         username = f"{first_name} {last_name}"
+        avatar = "https://res.cloudinary.com/dloeqfbwm/image/upload/v1713013364/avatar_user/default_avatar.jpg"
+        background  = "https://res.cloudinary.com/dloeqfbwm/image/upload/v1713016596/background_user/default_background.png"
         new_user = None
         try:
             hashed_password = bc.generate_password_hash(password, 10)
             new_user = User(email=email, first_name=first_name,
                             last_name=last_name, password=hashed_password,
-                            username=username)
+                            username=username, avatar=avatar, background =background )
             db.session.add(new_user)
             db.session.commit()
             db.session.refresh(new_user)

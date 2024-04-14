@@ -25,4 +25,8 @@ class Config:
     # Configure JWT settings
     JWT_SECRET_KEY = config('JWT_SECRET_KEY')
     JWT_ACCESS_TOKEN_EXPIRES= timedelta(days=1)  # Token expiration time
+    
+    CLOUDINARY_CLOUD_NAME=config('CLOUDINARY_CLOUD_NAME')
+    CLOUDINARY_API_KEY=config('CLOUDINARY_API_KEY')
+    CLOUDINARY_API_SECRET=config('CLOUDINARY_API_SECRET')
 
