@@ -7,7 +7,7 @@ const FriendItem = ({ className, friend }) => {
 			<div className="size-36 overflow-hidden rounded-full">
 				<img loading='lazy' src={"https://source.unsplash.com/random"} alt="" className='w-full h-full object-cover object-center' />
 			</div>
-			<span className='font-semibold' unselectable>{friend.username}</span>
+			<span className='font-semibold'>{friend.friend.username}</span>
 		</div>
 	)
 }

@@ -3,30 +3,34 @@ import { PiPaperPlaneTiltBold } from 'react-icons/pi'
 import { useSocketContext } from '../../context/SocketContext'
 import { useAuthContext } from '../../hooks/useAuthContext'
 import useConversation from '../../zustand/useConversation'
-const MessageInput = () => {
+const MessageInput = ({ scroll }) => {
 	const [state, dispatch] = useAuthContext()
-	const { selectedConversation } = useConversation()
+	const { selectedConversation, setLoadConversations } = useConversation()
 	const [message, setMessage] = useState('')
 	const { socket } = useSocketContext()
-	const sendMessage = (msg) => {
+	const sendMessage = () => {
 		socket.emit('message', {
 			user_id: state.user.id,
 			channel_id: selectedConversation.id,
-			message: msg,
+			message: message,
 			time: Date.now(),
 			type: 'text'
 		})
+		setLoadConversations(true)
+		setTimeout(() => {
+			setLoadConversations(false)
+		}, 500)
 		setMessage('')
+		scroll.current.scrollIntoView({ behavior: "smooth" });
 	}
 	const handleSendMessage = (e) => {
-		const messageInput = message.trim()
-		if (messageInput !== '') {
-			sendMessage(messageInput)
+		if (message !== '') {
+			sendMessage(message)
 		}
 	}
 	const onEnterPress = (e) => {
 		if (e.keyCode == 13 && e.shiftKey == false) {
-			sendMessage()
+			sendMessage(message)
 		}
 	}
 

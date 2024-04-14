@@ -1,7 +1,7 @@
 from flask import request
 from src.errors import InvalidAPIUsage
 from src import db
-from src.models import User
+from src.models import User, Friendship
 from src.auth import protect
 from src.util.api_features import APIFeatures
 from flask_restful import Resource
@@ -87,4 +87,26 @@ class MeBackground(Resource):
                 message='File not found!', status_code=400)
         response = make_response(
             {'status': 'sucess', 'data': user.to_dict()}, 200)
+        return response
+
+class SearchUsers(Resource):
+    @protect()
+    def get(self):
+        q = request.args.get('q')
+        if not q:
+            raise InvalidAPIUsage(
+                message='Query parameter is required!', status_code=400)
+        query = (db.session.query(User, Friendship.status)
+                 .join(Friendship, ((Friendship.user_id == User.id) & (
+                     Friendship.friend_id == request.user.id)), isouter=True))
+        if '@gmail.com' in q:
+            query = query.filter(User.email == q)
+        else:
+            query = query.filter(User.username.ilike(f'%{q}%'))
+        query = query.filter(User.id != request.user.id)
+        users = query.all()
+        users = [{**user.to_dict(), 'status': status.value if status else 'not_friend'}
+                 for user, status in users]
+        response = make_response(
+            {'status': 'sucess', 'total_count': len(users), 'data': users}, 200)
         return response

@@ -1,13 +1,14 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import InformationLine from '../../components/generalInfomationLine/InformationLine'
 import { ContactItem } from '../../components/contactItem/ContactItem'
 import { PiPhone, PiEnvelopeSimple } from "react-icons/pi";
 import FriendItem from '../../components/friendItem/FriendItem';
 import Axios from '../../api/index'
-import { useLoaderData } from 'react-router-dom';
+import { useLoaderData, useParams } from 'react-router-dom';
 const Index = () => {
 	const data = useLoaderData()
-	console.log(data)
+	const params = useParams()
+	const [friends, setFriends] = useState([])
 	const fakeData = [
 		{
 			Icon: PiPhone,
@@ -21,16 +22,19 @@ const Index = () => {
 	]
 
 	useEffect(() => {
-		const test = async () => {
+		const getFriends = async () => {
 			try {
-				await Axios.get('api/v1/users/me').then((res) => {
-					console.log(res.data.data)
+				await Axios.get(`api/v1/friendships/${params.id}`).then((res) => {
+					if (res.status === 200) {
+						setFriends(res.data.data)
+						console.log(res)
+					}
 				})
 			} catch (error) {
 				console.log(error)
 			}
 		}
-		test()
+		getFriends()
 	}, [])
 
 	return (
@@ -91,13 +95,13 @@ const Index = () => {
 						</div>
 						<div className="w-full h-full px-5 pb-4	 flex flex-col gap-3 overflow-hidden relative group">
 							<h1 className='w-full h-fit py-1 block font-bold text-lg dark:text-white'>Friends</h1>
-							{/* <div className="w-full h-full flex flex-wrap gap-4 border border-[#c2c2c2] rounded-lg overflow-y-scroll">
-								{
-									Array.from({ length: 8 }, (_, index) => (
-										<FriendItem key={index} className={'w-fit h-fit'} />
+							<div className="w-full h-full flex flex-wrap gap-4 border border-[#c2c2c2] rounded-lg overflow-y-scroll">
+								{/* {
+									friends.map((item, index) => (
+										<FriendItem key={index} friend={item} className={'w-fit h-fit'} />
 									))
-								}
-							</div> */}
+								} */}
+							</div>
 							<button className='absolute w-fit px-6 py-3 bg-primary text-white font-bold -bottom-16 right-9 rounded-md group-hover:bottom-7 transition-all duration-300 hover:opacity-60'>
 								View All
 							</button>
