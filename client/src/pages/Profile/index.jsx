@@ -42,22 +42,26 @@ const Index = () => {
 			<div className="w-full h-full flex flex-col gap-2">
 				<div className="w-full h-[350px] relative">
 					<div id='coverImage' className="w-full h-[250px] rounded-xl overflow-hidden">
-						<img src="https://source.unsplash.com/random" alt="cover image" className='w-full h-full object-cover object-center' />
+						<img src={data[0].background} alt="cover image" className='w-full h-full object-fill object-center' />
 					</div>
 					<div className="w-full h-[100px] absolute bottom-8">
 						<div className="w-full h-full flex justify-between items-center px-10">
 							<section className="h-full flex gap-4 items-center">
 								<div className="size-32 overflow-hidden rounded-full border-[5px] border-white">
-									<img src="https://source.unsplash.com/random" alt="" className='w-full h-full object-cover' />
+									<img src={data[0].avatar} alt="" className='w-full h-full object-cover' />
 								</div>
 								<div className="w-fit h-full flex flex-col place-content-end pb-4">
 									<span className='whitespace-nowrap text-xl font-bold dark:text-white'>{data[0].username}</span>
 									<span className='whitespace-nowrap dark:text-white'>{data[0].email}</span>
 								</div>
 							</section>
-							<section className='h-full flex flex-col place-content-end pb-5'>
-								<button className='w-fit h-fit px-10 py-2 border dark:border-white dark:text-white dark:hover:border-primary border-black rounded-md hover:bg-primary hover:border-primary transition-all hover:text-white'>Edit</button>
-							</section>
+							{
+								JSON.parse(localStorage.getItem('user')).id == params.id && (
+									<section className='h-full flex flex-col place-content-end pb-5'>
+										<button className='w-fit h-fit px-10 py-2 border dark:border-white dark:text-white dark:hover:border-primary border-black rounded-md hover:bg-primary hover:border-primary transition-all hover:text-white'>Edit</button>
+									</section>
+								)
+							}
 						</div>
 					</div>
 				</div>

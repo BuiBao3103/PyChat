@@ -35,8 +35,9 @@ export const action = async ({ request }) => {
 		userInformaiton.password = data.get("password")
 		console.log(userInformaiton)
 	} else {
-		userInformaiton.firstName = data.get("firstName")
-		userInformaiton.lastName = data.get("lastName")
+		// remove all white space from aa string
+		userInformaiton.firstName = data.get("firstName").replace(/\s/g, '');
+		userInformaiton.lastName = data.get("lastName").replace(/\s/g, '');
 		userInformaiton.email = data.get("email")
 		userInformaiton.password = data.get("password")
 		if (userInformaiton.firstName.trim() === "") {

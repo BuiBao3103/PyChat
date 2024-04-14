@@ -93,9 +93,9 @@ class SearchUsers(Resource):
     @protect()
     def get(self):
         q = request.args.get('q')
-        if not q:
-            raise InvalidAPIUsage(
-                message='Query parameter is required!', status_code=400)
+        # if not q:
+        #     raise InvalidAPIUsage(
+        #         message='Query parameter is required!', status_code=400)
         query = (db.session.query(User, Friendship.status)
                  .join(Friendship, ((Friendship.user_id == User.id) & (
                      Friendship.friend_id == request.user.id)), isouter=True))
