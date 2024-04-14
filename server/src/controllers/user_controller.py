@@ -1,7 +1,7 @@
 from flask import request
 from src.errors import InvalidAPIUsage
 from src import db
-from src.models import User
+from src.models import User, Friendship
 from src.auth import protect
 from src.util.api_features import APIFeatures
 
@@ -26,6 +26,7 @@ class Users(Resource):
             response = make_response(
                 {'status': 'sucess', 'data': user.to_dict()}, 200)
             return response
+
     def patch(self, user_id):
         data = request.get_json()
         user = User.query.get(user_id)
@@ -38,10 +39,21 @@ class Users(Resource):
         response = make_response(
             {'status': 'sucess', 'data': user.to_dict()}, 200)
         return response
-    
+
+
 class Me(Resource):
     @protect()
     def get(self):
         response = make_response(
             {'status': 'sucess', 'data': request.user.to_dict()}, 200)
+        return response
+
+
+class SearchUsers(Resource):
+    @protect()
+    def get(self):
+        api_freatures = APIFeatures(User, request.args)
+        items, total_count = api_freatures.perform_query()
+        response = make_response(
+            {'status': 'sucess', 'total_count': total_count, 'data': [item.to_dict() for item in items]}, 200)
         return response
