@@ -22,7 +22,8 @@ class Conversation(db.Model, SerializerMixin):
     id = Column(Integer, primary_key=True, autoincrement=True)
     type = Column(Enum(ConversationType), nullable=False)
     last_message_id = Column(Integer, ForeignKey('messages.id'), nullable=True)
-    last_message = relationship('Message', foreign_keys='Conversation.last_message_id', lazy=True)
+    last_message = relationship(
+        'Message', foreign_keys='Conversation.last_message_id', lazy=True)
     participants = relationship("Participant", backref="conversation",
                                 foreign_keys='Participant.conversation_id', lazy=True)
     # messages = relationship("Message", backref="conversation.py",
@@ -53,7 +54,7 @@ class Message(db.Model, SerializerMixin):
     __tablename__ = 'messages'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    message = Column(String(255), nullable=False)
+    message = Column(String(255), nullable=True)
     time = Column(DateTime, nullable=False)
     type = Column(Enum(MessageType), nullable=False)
     conversation_id = Column(Integer, ForeignKey('conversations.id'))
@@ -62,10 +63,11 @@ class Message(db.Model, SerializerMixin):
                                foreign_keys='Attachment.message_id', lazy=True)
     # deleted_messages = relationship('DeletedMessage', backref='message',
     #                                 foreign_keys='DeletedMessage.message_id', lazy=True)
-    serialize_rules = ('-participants.conversation', '-user',)
+    serialize_rules = ('-participants.conversation',
+                       '-user', '-attachments.message',)
 
 
-class Attachment(db.Model):
+class Attachment(db.Model, SerializerMixin):
     __tablename__ = 'attachments'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
@@ -145,4 +147,3 @@ class DeletedConversation(db.Model):
     id = Column(Integer, primary_key=True, autoincrement=True)
     user_id = Column(Integer, ForeignKey('users.id'))
     conversation_id = Column(Integer, ForeignKey('conversations.id'))
-
