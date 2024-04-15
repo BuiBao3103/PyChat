@@ -34,6 +34,7 @@ class APIFeatures:
                 value = value.upper()
             if isinstance(value, str) and ':' in value:
                 op, val = value.split(':')
+                op = op.lower()
                 if op in operators:
                     query = query.filter(operators[op](field, val))
             else:

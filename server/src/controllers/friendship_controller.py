@@ -104,7 +104,7 @@ class FriendshipsRequest(Resource):
         response = make_response(
             {"status": "success", 'data': friendship_user.to_dict()}, 201)
         return response
-    
+
     def delete(self):
         data = request.get_json()
         user_id = data.get('userID')
@@ -174,7 +174,7 @@ class FriendshipsAccept(Resource):
         response = make_response(
             {"status": "success", 'data': friendship_user.to_dict()}, 200)
         return response
-    
+
     def delete(self):
         data = request.get_json()
         user_id = data.get('userID')
@@ -201,4 +201,65 @@ class FriendshipsAccept(Resource):
                 message='Error creating delete request friendship', status_code=400)
         response = make_response(
             {"status": "success", 'data': None}, 204)
+        return response
+
+
+class FriendshipsBlock(Resource):
+    def post(self):
+        data = request.get_json()
+        user_id = data.get('userID')
+        friend_id = data.get('friendID')
+        friendship_user = Friendship.query.filter_by(
+            user_id=user_id, friend_id=friend_id, delete_at=None).first()
+        friendship_friend = Friendship.query.filter_by(
+            user_id=friend_id, friend_id=user_id, delete_at=None).first()
+        print(friendship_user.status, friendship_friend.status)
+        if not friendship_user or not friendship_friend:
+            raise InvalidAPIUsage(
+                message='Friendships is not exist!', status_code=400)
+        if (friendship_user.status != FriendshipStatus.FRIENDS
+                or friendship_friend.status != FriendshipStatus.FRIENDS):
+            raise InvalidAPIUsage(
+                message='Friend is not friend!', status_code=400)
+        try:
+            friendship_user.status = FriendshipStatus.BLOCKED
+            friendship_friend.status = FriendshipStatus.BE_BLOCKED
+            db.session.add_all([friendship_user, friendship_friend])
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            app.logger.error(f'Exception: {e}')
+            raise InvalidAPIUsage(
+                message='Error creating block friendship', status_code=400)
+        response = make_response(
+            {"status": "success", 'data': friendship_user.to_dict()}, 200)
+        return response
+
+    def delete(self):
+        data = request.get_json()
+        user_id = data.get('userID')
+        friend_id = data.get('friendID')
+        friendship_user = Friendship.query.filter_by(
+            user_id=user_id, friend_id=friend_id, delete_at=None).first()
+        friendship_friend = Friendship.query.filter_by(
+            user_id=friend_id, friend_id=user_id, delete_at=None).first()
+        if not friendship_user or not friendship_friend:
+            raise InvalidAPIUsage(
+                message='Friendships is not exist!', status_code=400)
+        if (friendship_user.status != FriendshipStatus.BLOCKED
+                or friendship_friend.status != FriendshipStatus.BE_BLOCKED):
+            raise InvalidAPIUsage(
+                message='Friend is not block!', status_code=400)
+        try:
+            friendship_user.status = FriendshipStatus.FRIENDS
+            friendship_friend.status = FriendshipStatus.FRIENDS
+            db.session.add_all([friendship_user, friendship_friend])
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            app.logger.error(f'Exception: {e}')
+            raise InvalidAPIUsage(
+                message='Error creating unblock friendship', status_code=400)
+        response = make_response(
+            {"status": "success", 'data': friendship_user.to_dict()}, 200)
         return response
