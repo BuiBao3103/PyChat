@@ -3,8 +3,6 @@ import { NavLink } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { Tooltip } from 'react-tooltip'
 const IconMenu = ({ to, Icon, title }) => {
-
-
 	return (
 		<>
 			<NavLink
@@ -23,7 +21,7 @@ const IconMenu = ({ to, Icon, title }) => {
 }
 IconMenu.propTypes = {
 	to: PropTypes.string,
-	Icon: PropTypes.element,
+	Icon: PropTypes.elementType,
 	title: PropTypes.string.isRequired,
 	onClick: PropTypes.func,
 }

@@ -11,7 +11,8 @@ import Axios from '../../api/index'
 const Index = () => {
 	const [query, setQuery] = useState('')
 	const [usersData, setUsersData] = useState([])
-	const { loading, users,search } = useSearch({ query })
+	const { loading, users, searchUsers } = useSearch({ query })
+	console.log(users)
 	const handleChange = (e) => {
 		setQuery(e.target.value)
 	}
@@ -22,13 +23,19 @@ const Index = () => {
 			const res = await Axios.post('/api/v1/friendships/request', { userID, friendID });
 			if (res.status === 201) {
 				console.log(res);
-
+				searchUsers()
 			}
-		} else if (searchValue.status === 'request_sent') {
+		} else if (searchValue.status === 'request_received') {
 			const res = await Axios.post('/api/v1/friendships/accept', { userID, friendID });
 			if (res.status === 201) {
 				console.log(res);
-
+				searchUsers()
+			}
+		} else if (searchValue.status === 'request_sent') {
+			const res = await Axios.delete('/api/v1/friendships/request', { data: { userID, friendID } });
+			if (res.status === 204) {
+				console.log(res);
+				searchUsers()
 			}
 		}
 	};
@@ -70,11 +77,11 @@ const Index = () => {
 						<h2 className='font-medium dark:text-white'>Search result</h2>
 					</div>
 					<div className="w-full h-full overflow-y-scroll">
-						<div className="w-full h-fit grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5 pr-2 pb-2">
+						<div className="w-full h-fit grid grid-cols-1 xl:grid-cols-3 gap-5 pr-2 pb-2">
 							{
 								loading ? (
 									Array.from({ length: users.length }, (_, index) => (
-										<div className="w-full h-fit p-5 bg-[#f0f0f0] dark:bg-[#3a3b3c] flex justify-between items-center rounded-lg shadow-md">
+										<div key={index} className="w-full h-fit p-5 bg-[#f0f0f0] dark:bg-[#3a3b3c] flex justify-between items-center rounded-lg shadow-md">
 											<div className="w-full flex items-center gap-4">
 												<Skeleton width={85} height={85} circle baseColor='#D8D9DA' />
 												<div className="flex flex-col">

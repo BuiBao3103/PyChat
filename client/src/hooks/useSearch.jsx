@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import useDebounce from './useDebounce'
 import Axios from '../api/index'
-const useSearch = ({ query }) => {
+const useSearch = ({ query, type }) => {
 
 	const [loading, setLoading] = useState(false)
 	const [users, setUsers] = useState([])
@@ -9,7 +9,13 @@ const useSearch = ({ query }) => {
 	const searchUsers = async () => {
 		setLoading(true)
 		try {
-			const res = await Axios.get(`/api/v1/users/search?q=${debounceSearch}`)
+			let url = ``
+			if (type === 'search') {
+				url = `/api/v1/users/search?q=${debounceSearch}`
+			}else {
+				
+			}
+			const res = await Axios.get(url)
 			if (res.status === 200) {
 				setUsers(res.data.data)
 			}

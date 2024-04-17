@@ -14,12 +14,11 @@ export const SocketProvider = ({ children }) => {
 
 	useEffect(() => {
 		if (state.user) {
-			const socket = io("http://localhost:5000", {
-				query: {
-					userID: state.user.id
-				}
+			const socket = io("http://localhost:5000",{
+				withCredentials: true,
 			})
 			setSocket(socket)
+			console.log(socket)
 			socket.on("getOnlineUsers", (users) => {
 				setOnlineUsers(users)
 			})

@@ -47,7 +47,7 @@ const Index = () => {
 					<div className="w-full h-[100px] absolute bottom-8">
 						<div className="w-full h-full flex justify-between items-center px-10">
 							<section className="h-full flex gap-4 items-center">
-								<div className="size-32 overflow-hidden rounded-full border-[5px] border-white">
+								<div className="size-32 overflow-hidden rounded-full border-[5px] border-gray-100">
 									<img src={data[0].avatar} alt="" className='w-full h-full object-cover' />
 								</div>
 								<div className="w-fit h-full flex flex-col place-content-end pb-4">

@@ -16,7 +16,6 @@ const Index = () => {
 	useEffect(() => {
 		setConversations(conversationsLoader)
 	}, [])
-	console.log(conversationsLoader)
 	useEffect(() => {
 		const loadLastMessage = async () => {
 			const res = await Axios.get(`/api/v1/users/me/conversations`)
