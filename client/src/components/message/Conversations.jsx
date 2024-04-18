@@ -5,13 +5,11 @@ import useConversation from '../../zustand/useConversation'
 
 const Conversations = ({ conversationsUser }) => {
 	const [conversations, setConversations] = useState([])
-	const { loadConversation } = useConversation()
 	const { socket } = useSocketContext()
-	// console.log(conversationsUser)
 	useEffect(() => {
 		setConversations(conversationsUser)
 	}, [conversationsUser])
-
+	console.log(conversations)
 	const joinRoom = (conversationID) => {
 		socket.emit('join', { channel_id: conversationID })
 	}

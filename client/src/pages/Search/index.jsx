@@ -27,7 +27,7 @@ const Index = () => {
 			}
 		} else if (searchValue.status === 'request_received') {
 			const res = await Axios.post('/api/v1/friendships/accept', { userID, friendID });
-			if (res.status === 201) {
+			if (res.status === 200) {
 				console.log(res);
 				searchUsers()
 			}

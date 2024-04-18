@@ -3,7 +3,6 @@ import Axios from '../../api/index'
 import { FaUserCheck } from "react-icons/fa6";
 const SearchItem = ({ item, sendReq }) => {
 	const [searchValue, setSearchValue] = useState(item)
-	console.log(item)
 	useEffect(() => {
 		setSearchValue(item)
 	}, [item])
@@ -34,7 +33,7 @@ const SearchItem = ({ item, sendReq }) => {
 					<span className='text-white text-sm font-medium whitespace-nowrap'>{
 						searchValue && searchValue.status === 'not_friend' ?
 							'Add friend' : searchValue.status === 'request_sent' ?
-								'Cancel Request' : searchValue.status === 'request_received' ? 'Accept' : 'Friends'
+								'Cancel Request' : searchValue.status === 'request_received' ? 'Accept' : searchValue.status === 'friends' && 'Friends'
 					}</span>
 				</button>
 				{

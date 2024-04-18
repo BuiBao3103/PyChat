@@ -8,6 +8,7 @@ const MessageInput = ({ scroll }) => {
 	const { selectedConversation, setLoadConversations } = useConversation()
 	const [message, setMessage] = useState('')
 	const { socket } = useSocketContext()
+	console.log(socket)
 	const sendMessage = () => {
 		socket.emit('message', {
 			user_id: state.user.id,

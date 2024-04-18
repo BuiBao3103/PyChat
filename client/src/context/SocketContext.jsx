@@ -11,23 +11,26 @@ export const SocketProvider = ({ children }) => {
 	const [socket, setSocket] = useState(null)
 	const [onlineUsers, setOnlineUsers] = useState([])
 	const [state, dispatch] = useAuthContext()
-
 	useEffect(() => {
 		if (state.user) {
-			const socket = io("http://localhost:5000",{
-				withCredentials: true,
+			const socket = io("http://localhost:5000", {
+				query: {
+					userID: JSON.parse(localStorage.getItem("user")).id
+				},
+				autoConnect: false
 			})
 			setSocket(socket)
 			console.log(socket)
-			socket.on("getOnlineUsers", (users) => {
-				setOnlineUsers(users)
-			})
-
+			console.log('run')
+			// socket.on("getOnlineUsers", (users) => {
+			// 	setOnlineUsers(users)
+			// })
 			return () => socket.close()
 		} else {
-			if (socket) {
+			if(socket) {
 				socket.close()
 				setSocket(null)
+			console.log('run error')
 			}
 		}
 	}, [state.user])
