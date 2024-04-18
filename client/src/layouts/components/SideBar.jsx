@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { FaRegUser } from "react-icons/fa";
 import { PiUserListBold, PiGearSixBold, PiChatCenteredDotsBold, PiMagnifyingGlassBold, PiSignOutBold } from "react-icons/pi";
 import IconMenu from '../../components/iconmenu/IconMenu';
-import { Link, NavLink, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import LogoIcon from '../../assets/LogoIcon';
 import Setting from '../../pages/Setting'
 import { customToast } from '../../utils/customToast';
@@ -76,10 +76,14 @@ const SideBar = () => {
 						</div>
 					</section>
 					<section className='w-full flex flex-col items-center gap-3'>
-						<div className="w-[55px] h-[55px] rounded-full overflow-hidden">
+						<div
+							onClick={() => {
+								navigate(`/profile/${JSON.parse(localStorage.getItem('user')).id}`)
+							}}
+							className="w-[55px] h-[55px] rounded-full overflow-hidden">
 							<img
 								className='w-full h-full object-cover'
-								src="https://images.unsplash.com/photo-1552058544-f2b08422138a?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8cGVyc29ufGVufDB8fDB8fHww" alt="User Avatar" />
+								src={JSON.parse(localStorage.getItem("user")).avatar} alt="User Avatar" />
 						</div>
 						<Link
 							onClick={logoutUser}

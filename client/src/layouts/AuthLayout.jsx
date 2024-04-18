@@ -59,6 +59,9 @@ export const action = async ({ request }) => {
 		} else {
 			response = await Axios.post("/api/v1/register", userInformaiton)
 		}
+		if (response.status === 200) {
+			console.log(response)
+		}
 	} catch (error) {
 		console.log(error)
 		if (error.response.data.message.includes("Invalid")) {
@@ -70,7 +73,6 @@ export const action = async ({ request }) => {
 			emailExist: error.response.data.message
 		}
 	}
-	console.log(response)
 	localStorage.setItem("user", JSON.stringify(response.data.data))
 	localStorage.setItem("auth", true)
 	customToast({ type: "success", message: action === 'login' ? "Login successfully" : "Sign up successfully" })
