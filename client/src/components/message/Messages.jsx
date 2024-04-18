@@ -7,7 +7,7 @@ import MessageInput from './MessageInput';
 const Messages = ({ msgConversation }) => {
 	const [messages, setMessages] = useState([]);
 	const { socket } = useSocketContext();
-	const { selectedConversation, loadConversation } = useConversation();
+	const { selectedConversation } = useConversation();
 	const messageEnd = useRef();
 
 	useEffect(() => {
@@ -18,7 +18,7 @@ const Messages = ({ msgConversation }) => {
 		return () => {
 		}
 	}, [msgConversation]);
-	
+
 	useEffect(() => {
 		const handleNewMessage = (data) => {
 			setMessages(oldMsg => [data, ...oldMsg]);
@@ -36,13 +36,15 @@ const Messages = ({ msgConversation }) => {
 		<>
 			<div className='w-full h-full overflow-auto flex flex-col gap-2'>
 				<h1 className='w-full pb-2 text-lg dark:text-white dark:border-ebony-clay h-fit bg-light-gray p-2 rounded-md font-medium shadow-md'>{selectedConversation.friend.username}</h1>
-				<div className="w-full h-full flex flex-col overflow-y-scroll">
-					{messages.slice().reverse().map((item, index) => (
-						<div key={index}>
-							<Message message={item} />
-						</div>
-					))}
-					<div ref={messageEnd}> </div> {/* This empty div will always be at the end of your messages list */}
+				<div className="w-full h-full flex items-end overflow-y-scroll">
+					<div className="w-full h-fit flex flex-col">
+						{messages.slice().reverse().map((item, index) => (
+							<div key={index}>
+								<Message message={item} />
+							</div>
+						))}
+						<div ref={messageEnd}> </div> {/* This empty div will always be at the end of your messages list */}
+					</div>
 				</div>
 			</div>
 			<MessageInput scroll={messageEnd} />

@@ -26,7 +26,6 @@ const Index = () => {
 			color: "#ff3d43"
 		}
 	]
-	console.log(data)
 	return (
 		<div className='w-full md:px-10 md:py-20 p-10 h-full'>
 			<header className="w-full flex flex-col justify-center items-center gap-px">

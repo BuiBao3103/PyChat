@@ -5,7 +5,6 @@ import { useNavigate } from 'react-router-dom'
 import useConversation from '../../zustand/useConversation'
 import { formatMessageTime } from '../../utils/extractTIme'
 const ChatBrief = ({ className = '', currentConversation, joinRoom,leaveRoom }) => {
-	// console.log(currentConversation)
 	const navigate = useNavigate()
 	const { setSelectedConversation, selectedConversation } = useConversation()
 	const leaveRoomWithID = (conversation) => {
