@@ -24,7 +24,7 @@ const ChatBrief = ({ className = '', currentConversation, joinRoom,leaveRoom }) 
 			}}
 			className={`${className}  w-full h-auto p-3 flex gap-2 border-b dark:border-ebony-clay hover:bg-light-gray dark:hover:bg-white/30 transition-all cursor-pointer`}>
 			<div className="size-[60px] rounded-full relative">
-				<img src={DefaultAvatar} alt="" className='w-full h-full object-cover object-center rounded-full' />
+				<img src={currentConversation.friend.avatar} alt="" className='w-full h-full object-cover object-center rounded-full' />
 				<div className={`size-4 border-[3px] border-white absolute bottom-0 right-0 rounded-full ${currentConversation.friend.last_online == null ? "bg-primary-900" : "hidden"}`} />
 			</div>
 			<div className="flex-1 h-full flex flex-col justify-center items-center">

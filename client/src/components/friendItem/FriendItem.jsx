@@ -12,6 +12,12 @@ const FriendItem = ({ className, friend }) => {
 				<span className='text-gray-500'>{friend.friend.email}</span>
 			</div>
 			<div className="w-full flex gap-2">
+				{/* //create one button with unfriend when friend.status == 'friends' */}
+				{
+					friend.status === 'friends' && (
+						<button className='w-full bg-primary text-white py-2 rounded-lg font-medium'>Unfriend</button>
+					)
+				}
 				{/* //create two button with Cancel and Accept when friend.status == 'request_received' */}
 				{
 					friend.status === 'request_received' && (
