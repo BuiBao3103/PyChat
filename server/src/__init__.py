@@ -19,8 +19,9 @@ cloudinary.config(
 cors = CORS(app, resources={
             r"/api/*": {"origins": "http://localhost:5173"}}, supports_credentials=True)
 jwt = JWTManager(app)
-# socketio = SocketIO(app)
-socketio = SocketIO(app, cors_allowed_origins="http://localhost:5173" )
+# socketio allow all origins
+socketio = SocketIO(app, cors_allowed_origins="*")
+
 db = SQLAlchemy(app)
 bc = Bcrypt(app)
 lm = LoginManager()

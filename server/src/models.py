@@ -31,8 +31,8 @@ class Participant(db.Model, SerializerMixin):
     id = Column(Integer, primary_key=True, autoincrement=True)
     user_id = Column(Integer, ForeignKey('users.id'))
     conversation_id = Column(Integer, ForeignKey('conversations.id'))
-    delete_at = Column(DateTime, nullable=True, default=True)
-    seen_at = Column(DateTime, nullable=True, default=True)
+    delete_at = Column(DateTime, nullable=True, default=None)
+    seen_at = Column(DateTime, nullable=True, default=None)
 
 
 class MessageType(enum.Enum):
@@ -51,7 +51,7 @@ class Message(db.Model, SerializerMixin):
     type = Column(Enum(MessageType), nullable=False)
     conversation_id = Column(Integer, ForeignKey('conversations.id'))
     user_id = Column(Integer, ForeignKey('users.id'))
-    revoke_at = Column(DateTime, nullable=True, default=True)
+    revoke_at = Column(DateTime, nullable=True, default=None)
     attachments = relationship("Attachment", backref="message",
                                foreign_keys='Attachment.message_id', lazy=True)
     # deleted_messages = relationship('DeletedMessage', backref='message',
