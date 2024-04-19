@@ -11,16 +11,10 @@ def load_user(user_id):
     return User.query.get(user_id)
 
 
-class ConversationType(enum.Enum):
-    GROUP = "group"
-    PERSONAL = "personal"
-
-
 class Conversation(db.Model, SerializerMixin):
     __tablename__ = 'conversations'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    type = Column(Enum(ConversationType), nullable=False)
     last_message_id = Column(Integer, ForeignKey('messages.id'), nullable=True)
     last_message = relationship(
         'Message', foreign_keys='Conversation.last_message_id', lazy=True)
@@ -90,7 +84,6 @@ class Friendship(db.Model, SerializerMixin):
     user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
     friend_id = Column(Integer, ForeignKey('users.id'), nullable=False)
     status = Column(Enum(FriendshipStatus), nullable=False)
-    delete_at = Column(DateTime, default=None)
 
     # serialize_rules = ('-user',)
 

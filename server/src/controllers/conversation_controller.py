@@ -1,5 +1,5 @@
 from src.errors import InvalidAPIUsage
-from src.models import Conversation, Participant, ConversationType
+from src.models import Conversation, Participant
 from src.util.api_features import APIFeatures
 from src import db
 from flask_restful import Resource
@@ -87,12 +87,11 @@ class MeConversations(Resource):
         items, total_count = api_freatures.perform_query(query)
         items = [item.to_dict() for item in items]
         for conversation in items:
-            if ConversationType(items[0]['type']) == ConversationType.PERSONAL:
-                friend_user_index = 0
-                if conversation['participants'][0]['user']['id'] == request.user.id:
-                    friend_user_index = 1
-                conversation['friend'] = conversation['participants'][friend_user_index]['user']
-                del conversation['participants']
+            friend_user_index = 0
+            if conversation['participants'][0]['user']['id'] == request.user.id:
+                friend_user_index = 1
+            conversation['friend'] = conversation['participants'][friend_user_index]['user']
+            del conversation['participants']
         response = make_response(
             {'status': 'sucess', 'total_count': total_count, 'data': items}, 200)
         return response

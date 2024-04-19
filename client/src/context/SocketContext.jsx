@@ -17,7 +17,6 @@ export const SocketProvider = ({ children }) => {
 				query: {
 					userID: JSON.parse(localStorage.getItem("user")).id
 				},
-				autoConnect: false
 			})
 			setSocket(socket)
 			console.log(socket)

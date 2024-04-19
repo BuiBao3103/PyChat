@@ -1,6 +1,6 @@
 from src import db, app
 from src.errors import InvalidAPIUsage
-from src.models import Friendship, FriendshipStatus, Conversation, ConversationType, Participant
+[git from src.models import Friendship, FriendshipStatus, Conversation, Participant
 from datetime import datetime
 from src.util.api_features import APIFeatures
 from src.errors import InvalidAPIUsage
@@ -26,7 +26,7 @@ class Friendships(Resource):
                 {'status': 'sucess', 'data': friendship.to_dict()}, 200)
             return response
 
-    def post():
+    def post(self):
         data = request.get_json()
         try:
             user_id = data["userID"]
@@ -73,8 +73,7 @@ class Friendships(Resource):
         if not friendship:
             raise InvalidAPIUsage(
                 message='Friendship not found', status_code=404)
-        friendship.delete_at = datetime.now()
-        db.session.commit()
+        db.session.delete(friendship)
         response = make_response({'status': 'success', 'data': None}, 204)
         return response
 
@@ -85,7 +84,7 @@ class FriendshipsRequest(Resource):
         user_id = data["userID"]
         friend_id = data["friendID"]
         existing_friendship = Friendship.query.filter_by(
-            user_id=user_id, friend_id=friend_id, delete_at=None).first()
+            user_id=user_id, friend_id=friend_id).first()
         if existing_friendship is not None:
             raise InvalidAPIUsage(
                 message="Friendships is exist!", status_code=400)
@@ -110,9 +109,9 @@ class FriendshipsRequest(Resource):
         user_id = data.get('userID')
         friend_id = data.get('friendID')
         friendship_user = Friendship.query.filter_by(
-            user_id=user_id, friend_id=friend_id, delete_at=None).first()
+            user_id=user_id, friend_id=friend_id).first()
         friendship_friend = Friendship.query.filter_by(
-            user_id=friend_id, friend_id=user_id, delete_at=None).first()
+            user_id=friend_id, friend_id=user_id).first()
         if not friendship_user or not friendship_friend:
             raise InvalidAPIUsage(
                 message='Friendships is not exist!', status_code=400)
@@ -140,9 +139,9 @@ class FriendshipsAccept(Resource):
         user_id = data.get('userID')
         friend_id = data.get('friendID')
         friendship_user = Friendship.query.filter_by(
-            user_id=user_id, friend_id=friend_id, delete_at=None).first()
+            user_id=user_id, friend_id=friend_id).first()
         friendship_friend = Friendship.query.filter_by(
-            user_id=friend_id, friend_id=user_id, delete_at=None).first()
+            user_id=friend_id, friend_id=user_id).first()
         if not friendship_user or not friendship_friend:
             raise InvalidAPIUsage(
                 message='Friendships is not exist!', status_code=400)
@@ -150,7 +149,7 @@ class FriendshipsAccept(Resource):
                 or friendship_friend.status != FriendshipStatus.REQUEST_SENT):
             raise InvalidAPIUsage(
                 message='Friend is not request!', status_code=400)
-        conversation = Conversation(type=ConversationType.PERSONAL)
+        conversation = Conversation()
         try:
             db.session.add(conversation)
             db.session.commit()
@@ -180,9 +179,9 @@ class FriendshipsAccept(Resource):
         user_id = data.get('userID')
         friend_id = data.get('friendID')
         friendship_user = Friendship.query.filter_by(
-            user_id=user_id, friend_id=friend_id, delete_at=None).first()
+            user_id=user_id, friend_id=friend_id).first()
         friendship_friend = Friendship.query.filter_by(
-            user_id=friend_id, friend_id=user_id, delete_at=None).first()
+            user_id=friend_id, friend_id=user_id).first()
         if not friendship_user or not friendship_friend:
             raise InvalidAPIUsage(
                 message='Friendships is not exist!', status_code=400)
@@ -210,10 +209,9 @@ class FriendshipsBlock(Resource):
         user_id = data.get('userID')
         friend_id = data.get('friendID')
         friendship_user = Friendship.query.filter_by(
-            user_id=user_id, friend_id=friend_id, delete_at=None).first()
+            user_id=user_id, friend_id=friend_id).first()
         friendship_friend = Friendship.query.filter_by(
-            user_id=friend_id, friend_id=user_id, delete_at=None).first()
-        print(friendship_user.status, friendship_friend.status)
+            user_id=friend_id, friend_id=user_id).first()
         if not friendship_user or not friendship_friend:
             raise InvalidAPIUsage(
                 message='Friendships is not exist!', status_code=400)
@@ -240,9 +238,9 @@ class FriendshipsBlock(Resource):
         user_id = data.get('userID')
         friend_id = data.get('friendID')
         friendship_user = Friendship.query.filter_by(
-            user_id=user_id, friend_id=friend_id, delete_at=None).first()
+            user_id=user_id, friend_id=friend_id).first()
         friendship_friend = Friendship.query.filter_by(
-            user_id=friend_id, friend_id=user_id, delete_at=None).first()
+            user_id=friend_id, friend_id=user_id).first()
         if not friendship_user or not friendship_friend:
             raise InvalidAPIUsage(
                 message='Friendships is not exist!', status_code=400)
