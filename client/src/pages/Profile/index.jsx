@@ -24,7 +24,7 @@ const Index = () => {
 	useEffect(() => {
 		const getFriends = async () => {
 			try {
-				await Axios.get(`api/v1/friendships/${params.id}`).then((res) => {
+				await Axios.get(`api/v1/friendships?user_id=eq:1&status=friends`).then((res) => {
 					if (res.status === 200) {
 						setFriends(res.data.data)
 						console.log(res)
@@ -69,7 +69,7 @@ const Index = () => {
 					<section className="w-[550px] h-full flex flex-col gap-3">
 						<div className="w-full h-fit border border-[#c2c2c2] rounded-xl px-5 py-4">
 							<div className="w-full h-full flex flex-col gap-1 border-r border-[#c2c2c2]">
-								<h1 className='text-4xl font-bold dark:text-white'>269</h1>
+								<h1 className='text-4xl font-bold dark:text-white'>{friends.length}</h1>
 								<span className=' dark:text-white'>Friends</span>
 							</div>
 						</div>
@@ -78,16 +78,21 @@ const Index = () => {
 								<h1 className='font-bold text-lg block py-2 dark:text-white'>General Information</h1>
 								<div className="w-full h-full flex flex-col">
 									{
-										Array.from({ length: 5 }, (_, index) => (
-											<InformationLine key={index} title={'title'} value={'value'} />
-										))
+										data && (
+											<>
+												<InformationLine title={"First name"} value={data[0].first_name} />
+												<InformationLine title={"Last name"} value={data[0].last_name} />
+												{/* <InformationLine title={"Phone number"} value={'Thần '} /> */}
+												<InformationLine title={"Email"} value={data[0].email} />
+											</>
+										)
 									}
 								</div>
 							</div>
 						</div>
 					</section>
-					<section className='w-full h-f border border-[#c2c2c2] rounded-xl flex flex-col'>
-						<div className="w-full h-fit px-5 py-1 flex flex-col gap-3">
+					<section className='w-full h-f border border-[#c2c2c2] rounded-xl flex p-4'>
+						{/* <div className="w-full h-fit px-5 py-1 flex flex-col gap-3">
 							<h1 className='w-full block py-2 font-bold text-lg dark:text-white'>Quick Contact</h1>
 							<div className="w-full flex flex-col gap-2">
 								{
@@ -96,15 +101,15 @@ const Index = () => {
 									))
 								}
 							</div>
-						</div>
-						<div className="w-full h-full px-5 pb-4	 flex flex-col gap-3 overflow-hidden relative group">
+						</div> */}
+						<div className="w-full h-full flex flex-col gap-3 overflow-hidden relative group">
 							<h1 className='w-full h-fit py-1 block font-bold text-lg dark:text-white'>Friends</h1>
 							<div className="w-full h-full flex flex-wrap gap-4 border border-[#c2c2c2] rounded-lg overflow-y-scroll">
-								{/* {
+								{
 									friends.map((item, index) => (
 										<FriendItem key={index} friend={item} className={'w-fit h-fit'} />
 									))
-								} */}
+								}
 							</div>
 							<button className='absolute w-fit px-6 py-3 bg-primary text-white font-bold -bottom-16 right-9 rounded-md group-hover:bottom-7 transition-all duration-300 hover:opacity-60'>
 								View All

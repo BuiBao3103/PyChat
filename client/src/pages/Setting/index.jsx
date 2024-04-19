@@ -26,10 +26,9 @@ const Index = ({ onClick }) => {
 										<span className='font-medium dark:text-white'>Dark mode</span>
 										<Toggle></Toggle>
 									</div>
-									<div className="w-full flex justify-between items-center p-2 border-b">
+									{/* <div className="w-full flex justify-between items-center p-2 border-b">
 										<span className='font-medium dark:text-white'>Active status</span>
-										{/* <Toggle></Toggle> */}
-									</div>
+									</div> */}
 									<div onClick={() => setVisibleBlockList(!visibleBlockList)} className="w-full flex justify-between items-center p-2 rounded-md hover:bg-light-gray dark:hover:bg-white/30 transition-all cursor-pointer">
 										<div className="w-full flex items-center gap-2">
 											<PiMinusCircle size={22} className='dark:text-white' />
@@ -42,6 +41,7 @@ const Index = ({ onClick }) => {
 						) : (
 							<>
 								{/* <div className="w-full flex flex-col gap-8 items-center relative"> */}
+								<div className="w-full h-full flex flex-col gap-6 items-center">
 									<h1 className='text-2xl font-bold dark:text-white'>Manage blocking list</h1>
 									<div className="w-full h-fit flex flex-col">
 										<div className="w-full flex gap-2 px-2 py-3 border rounded-md">
@@ -52,21 +52,22 @@ const Index = ({ onClick }) => {
 										</div>
 										<span className="absolute w-[550px] h-px bg-black -left-6 -bottom-3"></span>
 									</div>
-								{/* </div> */}
-								<div className="w-full h-full overflow-y-scroll flex flex-col gap-1 border-t pt-1">
-									{/* /create an array with 10 elements each item has avatar circle and username and a button to block or unblock base on the data */}
-									{Array.from({ length: 10 }, (_, i) => (
-										<div key={i} className="w-full flex justify-between items-center">
-											<div className="w-full flex items-center gap-2">
-												<div className="size-16 rounded-full overflow-hidden">
-													<img src={JSON.parse(localStorage.getItem('user')).avatar} alt="Avatar user" className='w-full h-full object-cover object-center' />
+									{/* </div> */}
+									<div className="w-full h-full overflow-y-scroll flex flex-col gap-1 border-t pt-1">
+										{/* /create an array with 10 elements each item has avatar circle and username and a button to block or unblock base on the data */}
+										{Array.from({ length: 2 }, (_, i) => (
+											<div key={i} className="w-full flex justify-between items-center">
+												<div className="w-full flex items-center gap-2">
+													<div className="size-16 rounded-full overflow-hidden">
+														<img src={JSON.parse(localStorage.getItem('user')).avatar} alt="Avatar user" className='w-full h-full object-cover object-center' />
+													</div>
+													<span className='font-medium dark:text-white'>Nguoi dung {i+1}</span>
 												</div>
-												<span className='font-medium dark:text-white'>{JSON.parse(localStorage.getItem('user')).username}</span>
+												<button className='w-fit h-fit py-2 px-3 rounded-md flex items-center justify-center bg-primary font-medium text-white'>Unblock</button>
 											</div>
-											<button className='w-fit h-fit py-2 px-3 rounded-md flex items-center justify-center bg-primary font-medium text-white'>Unblock</button>
-										</div>
-									))}
+										))}
 
+									</div>
 								</div>
 							</>
 						)

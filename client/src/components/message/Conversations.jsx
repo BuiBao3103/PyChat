@@ -6,6 +6,7 @@ import useConversation from '../../zustand/useConversation'
 const Conversations = ({ conversationsUser }) => {
 	const [conversations, setConversations] = useState(conversationsUser)
 	const { socket } = useSocketContext()
+	console.log(socket)
 	useEffect(() => {
 		setConversations(conversationsUser)
 	}, [conversationsUser])

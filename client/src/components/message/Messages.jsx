@@ -32,18 +32,19 @@ const Messages = ({ msgConversation }) => {
 	const scrollToBottom = () => {
 		messageEnd.current.scrollIntoView({ behavior: "smooth" });
 	};
+	console.log(messageEnd);
 	return (
 		<>
 			<div className='w-full h-full overflow-auto flex flex-col gap-2'>
 				<h1 className='w-full pb-2 text-lg dark:text-white dark:border-ebony-clay h-fit bg-light-gray p-2 rounded-md font-medium shadow-md'>{selectedConversation.friend.username}</h1>
-				<div className="w-full h-full flex items-end overflow-y-scroll">
-					<div className="w-full h-fit flex flex-col">
+				<div className="w-full h-full flex items-end overflow-y-hidden">
+					<div className="w-full h-full flex flex-col overflow-y-scroll">
 						{messages.slice().reverse().map((item, index) => (
 							<div key={index}>
 								<Message message={item} />
 							</div>
 						))}
-						<div ref={messageEnd}> </div> {/* This empty div will always be at the end of your messages list */}
+						<div className='messageEnd' ref={messageEnd}></div> {/* This empty div will always be at the end of your messages list */}
 					</div>
 				</div>
 			</div>

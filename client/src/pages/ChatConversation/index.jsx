@@ -31,9 +31,9 @@ const Index = () => {
 				<div className="w-full h-[120px] flex flex-col gap-3 p-3">
 					<div className="w-full flex justify-between items-center gap-2">
 						<span className='font-bold text-2xl dark:text-white'>Chat</span>
-						<Link to={"/conversation/to"}>
+						{/* <Link to={"/conversation/to"}>
 							<PiNotePencil size={35} className=' dark:text-white cursor-pointer' />
-						</Link>
+						</Link> */}
 					</div>
 					<div className="w-full flex gap-2">
 						<input type="search" className='bg-light-gray dark:bg-[#282930] dark:text-white dark:focus:outline-white rounded-md px-3 py-2 w-full focus:outline-primary' placeholder='Search by name' />
