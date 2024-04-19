@@ -50,7 +50,7 @@ export const action = async ({ request }) => {
 				emptyField: "This field is required"
 			}
 		}
-		console.log(userInformaiton)
+		// console.log(userInformaiton)
 	}
 	let response
 	try {
@@ -60,7 +60,7 @@ export const action = async ({ request }) => {
 			response = await Axios.post("/api/v1/register", userInformaiton)
 		}
 		if (response.status === 200) {
-			console.log(response)
+			// console.log(response)
 		}
 	} catch (error) {
 		console.log(error)
