@@ -22,10 +22,6 @@ class Conversation(db.Model, SerializerMixin):
                                 foreign_keys='Participant.conversation_id', lazy=True)
     # messages = relationship("Message", backref="conversation.py",
     #                         foreign_keys='Message.conversation_id', lazy=True)
-    # seen_conversations = relationship('SeenConversation', backref='conversation.py',
-    #                                   foreign_keys='SeenConversation.conversation_id', lazy=True)
-    # deleted_conversations = relationship('DeletedConversation', backref='conversation.py',
-    #                                      foreign_keys='DeletedConversation.conversation_id', lazy=True)
     serialize_rules = ('-participants.conversation',)
 
 
@@ -111,14 +107,9 @@ class User(db.Model, UserMixin, SerializerMixin):
                                foreign_keys='Friendship.friend_id', lazy=True)
     deleted_messages = relationship('DeletedMessage', backref='user',
                                     foreign_keys='DeletedMessage.user_id', lazy=True)
-    seen_conversations = relationship('SeenConversation', backref='user',
-                                      foreign_keys='SeenConversation.user_id', lazy=True)
-    deleted_conversations = relationship('DeletedConversation', backref='user',
-                                         foreign_keys='DeletedConversation.user_id', lazy=True)
 
     serialize_rules = ('-participants', '-friendships', '-messages',
-                       '-deleted_messages', '-seen_conversations',
-                       '-deleted_conversations', '-password',)
+                       '-deleted_messages', '-password',)
 
 
 class DeletedMessage(db.Model):

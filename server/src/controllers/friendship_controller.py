@@ -1,6 +1,6 @@
 from src import db, app
 from src.errors import InvalidAPIUsage
-[git from src.models import Friendship, FriendshipStatus, Conversation, Participant
+from src.models import Friendship, FriendshipStatus, Conversation, Participant
 from datetime import datetime
 from src.util.api_features import APIFeatures
 from src.errors import InvalidAPIUsage
