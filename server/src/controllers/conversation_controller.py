@@ -6,6 +6,7 @@ from flask_restful import Resource
 from flask import request, make_response
 from src.auth import protect
 
+
 class Conversations(Resource):
     def get(self, conversation_id=None):
         if conversation_id == None:
@@ -18,7 +19,7 @@ class Conversations(Resource):
             conversation = Conversation.query.get(conversation_id)
             if not conversation:
                 raise InvalidAPIUsage(
-                message='Conversation does not exist!', status_code=400)
+                    message='Conversation does not exist!', status_code=400)
             response = make_response(
                 {'status': 'sucess', 'data': conversation.to_dict()}, 200)
             return response
@@ -77,6 +78,7 @@ class UserConversations(Resource):
             {'status': 'sucess', 'total_count': total_count, 'data': items}, 200)
         return response
 
+
 class MeConversations(Resource):
     @protect()
     def get(self):
@@ -87,10 +89,11 @@ class MeConversations(Resource):
         items, total_count = api_freatures.perform_query(query)
         items = [item.to_dict() for item in items]
         for conversation in items:
-            friend_user_index = 0
+            friend_index, user_index = 0, 1
             if conversation['participants'][0]['user']['id'] == request.user.id:
-                friend_user_index = 1
-            conversation['friend'] = conversation['participants'][friend_user_index]['user']
+                 friend_index, user_index = 1, 0
+            conversation['friend'] = conversation['participants'][friend_index]['user']
+            conversation['seen_at'] = conversation['participants'][user_index]['seen_at']
             del conversation['participants']
         response = make_response(
             {'status': 'sucess', 'total_count': total_count, 'data': items}, 200)

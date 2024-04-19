@@ -7,6 +7,7 @@ from src.errors import InvalidAPIUsage
 from sqlalchemy.exc import IntegrityError
 from flask import make_response
 from flask_restful import Resource
+from datetime import datetime
 
 
 class Login(Resource):
@@ -39,13 +40,15 @@ class Register(Resource):
         first_name = data.get('firstName')
         username = f"{first_name} {last_name}"
         avatar = "https://res.cloudinary.com/dloeqfbwm/image/upload/v1713013364/avatar_user/default_avatar.jpg"
-        background  = "https://res.cloudinary.com/dloeqfbwm/image/upload/v1713016596/background_user/default_background.png"
+        background = "https://res.cloudinary.com/dloeqfbwm/image/upload/v1713016596/background_user/default_background.png"
+        last_online = datetime.now()
         new_user = None
         try:
             hashed_password = bc.generate_password_hash(password, 10)
             new_user = User(email=email, first_name=first_name,
                             last_name=last_name, password=hashed_password,
-                            username=username, avatar=avatar, background =background )
+                            username=username, avatar=avatar, background=background,
+                            last_online=last_online)
             db.session.add(new_user)
             db.session.commit()
             db.session.refresh(new_user)
