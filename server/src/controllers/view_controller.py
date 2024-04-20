@@ -10,5 +10,4 @@ class ViewController:
         user = db.session.query(User).get(user_id)
         messages = db.session.query(Message).filter(Message.conversation_id == room_id).all()
         messages = [message.to_dict() for message in messages]
-        print(messages)
         return render_template('index.html', user=user, messages=messages)

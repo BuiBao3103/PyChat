@@ -68,6 +68,9 @@ document.addEventListener('DOMContentLoaded', function () {
 				messageContainer.appendChild(createImageDiv(data.attachments[0].url, 'start'));
 		}
 	});
+	socket.on('new_mess', function (data) {
+		console.log(data);
+	})
 
 });
 const createMessDiv = (message, location) => {
