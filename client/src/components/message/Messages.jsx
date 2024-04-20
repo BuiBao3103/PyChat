@@ -15,8 +15,6 @@ const Messages = ({ msgConversation }) => {
 		setTimeout(() => {
 			scrollToBottom();
 		}, 200);
-		return () => {
-		}
 	}, [msgConversation]);
 
 	useEffect(() => {
@@ -32,19 +30,19 @@ const Messages = ({ msgConversation }) => {
 	const scrollToBottom = () => {
 		messageEnd.current.scrollIntoView({ behavior: "smooth" });
 	};
-	console.log(messageEnd);
+	useEffect(() => {
+		scrollToBottom()
+	},[messages])
 	return (
 		<>
-			<div className='w-full h-full overflow-auto flex flex-col gap-2'>
-				<h1 className='w-full pb-2 text-lg dark:text-white dark:border-ebony-clay h-fit bg-light-gray p-2 rounded-md font-medium shadow-md'>{selectedConversation.friend.username}</h1>
-				<div className="w-full h-full flex items-end overflow-y-hidden">
-					<div className="w-full h-full flex flex-col overflow-y-scroll">
+			<div className='w-full h-full overflow-auto flex flex-col gap-2 relative'>
+				<h1 className='w-full absolute pb-2 z-10 text-lg dark:text-white dark:border-ebony-clay h-fit bg-light-gray p-2 rounded-md font-medium shadow-md'>{selectedConversation.friend.username}</h1>
+				<div className="w-full h-full pt-12">
+					<div className="w-full h-full overflow-y-auto">
 						{messages.slice().reverse().map((item, index) => (
-							<div key={index}>
-								<Message message={item} />
-							</div>
+								<Message message={item} key={index} />
 						))}
-						<div className='messageEnd' ref={messageEnd}></div> {/* This empty div will always be at the end of your messages list */}
+						<div className='messageEnd' style={{float: "left", clear: "both"}} ref={messageEnd}></div> {/* This empty div will always be at the end of your messages list */}
 					</div>
 				</div>
 			</div>
