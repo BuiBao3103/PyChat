@@ -35,7 +35,7 @@ const MessageInput = ({ scroll }) => {
 	}
 
 	return (
-		<div className="w-full h-16 flex items-center gap-3">
+		<div className="w-full h-16 flex items-center gap-3 relative">
 			<span className='size-12 bg-primary flex justify-center items-center rounded-md p-2.5 cursor-pointer hover:opacity-75 transition-all'>
 				<PiImage size={22} className='text-white size-full' />
 			</span>
