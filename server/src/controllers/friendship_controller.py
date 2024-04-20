@@ -261,3 +261,32 @@ class FriendshipsBlock(Resource):
         response = make_response(
             {"status": "success", 'data': friendship_user.to_dict()}, 200)
         return response
+
+class FriendshipUnfriend(Resource):
+    def post(self):
+        data = request.get_json()
+        user_id = data.get('userID')
+        friend_id = data.get('friendID')
+        friendship_user = Friendship.query.filter_by(
+            user_id=user_id, friend_id=friend_id).first()
+        friendship_friend = Friendship.query.filter_by(
+            user_id=friend_id, friend_id=user_id).first()
+        if not friendship_user or not friendship_friend:
+            raise InvalidAPIUsage(
+                message='Friendships is not exist!', status_code=400)
+        if (friendship_user.status != FriendshipStatus.FRIENDS
+                or friendship_friend.status != FriendshipStatus.FRIENDS):
+            raise InvalidAPIUsage(
+                message='Friend is not friend!', status_code=400)
+        try:
+            db.session.delete(friendship_user)
+            db.session.delete(friendship_friend)
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            app.logger.error(f'Exception: {e}')
+            raise InvalidAPIUsage(
+                message='Error creating delete friendship', status_code=400)
+        response = make_response(
+            {"status": "success", 'data': None}, 204)
+        return response
