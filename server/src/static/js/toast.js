@@ -19,7 +19,6 @@ function createToast(type, text, title = null, icon = null) {
             title = 'Info';
             icon = 'fa-solid fa-circle-info';
             break
-
     }
     newToast.innerHTML = `
             <div class="toast show ${type}">

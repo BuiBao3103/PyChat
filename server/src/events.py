@@ -32,7 +32,7 @@ def handle_disconnect():
         user = User.query.get(user_id)
         user.last_online = datetime.now()
         db.session.commit()
-        del user_session[user_id]
+        del user_session[int(user_id)]
     print('Client disconnected')
 
 
@@ -52,8 +52,6 @@ def handle_leave(data):
 
 @socketio.on('message')
 def handle_message(data):
-    print(request.sid)
-    print(user_session['1'])
     message_type = MessageType(data['type'])
     if message_type == MessageType.TEXT:
         handle_text_message(data)
@@ -79,10 +77,11 @@ def handle_text_message(data):
     db.session.commit()
     # Broadcast the message to everyone in the room except the sender
     emit('message', new_message.to_dict(), room=channel_id)
-    data_noti = {
-        'coversation': conversation.to_dict(),
-    }
-    emit('new_mess', data_noti, room=user_session['1'])
+    participants = conversation.participants
+    for participant in participants:
+        if user_session.get(str(participant.id)) is not None:
+            emit('new_mess', {'conversation': conversation.to_dict()},
+                 room=user_session[str(participant.id)])
 
 
 def handle_image_message(data):
