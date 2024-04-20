@@ -4,12 +4,12 @@
 	"version": "0.0.0",
 	"type": "module",
 	"scripts": {
-		"dev": "vite",
+		"dev": "vite --host 127.0.0.1",
 		"build": "vite build",
 		"lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
 		"preview": "vite preview",
 		"start": "concurrently \"npm run server\" \"npm run dev\"",
-		"server": "cd ../ && cd server && flask --app run run --host=localhost --port=5000 --with-threads --debug"
+		"server": "cd ../ && cd server && python run.py"
 	},
 	"dependencies": {
 		"axios": "^1.6.8",

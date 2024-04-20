@@ -29,4 +29,5 @@ class Config:
     CLOUDINARY_CLOUD_NAME=config('CLOUDINARY_CLOUD_NAME')
     CLOUDINARY_API_KEY=config('CLOUDINARY_API_KEY')
     CLOUDINARY_API_SECRET=config('CLOUDINARY_API_SECRET')
-
+    SERVER_HOST = '127.0.0.1' if config('SERVER_HOST') == 'localhost' else config('SERVER_HOST')
+    SERVER_PORT = config('SERVER_PORT', cast=int)

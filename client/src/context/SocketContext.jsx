@@ -13,9 +13,9 @@ export const SocketProvider = ({ children }) => {
 	const [state, dispatch] = useAuthContext()
 	console.log(state.user)
 	useEffect(() => {
-		const socket = io("http://localhost:5000", {
+		const socket = io("http://127.0.0.1:5000", {
 			query: {
-				userID: JSON.parse(localStorage.getItem("user")).id
+				userID: JSON.parse(localStorage.getItem("user"))?.id
 			},
 		})
 		setSocket(socket)

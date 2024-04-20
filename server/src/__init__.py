@@ -17,7 +17,7 @@ cloudinary.config(
 )
 # Initialize Flask extensions
 cors = CORS(app, resources={
-            r"/api/*": {"origins": "http://localhost:5173"}}, supports_credentials=True)
+            r"/api/*": {"origins": "*"}}, supports_credentials=True)
 jwt = JWTManager(app)
 # socketio allow all origins
 socketio = SocketIO(app, cors_allowed_origins="*")
