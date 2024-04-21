@@ -10,7 +10,7 @@ const MessageInput = ({ scroll }) => {
 	const { socket } = useSocketContext()
 	const sendMessage = () => {
 		socket.emit('message', {
-			user_id: state.user.id,
+			user_id: JSON.parse(localStorage.getItem('user')).id,
 			channel_id: selectedConversation.id,
 			message: message,
 			time: Date.now(),
