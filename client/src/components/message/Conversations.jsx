@@ -6,7 +6,7 @@ import useConversation from '../../zustand/useConversation'
 const Conversations = ({ conversationsUser }) => {
 	const [conversations, setConversations] = useState(conversationsUser)
 	const { socket } = useSocketContext()
-	console.log(socket)
+	const { selectedConversation, setSelectedConversation } = useConversation()
 	useEffect(() => {
 		setConversations(conversationsUser)
 	}, [conversationsUser])
@@ -23,7 +23,7 @@ const Conversations = ({ conversationsUser }) => {
 		<div className="w-full h-full flex flex-col overflow-y-scroll pb-3 scrollChatConversions">
 			{
 				conversations.map((item, index) => (
-					<ChatBrief key={index} className='first:border-t' currentConversation={item} joinRoom={joinRoom} leaveRoom={leaveRoom} />
+					<ChatBrief key={index} className={`first:border-t ${selectedConversation != null && selectedConversation.id === item.id ? 'bg-light-gray' : 'bg-white'}`} currentConversation={item} joinRoom={joinRoom} leaveRoom={leaveRoom} />
 				))
 			}
 		</div>
