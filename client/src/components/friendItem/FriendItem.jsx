@@ -2,6 +2,20 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 const FriendItem = ({ className, friend }) => {
+
+	//create a async function to handle the request unfriend cancel accept, cancel request
+	const handleRequest = async (type) => {
+		let url = ''
+		if (type === 'friends') {
+			url = `/api/v1/friendships/${friend.friend.id}`
+		} else if (type === 'request_received') {
+			url = `/api/v1/friendships/accept`
+		} else if (type === 'request_sent') {
+			url = `/api/v1/friendships/request`
+		}
+	}
+
+
 	return (
 		<div className={`${className} p-3 flex flex-col gap-3 justify-center items-center bg-white rounded-lg`}>
 			<div className="size-36 overflow-hidden rounded-full border-2 border-gray-100">
