@@ -1,14 +1,61 @@
 import React, { useEffect, useState } from 'react'
 import InformationLine from '../../components/generalInfomationLine/InformationLine'
-import { ContactItem } from '../../components/contactItem/ContactItem'
+import { MdCameraEnhance, MdPhotoCamera } from 'react-icons/md'
 import { PiPhone, PiEnvelopeSimple } from "react-icons/pi";
 import FriendItem from '../../components/friendItem/FriendItem';
 import Axios from '../../api/index'
 import { useLoaderData, useParams } from 'react-router-dom';
+import UpdateAvatar from '../../components/avatar/UpdateAvatar';
+import { useAuthContext } from '../../hooks/useAuthContext';
+import UpdateCoverImage from '../../components/avatar/UpdateCoverImage';
 const Index = () => {
 	const data = useLoaderData()
+	const [user, setUser] = useState(data)
+	const [state, dispatch] = useAuthContext()
 	const params = useParams()
 	const [friends, setFriends] = useState([])
+	const [selectedFile, setSelectedFile] = useState(null)
+	const [selectedCoverFile, setSelectedCoverFile] = useState(null)
+	const handleFileChange = (e) => {
+		const file = e.target.files[0];
+		if (file && !file.type.startsWith('image/')) {
+			toast.error('Please select a valid image file.');
+			return;
+		}
+		if (file) {
+			const reader = new FileReader();
+			reader.onload = () => {
+				setSelectedFile(reader.result);
+			};
+			reader.readAsDataURL(file);
+		}
+	};
+	const handleCoverFileChange = (e) => {
+		const file = e.target.files[0];
+		if (file && !file.type.startsWith('image/')) {
+			toast.error('Please select a valid image file.');
+			return;
+		}
+		if (file) {
+			const reader = new FileReader();
+			reader.onload = () => {
+				setSelectedCoverFile(reader.result);
+			};
+			reader.readAsDataURL(file);
+		}
+	};
+	const getUser = async () => {
+		try {
+			await Axios.get(`api/v1/users/me`).then((res) => {
+				if (res.status === 200) {
+					setUser(res.data.data)
+					dispatch({ type: "LOGIN", value: res.data.data })
+				}
+			})
+		} catch (error) {
+			console.log(error)
+		}
+	}
 	const fakeData = [
 		{
 			Icon: PiPhone,
@@ -17,17 +64,17 @@ const Index = () => {
 		}, {
 			Icon: PiEnvelopeSimple,
 			title: 'Personal Email',
-			value: data[0].email
+			value: user.email
 		}
 	]
 
 	useEffect(() => {
 		const getFriends = async () => {
 			try {
-				await Axios.get(`api/v1/friendships?user_id=eq:1&status=friends`).then((res) => {
+				await Axios.get(`api/v1/friendships?user_id=eq:${params.id}&status=friends`).then((res) => {
 					if (res.status === 200) {
 						setFriends(res.data.data)
-						console.log(res)
+						// console.log(res)
 					}
 				})
 			} catch (error) {
@@ -36,23 +83,42 @@ const Index = () => {
 		}
 		getFriends()
 	}, [])
-
+	useEffect(() => {
+		getUser()
+	}, [selectedFile, selectedCoverFile])
 	return (
 		<div className='w-full h-full rounded-xl bg-white dark:bg-primary-dark p-3 overflow-hidden'>
 			<div className="w-full h-full flex flex-col gap-2">
 				<div className="w-full h-[350px] relative">
-					<div id='coverImage' className="w-full h-[250px] rounded-xl overflow-hidden">
-						<img src={data[0].background} alt="cover image" className='w-full h-full object-fill object-center' />
+					<div id='coverImage' className="w-full h-[250px] rounded-xl relative">
+						<img src={user.background} alt="cover image" className='w-full h-full object-cover object-center rounded-xl' />
+						{
+							(JSON.parse(localStorage.getItem('user')).id === user.id) && (
+								<label htmlFor='coverImageFile' className="w-fit flex items-center gap-1 p-3 bg-black/30 rounded-md absolute top-[75%] right-2 transition-all hover:bg-black/60 cursor-pointer">
+									<input type="file" name='' id='coverImageFile' onChange={handleCoverFileChange} accept="image/*" className='absolute w-full h-full inset-0 hidden' />
+									<MdCameraEnhance size={28} className='text-white' />
+									<span className='font-medium text-white'>Edit cover photo</span>
+								</label>
+							)
+						}
 					</div>
 					<div className="w-full h-[100px] absolute bottom-8">
 						<div className="w-full h-full flex justify-between items-center px-10">
 							<section className="h-full flex gap-4 items-center">
-								<div className="size-32 overflow-hidden rounded-full border-[5px] border-gray-100">
-									<img src={data[0].avatar} alt="" className='w-full h-full object-cover' />
+								<div className="size-32 rounded-full border-[5px] border-gray-100 relative">
+									<img src={user.avatar} alt="" className='w-full h-full object-cover rounded-full' />
+									{
+										(JSON.parse(localStorage.getItem('user')).id === user.id) && (
+											<label htmlFor="imageFile" className='absolute top-3/4 right-0 z-10 overflow-hidden cursor-pointer'>
+												<input type="file" name="" id="imageFile" className='hidden absolute w-full h-full' onChange={handleFileChange} accept="image/*" />
+												<MdPhotoCamera size={40} className=' bg-gray-300 text-black p-2 rounded-full hover:bg-gray-400 transition-all hover:text-white' />
+											</label>
+										)
+									}
 								</div>
 								<div className="w-fit h-full flex flex-col place-content-end pb-4">
-									<span className='whitespace-nowrap text-xl font-bold dark:text-white'>{data[0].username}</span>
-									<span className='whitespace-nowrap dark:text-white'>{data[0].email}</span>
+									<span className='whitespace-nowrap text-xl font-bold dark:text-white'>{user.username}</span>
+									<span className='whitespace-nowrap dark:text-white'>{user.email}</span>
 								</div>
 							</section>
 							{
@@ -80,10 +146,10 @@ const Index = () => {
 									{
 										data && (
 											<>
-												<InformationLine title={"First name"} value={data[0].first_name} />
-												<InformationLine title={"Last name"} value={data[0].last_name} />
-												{/* <InformationLine title={"Phone number"} value={'Thần '} /> */}
-												<InformationLine title={"Email"} value={data[0].email} />
+												<InformationLine title={"First name"} value={user.first_name} />
+												<InformationLine title={"Last name"} value={user.last_name} />
+												<InformationLine title={"Email"} value={user.email} />
+												{/* <InformationLine title={"Phone number"} value={"0344248396"} /> */}
 											</>
 										)
 									}
@@ -92,16 +158,6 @@ const Index = () => {
 						</div>
 					</section>
 					<section className='w-full h-f border border-[#c2c2c2] rounded-xl flex p-4'>
-						{/* <div className="w-full h-fit px-5 py-1 flex flex-col gap-3">
-							<h1 className='w-full block py-2 font-bold text-lg dark:text-white'>Quick Contact</h1>
-							<div className="w-full flex flex-col gap-2">
-								{
-									fakeData.map((item, index) => (
-										<ContactItem key={index} Icon={item.Icon} title={item.title} value={item.value} />
-									))
-								}
-							</div>
-						</div> */}
 						<div className="w-full h-full flex flex-col gap-3 overflow-hidden relative group">
 							<h1 className='w-full h-fit py-1 block font-bold text-lg dark:text-white'>Friends</h1>
 							<div className="w-full h-full flex flex-wrap gap-4 border border-[#c2c2c2] rounded-lg overflow-y-scroll">
@@ -118,6 +174,12 @@ const Index = () => {
 					</section>
 				</div>
 			</div>
+			{
+				selectedFile != null && <UpdateAvatar file={selectedFile} setSelectedFile={setSelectedFile} />
+			}
+			{
+				selectedCoverFile != null && <UpdateCoverImage file={selectedCoverFile} setSelectedCoverFile={setSelectedCoverFile} />
+			}
 		</div>
 	)
 }

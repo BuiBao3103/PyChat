@@ -33,7 +33,7 @@ export const action = async ({ request }) => {
 	if (action === "login") {
 		userInformaiton.email = data.get("email")
 		userInformaiton.password = data.get("password")
-		console.log(userInformaiton)
+		// console.log(userInformaiton)
 	} else {
 		// remove all white space from aa string
 		userInformaiton.firstName = data.get("firstName").replace(/\s/g, '');
