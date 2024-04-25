@@ -1,3 +1,9 @@
+//read file .env
+
+
+
+
+const host = process.env.HOST || 'localhost';
 document.addEventListener('DOMContentLoaded', function () {
 	const channelMatch = window.location.pathname.match(/^\/r\/\d+\/\d+$/);
 	if (!channelMatch) {
@@ -6,7 +12,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	}
 	const channel_id = channelMatch[0].split('/')[2];
 	const user_send_id = channelMatch[0].split('/')[3];
-	const socket = io('http://localhost:5000', {
+	const socket = io('http://127.0.0.1:5000', {
 		query: {
 			userID: user_send_id
 		}

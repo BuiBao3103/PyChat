@@ -15,6 +15,8 @@ user_session = {}
 @socketio.on('connect')
 def handle_connect():
     user_id = request.args.get('userID')
+    if user_id is None:
+        return
     session['user_id'] = user_id  # Store user_id in session
     user = User.query.get(user_id)
     user.last_online = None
@@ -32,7 +34,7 @@ def handle_disconnect():
         user = User.query.get(user_id)
         user.last_online = datetime.now()
         db.session.commit()
-        del user_session[int(user_id)]
+        del user_session[str(user_id)]
     print('Client disconnected')
 
 

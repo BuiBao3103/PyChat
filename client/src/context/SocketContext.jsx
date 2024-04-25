@@ -32,6 +32,7 @@ export const SocketProvider = ({ children }) => {
 				console.log('run error')
 			}
 		}
+
 	}, [])
 	return (
 		<SocketContext.Provider value={{ socket, onlineUsers }}>
