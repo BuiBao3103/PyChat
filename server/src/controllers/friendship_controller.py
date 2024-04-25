@@ -160,6 +160,7 @@ class FriendshipsAccept(Resource):
                 .join(Participant, Conversation.id == Participant.conversation_id)
                 .filter(Participant.user_id.in_([friend_id, user_id]))
                 .first())
+            
             if not conversation:
                 conversation = Conversation()
                 db.session.add(conversation)
