@@ -48,6 +48,55 @@ const Index = () => {
 		getListByFilter()
 	}, [filter])
 	// console.log(list)
+	const sendReq = async (friendData) => {
+		try {
+			const userID = JSON.parse(localStorage.getItem('user')).id;
+			const friendID = friendData.friend.id;
+			if (friendData.status === 'not_friend') {
+				const res = await Axios.post('/api/v1/friendships/request', { userID, friendID });
+				if (res.status === 201) {
+					// console.log(res);
+					getListByFilter()
+				}
+			} else if (friendData.status === 'request_received') {
+				const res = await Axios.post('/api/v1/friendships/accept', { userID, friendID });
+				if (res.status === 200) {
+					// console.log(res);
+					getListByFilter()
+				}
+			} else if (friendData.status === 'request_sent') {
+				const res = await Axios.delete('/api/v1/friendships/request', { data: { userID, friendID } });
+				if (res.status === 204) {
+					// console.log(res);
+					getListByFilter()
+				}
+			} else {
+				const res = await Axios.post('/api/v1/friendships/unfriend', { userID, friendID })
+				if (res.status === 204) {
+					console.log(res);
+					getListByFilter()
+				}
+			}
+		} catch (error) {
+			console.error(error);
+			;
+		}
+	};
+	const cancelReq = async (friendData) => {
+		try {
+			const userID = JSON.parse(localStorage.getItem('user')).id;
+			const friendID = friendData.friend.id;
+			if (friendData.status === 'request_received') {
+				const res = await Axios.delete('/api/v1/friendships/accept', { data: { userID, friendID } });
+				if (res.status === 204) {
+					// console.log(res);
+					getListByFilter()
+				}
+			}
+		} catch (error) {
+			console.error(error);
+		}
+	}
 	return (
 		<div className='w-full h-full bg-white p-3 rounded-xl overflow-hidden'>
 			<div className="w-full h-full flex flex-col gap-10">
@@ -73,11 +122,15 @@ const Index = () => {
 						{
 							!loading ? (
 								list.map((friend, index) => (
-									<FriendItem key={index} friend={friend} className={'border hover:border-[#666666] hover:shadow-lg hover:-translate-y-[2px] transition-all h-[260px]'} />
+									<FriendItem
+										key={index} friend={friend}
+										cancelReq={cancelReq}
+										sendReq={sendReq}
+										className={'border hover:border-[#666666] hover:shadow-lg hover:-translate-y-[2px] transition-all h-fit'} />
 								))
 							) : (
 								Array.from({ length: list.length }, (_, index) => (
-									<Skeleton key={index} width={342} height={260} borderRadius={8} />
+									<Skeleton key={index} width={342} height={282} borderRadius={8} />
 								))
 							)
 						}

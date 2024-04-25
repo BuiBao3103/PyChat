@@ -1,20 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-const FriendItem = ({ className, friend }) => {
-
-	//create a async function to handle the request unfriend cancel accept, cancel request
-	const handleRequest = async (type) => {
-		let url = ''
-		if (type === 'friends') {
-			url = `/api/v1/friendships/${friend.friend.id}`
-		} else if (type === 'request_received') {
-			url = `/api/v1/friendships/accept`
-		} else if (type === 'request_sent') {
-			url = `/api/v1/friendships/request`
-		}
-	}
-
+const FriendItem = ({ className, friend, sendReq, cancelReq }) => {
 
 	return (
 		<div className={`${className} p-3 flex flex-col gap-3 justify-center items-center bg-white rounded-lg`}>
@@ -29,31 +16,45 @@ const FriendItem = ({ className, friend }) => {
 				{/* //create one button with unfriend when friend.status == 'friends' */}
 				{
 					friend.status === 'friends' && (
-						<button className='w-full bg-primary text-white py-2 rounded-lg font-medium'>Unfriend</button>
+						<button
+							onClick={() => sendReq(friend)}
+							className='w-full bg-primary text-white py-2 rounded-lg font-medium hover:opacity-75 transition-opacity'>Unfriend</button>
 					)
 				}
 				{/* //create two button with Cancel and Accept when friend.status == 'request_received' */}
 				{
 					friend.status === 'request_received' && (
 						<>
-							<button className='w-full border-2 text-gray-700 py-2 rounded-lg font-medium'>Cancel</button>
-							<button className='w-full bg-primary text-white py-2 rounded-lg font-medium'>Accept</button>
+							<button
+								onClick={() => cancelReq(friend)}
+								className='w-full border-2 text-gray-700 py-2 rounded-lg font-medium hover:opacity-75 transition-opacity'>Cancel</button>
+							<button
+								onClick={() => sendReq(friend)}
+								className='w-full bg-primary text-white py-2 rounded-lg font-medium hover:opacity-75 transition-opacity'>Accept</button>
 						</>
 					)
 				}
 				{/* //create one button with Remove when friend.status == 'request_sent' */}
 				{
 					friend.status === 'request_sent' && (
-						<button className='w-full bg-primary text-white py-2 rounded-lg font-medium'>Cancel Request</button>
+						<button
+							onClick={() => sendReq(friend)}
+							className='w-full bg-primary text-white py-2 rounded-lg font-medium hover:opacity-75 transition-opacity'>Cancel Request</button>
 					)
 				}
 			</div>
 		</div>
 	)
 }
-
+FriendItem.defaultProps= {
+	sendReq: () => {},
+	cancelReq: () => {}
+}
 FriendItem.propTypes = {
-	className: PropTypes.string
+	className: PropTypes.string,
+	friend: PropTypes.object,
+	sendReq: PropTypes.func,
+	cancelReq: PropTypes.func
 }
 
 export default FriendItem
