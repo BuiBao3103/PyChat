@@ -149,21 +149,27 @@ class FriendshipsAccept(Resource):
                 or friendship_friend.status != FriendshipStatus.REQUEST_SENT):
             raise InvalidAPIUsage(
                 message='Friend is not request!', status_code=400)
-        conversation = Conversation()
+        print(friendship_user.to_dict())
+        print(friendship_friend.to_dict())
         try:
-            db.session.add(conversation)
-            db.session.commit()
-            db.session.refresh(conversation)
-
             friendship_user.status = FriendshipStatus.FRIENDS
             friendship_friend.status = FriendshipStatus.FRIENDS
             db.session.add_all([friendship_user, friendship_friend])
-
-            participant_user = Participant(
-                user_id=user_id, conversation_id=conversation.id)
-            participant_friend = Participant(
-                user_id=friend_id, conversation_id=conversation.id)
-            db.session.add_all([participant_user, participant_friend])
+            # check if conversation exist
+            conversation = (db.session.query(Conversation)
+                .join(Participant, Conversation.id == Participant.conversation_id)
+                .filter(Participant.user_id.in_([friend_id, user_id]))
+                .first())
+            if not conversation:
+                conversation = Conversation()
+                db.session.add(conversation)
+                db.session.commit()
+                db.session.refresh(conversation)
+                participant_user = Participant(
+                    user_id=user_id, conversation_id=conversation.id)
+                participant_friend = Participant(
+                    user_id=friend_id, conversation_id=conversation.id)
+                db.session.add_all([participant_user, participant_friend])
             db.session.commit()
         except Exception as e:
             db.session.rollback()
@@ -261,6 +267,7 @@ class FriendshipsBlock(Resource):
         response = make_response(
             {"status": "success", 'data': friendship_user.to_dict()}, 200)
         return response
+
 
 class FriendshipUnfriend(Resource):
     def post(self):
