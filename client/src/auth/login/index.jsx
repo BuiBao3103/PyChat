@@ -3,7 +3,7 @@ import { FcGoogle } from "react-icons/fc";
 import { FaFacebook, FaInstagram } from "react-icons/fa";
 import SocialMediaButton from '../../components/button/SocialMediaButton';
 import { PiEye, PiEyeClosed } from "react-icons/pi";
-import { Link, Form, useNavigation, useActionData } from 'react-router-dom';
+import { Link, Form, useNavigation, useActionData, useLoaderData } from 'react-router-dom';
 import { toast } from 'react-toastify';
 const Index = () => {
 	const [isVisiblePassword, setIsVisiblePassword] = useState(false)

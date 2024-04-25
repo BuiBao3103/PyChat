@@ -12,37 +12,56 @@ const Index = () => {
 	const [query, setQuery] = useState('')
 	const [usersData, setUsersData] = useState([])
 	const { loading, users, searchUsers } = useSearch({ query })
-	console.log(users)
 	const handleChange = (e) => {
 		setQuery(e.target.value)
 	}
 	const sendReq = async (searchValue) => {
-		const userID = JSON.parse(localStorage.getItem('user')).id;
-		const friendID = searchValue.id;
-		if (searchValue.status === 'not_friend') {
-			const res = await Axios.post('/api/v1/friendships/request', { userID, friendID });
-			if (res.status === 201) {
-				console.log(res);
-				searchUsers()
+		try {
+			const userID = JSON.parse(localStorage.getItem('user')).id;
+			const friendID = searchValue.id;
+			if (searchValue.status === 'not_friend') {
+				const res = await Axios.post('/api/v1/friendships/request', { userID, friendID });
+				if (res.status === 201) {
+					// console.log(res);
+					searchUsers()
+				}
+			} else if (searchValue.status === 'request_received') {
+				const res = await Axios.post('/api/v1/friendships/accept', { userID, friendID });
+				if (res.status === 200) {
+					// console.log(res);
+					searchUsers()
+				}
+			} else if (searchValue.status === 'request_sent') {
+				const res = await Axios.delete('/api/v1/friendships/request', { data: { userID, friendID } });
+				if (res.status === 204) {
+					// console.log(res);
+					searchUsers()
+				}
 			}
-		} else if (searchValue.status === 'request_received') {
-			const res = await Axios.post('/api/v1/friendships/accept', { userID, friendID });
-			if (res.status === 200) {
-				console.log(res);
-				searchUsers()
-			}
-		} else if (searchValue.status === 'request_sent') {
-			const res = await Axios.delete('/api/v1/friendships/request', { data: { userID, friendID } });
-			if (res.status === 204) {
-				console.log(res);
-				searchUsers()
-			}
+		} catch (error) {
+			console.error(error);
+			;
 		}
 	};
+	const cancelReq = async (searchValue) => {
+		try {
+			const userID = JSON.parse(localStorage.getItem('user')).id;
+			const friendID = searchValue.id;
+			if (searchValue.status === 'request_received') {
+				const res = await Axios.delete('/api/v1/friendships/accept', { data: { userID, friendID } });
+				if (res.status === 204) {
+					// console.log(res);
+					searchUsers()
+				}
+			}
+		} catch (error) {
+			console.error(error);
+		}
+	}
 
 	useEffect(() => {
 		setUsersData(users);
-	}, [users]); // Add users as a dependency to re-render when it changes
+	}, [users]);
 	return (
 		<div className='w-full h-full bg-white dark:bg-primary-dark rounded-xl p-3 flex flex-col gap-5'>
 			<section>
@@ -94,7 +113,7 @@ const Index = () => {
 									))
 								) : (
 									usersData.map((item, index) => (
-										<SearchItem item={item} key={index} sendReq={sendReq} />
+										<SearchItem item={item} key={index} sendReq={sendReq} cancelReq={cancelReq} />
 									))
 								)
 							}

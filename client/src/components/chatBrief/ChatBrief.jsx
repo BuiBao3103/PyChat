@@ -4,13 +4,13 @@ import DefaultAvatar from '../../assets/defaultAvatar.jpg'
 import { useNavigate } from 'react-router-dom'
 import useConversation from '../../zustand/useConversation'
 import { formatMessageTime } from '../../utils/extractTIme'
-const ChatBrief = ({ className = '', currentConversation, joinRoom,leaveRoom }) => {
+const ChatBrief = ({ className = '', currentConversation, joinRoom, leaveRoom }) => {
 	const navigate = useNavigate()
 	const { setSelectedConversation, selectedConversation } = useConversation()
 	const leaveRoomWithID = (conversation) => {
-		if(conversation != null){
+		if (conversation != null) {
 			leaveRoom(conversation.id)
-		}else{
+		} else {
 			console.log("No conversation")
 		}
 	}
@@ -33,7 +33,7 @@ const ChatBrief = ({ className = '', currentConversation, joinRoom,leaveRoom }) 
 					<span className='text-sm text-[#8d8d8d]'>{currentConversation.last_message != null && formatMessageTime(new Date(currentConversation.last_message.time))}</span>
 				</div>
 				<div className="w-full flex justify-between items-center gap-1">
-					<p className={`text-sm w-[180px] truncate text-[#8d8d8d]`}>{currentConversation.last_message != null ? currentConversation.last_message.message : "test"}</p>
+					<p className={`text-sm w-[180px] truncate text-[#8d8d8d]`}>{currentConversation.last_message != null ? `${JSON.parse(localStorage.getItem('user')).id == currentConversation.last_message.user_id ? 'You:' : ''} `  + currentConversation.last_message.message : "Hai bạn đã trở thành bạn hãy nhắn với nhau đi"}</p>
 					{/* <span className='text-sm bg-black text-white rounded-full size-[6px]' /> */}
 				</div>
 			</div>

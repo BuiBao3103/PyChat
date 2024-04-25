@@ -32,17 +32,17 @@ const Messages = ({ msgConversation }) => {
 	};
 	useEffect(() => {
 		scrollToBottom()
-	},[messages])
+	}, [messages])
 	return (
 		<>
-			<div className='w-full h-full overflow-auto flex flex-col gap-2 relative'>
+			<div className='w-full h-full overflow-hidden flex flex-col gap-2 relative first:!mt-auto'>
 				<h1 className='w-full absolute pb-2 z-10 text-lg dark:text-white dark:border-ebony-clay h-fit bg-light-gray p-2 rounded-md font-medium shadow-md'>{selectedConversation.friend.username}</h1>
 				<div className="w-full h-full pt-12">
-					<div className="w-full h-full overflow-y-auto">
-						{messages.slice().reverse().map((item, index) => (
-								<Message message={item} key={index} />
+					<div className="w-full h-full overflow-y-auto flex flex-col-reverse">
+						<div className='messageEnd' style={{ float: "left", clear: "both" }} ref={messageEnd}></div> {/* This empty div will always be at the end of your messages list */}
+						{messages.map((item, index) => (
+							<Message message={item} key={index} />
 						))}
-						<div className='messageEnd' style={{float: "left", clear: "both"}} ref={messageEnd}></div> {/* This empty div will always be at the end of your messages list */}
 					</div>
 				</div>
 			</div>

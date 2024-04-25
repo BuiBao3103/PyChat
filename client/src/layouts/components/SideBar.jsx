@@ -78,12 +78,12 @@ const SideBar = () => {
 					<section className='w-full flex flex-col items-center gap-3'>
 						<div
 							onClick={() => {
-								navigate(`/profile/${JSON.parse(localStorage.getItem('user')).id}`)
+								navigate(`/profile/${state.user.id ? state.user.id : JSON.parse(localStorage.getItem('user')).id}`)
 							}}
 							className="w-[55px] h-[55px] rounded-full overflow-hidden">
 							<img
 								className='w-full h-full object-cover'
-								src={JSON.parse(localStorage.getItem("user")).avatar} alt="User Avatar" />
+								src={state.user?.avatar ? state.user.avatar : JSON.parse(localStorage.getItem('user')).avatar} alt="User Avatar" />
 						</div>
 						<Link
 							onClick={logoutUser}

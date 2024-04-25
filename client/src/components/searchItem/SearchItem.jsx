@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import Axios from '../../api/index'
 import { FaUserCheck } from "react-icons/fa6";
-const SearchItem = ({ item, sendReq }) => {
+const SearchItem = ({ item, sendReq,cancelReq }) => {
 	const [searchValue, setSearchValue] = useState(item)
 	useEffect(() => {
 		setSearchValue(item)
 	}, [item])
+
 	return (
 		<div className='w-full h-fit p-5 bg-[#f0f0f0] dark:bg-[#3a3b3c] flex justify-between items-center rounded-lg shadow-md'>
 			<div className="w-full flex items-center gap-4">
@@ -21,7 +22,7 @@ const SearchItem = ({ item, sendReq }) => {
 				{
 					searchValue.status == 'request_received' && (
 						<button
-							onClick={sendReq}
+							onClick={() => cancelReq(searchValue)}
 							className={`w-auto px-3 py-2 bg-gray-400 dark:bg-primary hover:bg-primary-900 transition-all rounded-md`}>
 							<span className='text-white text-sm font-medium whitespace-nowrap'>Cancel</span>
 						</button>
