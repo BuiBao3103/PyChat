@@ -97,7 +97,7 @@ def handle_image_message(data):
     image_bytes = base64.b64decode(image_data)
     img = Image.open(BytesIO(image_bytes))
     image_name = f'received_image.{file_extension}'
-    img.save(image_name)
+    # img.save(image_name)
     image_stream = BytesIO()
     file_extension = 'JPEG' if file_extension.lower() == 'jpg' else file_extension.upper()
     img.save(image_stream, format=file_extension)
