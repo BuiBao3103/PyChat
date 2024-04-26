@@ -13,7 +13,7 @@ const MessageDetail = () => {
 
 	return (
 		<>
-			<div className="min-w-[300px] w-[300px] h-full rounded-xl bg-white dark:bg-primary-dark lg:block hidden">
+			<div className="min-w-[300px] w-[300px] h-full rounded-xl bg-white dark:bg-primary-dark xl:block hidden">
 				<div className="w-full flex flex-col justify-center items-center gap-3">
 					<div className="w-full flex flex-col justify-center items-center gap-1 p-3">
 						<div className="size-36 rounded-xl overflow-hidden">
