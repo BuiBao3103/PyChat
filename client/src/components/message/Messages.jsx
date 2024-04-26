@@ -4,7 +4,7 @@ import useConversation from '../../zustand/useConversation'
 import { useSocketContext } from '../../context/SocketContext'
 import MessageInput from './MessageInput';
 
-const Messages = ({ msgConversation }) => {
+const Messages = ({ msgConversation, selectedFiles }) => {
 	const [messages, setMessages] = useState([]);
 	const { socket } = useSocketContext();
 	const { selectedConversation } = useConversation();
@@ -46,7 +46,7 @@ const Messages = ({ msgConversation }) => {
 					</div>
 				</div>
 			</div>
-			<MessageInput scroll={messageEnd} />
+			<MessageInput scroll={messageEnd} selectedImageFiles={selectedFiles} />
 		</>
 	);
 };
