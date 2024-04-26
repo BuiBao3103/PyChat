@@ -14,6 +14,10 @@ const ChatBrief = ({ className = '', currentConversation, joinRoom, leaveRoom })
 			console.log("No conversation")
 		}
 	}
+	const userSend = () => {
+		return currentConversation.last_message.user_id == JSON.parse(localStorage.getItem('user')).id ? 'You: ' : ''
+
+	}
 	return (
 		<div
 			onClick={() => {
@@ -33,8 +37,19 @@ const ChatBrief = ({ className = '', currentConversation, joinRoom, leaveRoom })
 					<span className='text-sm text-[#8d8d8d]'>{currentConversation.last_message != null && formatMessageTime(new Date(currentConversation.last_message.time))}</span>
 				</div>
 				<div className="w-full flex justify-between items-center gap-1">
-					<p className={`text-sm w-[180px] truncate text-[#8d8d8d]`}>{currentConversation.last_message != null ? `${JSON.parse(localStorage.getItem('user')).id == currentConversation.last_message.user_id ? 'You:' : ''} `  + currentConversation.last_message.message : "Hai bạn đã trở thành bạn hãy nhắn với nhau đi"}</p>
-					{/* <span className='text-sm bg-black text-white rounded-full size-[6px]' /> */}
+					<p className={`text-sm w-[180px] truncate text-[#8d8d8d]`}>
+						{
+							currentConversation.last_message != null && currentConversation.last_message.type == 'text' ?
+								`${userSend()}` + currentConversation.last_message.message 
+									: currentConversation.last_message != null && currentConversation.last_message.type == 'image' ? 'You sent a photo.'
+										: 'Hai bạn đã trở thành bạn hãy nhắn với nhau đi'
+						}
+					</p>
+					{/* <p className={`text-sm w-[180px] truncate text-[#8d8d8d]`}>
+						{currentConversation.last_message != null
+							? `${JSON.parse(localStorage.getItem('user')).id == currentConversation.last_message.user_id
+								? 'You:' : ''} ` + currentConversation.last_message.message :
+							"Hai bạn đã trở thành bạn hãy nhắn với nhau đi"}</p> */}
 				</div>
 			</div>
 		</div>
