@@ -23,7 +23,7 @@ const Message = ({ message }) => {
 			<div className={`chat-bubble w-fit rounded-md text-white ${fromMe ? "bg-primary" : "bg-gray-700"} text-right`}>{
 				message.type == 'text' ? <span>{message.message}</span> :
 					message.attachments.map((item, index) => (
-						<img src={item.url} alt="" className='size-full max-h-[350px]' />
+						<img src={item.url} alt="" key={index} loading='lazy' className='size-full max-h-[350px]' />
 					))
 			}
 			</div>

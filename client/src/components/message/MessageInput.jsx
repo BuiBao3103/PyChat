@@ -5,7 +5,7 @@ import useConversation from '../../zustand/useConversation'
 import { toast } from 'react-toastify'
 const MessageInput = ({ scroll, selectedImageFiles }) => {
 	const { selectedConversation, setLoadConversations } = useConversation()
-	const [isDragging, setIsDragging] = useState(false)
+	const [isLoading, setIsLoading] = useState(false)
 	const [message, setMessage] = useState('')
 	const { socket } = useSocketContext()
 	const [selectedFiles, setSelectedFiles] = useState([]);
@@ -27,17 +27,16 @@ const MessageInput = ({ scroll, selectedImageFiles }) => {
 		}
 	}
 	const sendImages = () => {
-		const imageInputs = Array.from(document.querySelectorAll('#imageFile'));
+		const imageInputs = document.querySelector('#imageFiles');
 		if (selectedFiles.length > 0) {
 			selectedFiles.forEach((file, index) => {
-				const imageInput = imageInputs[index];
 				socket.emit('message', {
 					user_id: JSON.parse(localStorage.getItem('user')).id,
 					channel_id: selectedConversation.id,
 					imageData: file.split(',')[1],
 					time: Date.now(),
 					type: 'image',
-					fileExtension: imageInput.files[0].name.split('.').pop()
+					fileExtension: imageInputs.files[index].name.split('.').pop()
 				});
 			});
 			setLoadConversations(true);
@@ -110,14 +109,14 @@ const MessageInput = ({ scroll, selectedImageFiles }) => {
 						</div>
 					)
 				}
-				<label htmlFor='imageFile' className='size-12 bg-primary flex justify-center items-center rounded-md p-2.5 hover:opacity-75 transition-all cursor-pointer relative'>
+				<label htmlFor='imageFiles' className='size-12 bg-primary flex justify-center items-center rounded-md p-2.5 hover:opacity-75 transition-all cursor-pointer relative'>
 					<PiImage size={22} className='text-white size-full' />
 					<input
 						accept="image/*"
 						multiple={true}
-						type="file" name='imageFile'
+						type="file" name='imageFiles'
 						onChange={handleFileChange}
-						id='imageFile' className='w-full h-full absolute opacity-0 cursor-pointer' />
+						id='imageFiles' className='w-full h-full absolute opacity-0 cursor-pointer' />
 				</label>
 				<input type="text" onKeyDown={onEnterPress} value={message} onChange={(e) => setMessage(e.target.value)} className='w-full bg-light-gray dark:bg-[#282930] h-12 rounded-md px-3 focus:outline-primary' placeholder='Type your message' />
 				<button
