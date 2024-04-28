@@ -55,6 +55,7 @@ def handle_leave(data):
 @socketio.on('message')
 def handle_message(data):
     message_type = MessageType(data['type'])
+    print(message_type)
     if message_type == MessageType.TEXT:
         handle_text_message(data)
     elif message_type == MessageType.IMAGE:
@@ -104,6 +105,7 @@ def handle_image_message(data):
     image_stream.seek(0)  # Reset the stream position to the beginning
     upload_result = uploader.upload(
         image_stream, folder="message_image", resource_type="image")
+    print(upload_result)
     new_message = Message(user_id=user_id, conversation_id=channel_id,
                           time=datetime.fromtimestamp(time),
                           type=message_type)

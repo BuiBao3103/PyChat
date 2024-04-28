@@ -15,12 +15,17 @@ const MessageInput = ({ scroll, selectedImageFiles }) => {
 		for (let i = 0; i < files.length; i++) {
 			if (files[i].type.split('/')[0] !== 'image') {
 				toast.error('Only images are allowed')
-				continue;
+				return;
+			}
+			if (files[i].size > 1024 * 1024 * 2) {
+				toast.error('Only images less or equal than 2MB are allowed')
+				return;
 			}
 			if (!selectedFiles.some((e) => e.name === files[i].name)) {
 				const reader = new FileReader();
 				reader.readAsDataURL(files[i]);
 				reader.onload = () => {
+					console.log(reader.result)
 					setSelectedFiles((prev) => [...prev, reader.result]);
 				};
 			}
@@ -30,6 +35,7 @@ const MessageInput = ({ scroll, selectedImageFiles }) => {
 		const imageInputs = document.querySelector('#imageFiles');
 		if (selectedFiles.length > 0) {
 			selectedFiles.forEach((file, index) => {
+				// if(imageInputs.files[0].size <= 1024 * 1024) {
 				socket.emit('message', {
 					user_id: JSON.parse(localStorage.getItem('user')).id,
 					channel_id: selectedConversation.id,
@@ -38,6 +44,9 @@ const MessageInput = ({ scroll, selectedImageFiles }) => {
 					type: 'image',
 					fileExtension: imageInputs.files[index].name.split('.').pop()
 				});
+				// }else {
+				// 	toast.warning('Only images less or equal than 2MB are allowed')
+				// }
 			});
 			setLoadConversations(true);
 			setTimeout(() => {
