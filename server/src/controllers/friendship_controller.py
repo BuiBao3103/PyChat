@@ -149,8 +149,6 @@ class FriendshipsAccept(Resource):
                 or friendship_friend.status != FriendshipStatus.REQUEST_SENT):
             raise InvalidAPIUsage(
                 message='Friend is not request!', status_code=400)
-        print(friendship_user.to_dict())
-        print(friendship_friend.to_dict())
         try:
             friendship_user.status = FriendshipStatus.FRIENDS
             friendship_friend.status = FriendshipStatus.FRIENDS
