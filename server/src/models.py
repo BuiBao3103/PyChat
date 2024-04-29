@@ -54,10 +54,10 @@ class Message(db.Model, SerializerMixin):
     revoke_at = Column(DateTime, nullable=True, default=None)
     attachments = relationship("Attachment", backref="message",
                                foreign_keys='Attachment.message_id', lazy=True)
-    # deleted_messages = relationship('DeletedMessage', backref='message',
-    #                                 foreign_keys='DeletedMessage.message_id', lazy=True)
+    deleted_messages = relationship('DeletedMessage', backref='message',
+                                    foreign_keys='DeletedMessage.message_id', lazy=True)
     serialize_rules = ('-participants.conversation',
-                       '-user', '-attachments.message',)
+                       '-user', '-attachments.message', '-deleted_messages.message',)
 
 
 class Attachment(db.Model, SerializerMixin):
