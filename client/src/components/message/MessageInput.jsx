@@ -39,10 +39,12 @@ const MessageInput = ({ scroll, selectedImageFiles }) => {
 				socket.emit('message', {
 					user_id: JSON.parse(localStorage.getItem('user')).id,
 					channel_id: selectedConversation.id,
-					imageData: file.split(',')[1],
+					imageDatas: [{
+						image: file.split(',')[1],
+						fileExtension: imageInputs.files[index].name.split('.').pop()
+					}],
 					time: Date.now(),
 					type: 'image',
-					fileExtension: imageInputs.files[index].name.split('.').pop()
 				});
 				// }else {
 				// 	toast.warning('Only images less or equal than 2MB are allowed')

@@ -3,7 +3,7 @@
 
 
 
-const host = process.env.HOST || 'localhost';
+// const host = process.env.HOST || 'localhost';
 document.addEventListener('DOMContentLoaded', function () {
 	const channelMatch = window.location.pathname.match(/^\/r\/\d+\/\d+$/);
 	if (!channelMatch) {
@@ -50,10 +50,13 @@ document.addEventListener('DOMContentLoaded', function () {
 				socket.emit('message', {
 					user_id: user_send_id,
 					channel_id,
-					imageData: imageData.split(',')[1], // Extract base64 data
+					imageDatas: [{
+						image: imageData.split(',')[1],
+						fileExtension: file.name.split('.').pop()
+					}
+					],
 					time: Date.now(),
 					type: 'image',
-					fileExtension: file.name.split('.').pop() // Extract original extension
 				});
 			};
 			reader.readAsDataURL(file);

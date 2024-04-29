@@ -20,7 +20,7 @@ cors = CORS(app, resources={
             r"/api/*": {"origins": "*"}}, supports_credentials=True)
 jwt = JWTManager(app)
 # socketio allow all origins
-max_http_buffer_size = 5 * 1024 * 1024  # 5MB
+max_http_buffer_size = 100 * 1024 * 1024  # 100MB
 socketio = SocketIO(
     app, max_http_buffer_size=max_http_buffer_size, cors_allowed_origins="*")
 
