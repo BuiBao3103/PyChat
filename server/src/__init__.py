@@ -20,7 +20,9 @@ cors = CORS(app, resources={
             r"/api/*": {"origins": "*"}}, supports_credentials=True)
 jwt = JWTManager(app)
 # socketio allow all origins
-socketio = SocketIO(app, cors_allowed_origins="*")
+max_http_buffer_size = 100 * 1024 * 1024  # 100MB
+socketio = SocketIO(
+    app, max_http_buffer_size=max_http_buffer_size, cors_allowed_origins="*")
 
 db = SQLAlchemy(app)
 bc = Bcrypt(app)
