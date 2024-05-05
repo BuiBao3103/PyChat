@@ -96,9 +96,6 @@ class SearchUsers(Resource):
     @protect()
     def get(self):
         q = request.args.get('q')
-        # if not q:
-        #     raise InvalidAPIUsage(
-        #         message='Query parameter is required!', status_code=400)
         query = (db.session.query(User, Friendship.status)
                  .join(Friendship, ((Friendship.friend_id == User.id) & (
                      Friendship.user_id == request.user.id)), isouter=True))
@@ -110,6 +107,7 @@ class SearchUsers(Resource):
         users = query.all()
         users = [{**user.to_dict(), 'status': status.value if status else 'not_friend'}
                  for user, status in users]
+        users.sort(key=lambda x: ['friends', 'request_received', 'request_sent', 'not_friend'].index(x['status']))
         response = make_response(
             {'status': 'sucess', 'total_count': len(users), 'data': users}, 200)
         return response
