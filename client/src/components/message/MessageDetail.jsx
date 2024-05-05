@@ -2,32 +2,17 @@ import React, { useEffect, useState } from 'react'
 import { PiMinusCircle, PiMinus, PiPlus } from 'react-icons/pi'
 import useConversation from '../../zustand/useConversation'
 import BlockConfirm from '../modal/BlockConfirm'
-import Axios from '../../api/index'
 import ImagesOverlay from '../caroseul/ImagesOverlay'
+import useGetAllImages from '../../hooks/useGetAllImages'
 const MessageDetail = () => {
 
 	const { selectedConversation, isOpenCarosuel, setIsOpenCarosuel, setSelectedImage } = useConversation()
-	const [images, setImages] = useState([])
+	const { imagesData, getAllImages } = useGetAllImages()
 	const [isOpenRecentImage, setIsOpenRecentImage] = useState(false)
 	const [isVisibleBlockModal, setIsVisibleBlockModal] = useState(false)
 	const handleVisibleBlockModal = () => {
 		setIsVisibleBlockModal(!isVisibleBlockModal)
 	}
-
-	useEffect(() => {
-		const getAllImages = async () => {
-			try {
-				const res = await Axios.get(`/api/v1/conversations/${selectedConversation.id}/images?sort_by=-time`)
-				if (res.status == 200) {
-					setImages(res.data.data)
-				}
-			} catch (error) {
-				console.log(error)
-			}
-		}
-		getAllImages()
-	}, [selectedConversation.id])
-
 	return (
 		<>
 			<div className="min-w-[300px] w-[300px] h-full rounded-xl bg-white dark:bg-primary-dark xl:block hidden">
@@ -56,7 +41,7 @@ const MessageDetail = () => {
 							isOpenRecentImage && (
 								<div className="transition-all grid grid-cols-3 gap-1">
 									{
-										images.map((image, index) => (
+										imagesData.map((image, index) => (
 											<div key={index}
 												onClick={() => {
 													setIsOpenCarosuel(true)
@@ -86,7 +71,7 @@ const MessageDetail = () => {
 				</div>
 			</div>
 			{isVisibleBlockModal && <BlockConfirm user={selectedConversation} handleVisibleBlockModal={setIsVisibleBlockModal} />}
-			{isOpenCarosuel && <ImagesOverlay images={images} />}
+			{isOpenCarosuel && <ImagesOverlay images={imagesData} />}
 		</>
 	)
 }
