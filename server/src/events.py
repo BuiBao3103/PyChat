@@ -100,6 +100,8 @@ def handle_image_message(data):
     db.session.add(new_message)
     db.session.commit()
     db.session.refresh(new_message)
+    conversation.last_message_id = new_message.id
+    db.session.commit()
     image_datas = data['imageDatas']
     for image_data in image_datas:
         file_extension = image_data['fileExtension']
