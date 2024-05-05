@@ -96,10 +96,11 @@ def handle_image_message(data):
     new_message = Message(user_id=user_id, conversation_id=channel_id,
                           time=datetime.fromtimestamp(time),
                           type=message_type)
-    conversation.last_message_id = new_message.id
     db.session.add(new_message)
     db.session.commit()
     db.session.refresh(new_message)
+    conversation.last_message_id = new_message.id
+    db.session.commit()
     image_datas = data['imageDatas']
     for image_data in image_datas:
         file_extension = image_data['fileExtension']
