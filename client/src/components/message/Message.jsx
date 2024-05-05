@@ -57,10 +57,15 @@ const Message = ({ message, reloadMessage }) => {
 						<h1>{fromMe ? JSON.parse(localStorage.getItem('user')).username : selectedConversation.friend.username}</h1>
 						<time className="text-xs flex items-center">{formattedTime}</time>
 					</div>
-					<div className={`chat-bubble w-fit rounded-md text-white max-h-full ${fromMe ? "bg-primary" : "bg-gray-700"} text-right relative ${msg.type != "text" && "flex gap-1"}`}>
+					<div 
+						className={`chat-bubble w-fit rounded-md text-white max-h-full 
+									${fromMe && msg.revoke_at == null && "bg-primary"}  
+									${!fromMe && msg.revoke_at == null && "bg-gray-700"}
+									${msg.revoke_at != null && "chat-bubble-info"}
+									text-right relative ${msg.type != "text" && "flex gap-1"}`}>
 						{
 							msg.revoke_at != null && (
-								<span className="text-white">You unsent a message</span>
+								<span className="text-white">Message has been revoked</span>
 							)
 						}
 						{msg.revoke_at == null && msg.type === 'text' ? (
