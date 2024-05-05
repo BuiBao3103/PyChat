@@ -20,6 +20,7 @@ const ChatBrief = ({ className = '', currentConversation, joinRoom, leaveRoom })
 	const isUserSend = () => {
 		return currentConversation.last_message.user_id == JSON.parse(localStorage.getItem('user')).id
 	}
+	console.log(currentConversation.last_message)
 	return (
 		<div
 			onClick={() => {
@@ -37,9 +38,8 @@ const ChatBrief = ({ className = '', currentConversation, joinRoom, leaveRoom })
 					className="w-full h-full object-cover object-center rounded-full"
 				/>
 				<div
-					className={`size-4 border-[3px] border-white absolute bottom-0 right-0 rounded-full ${
-						currentConversation.friend.last_online == null ? "bg-primary-900" : "hidden"
-					}`}
+					className={`size-4 border-[3px] border-white absolute bottom-0 right-0 rounded-full ${currentConversation.friend.last_online == null ? "bg-primary-900" : "hidden"
+						}`}
 				/>
 			</div>
 			<div className="flex-1 h-full flex flex-col justify-center items-center">
@@ -50,14 +50,43 @@ const ChatBrief = ({ className = '', currentConversation, joinRoom, leaveRoom })
 					</span>
 				</div>
 				<div className="w-full flex justify-between items-center gap-1">
-					<p className={`text-sm w-[180px] truncate text-[#8d8d8d]`}>
-						{currentConversation.last_message &&
-							(currentConversation.last_message.type === "text"
-								? `${userSend()}${currentConversation.last_message.message}`
-								: isUserSend()
-								? `You sent ${currentConversation.last_message.attachments != 1 && `${currentConversation.last_message.attachments.length}`} a photo.`
-								: `${currentConversation.friend.username} sent a photo`)}
-						{!currentConversation.last_message && "You two are now friends, chat with each other"}
+					<p className={`text-sm w-[200px] truncate text-[#8d8d8d]`}>
+						{
+							currentConversation.last_message
+							&& currentConversation.last_message.type == "text"
+							&& isUserSend()
+							&& currentConversation.last_message?.revoke_at == null
+							&& currentConversation.last_message?.deleted_messages.length == 0
+							&& `${userSend()}${currentConversation.last_message.message}`
+						}
+						{
+							currentConversation.last_message
+							&& currentConversation.last_message.type == "text"
+							&& !isUserSend() && currentConversation.last_message?.deleted_messages.length == 0
+							&& currentConversation.last_message?.revoke_at == null
+							&& `${currentConversation.last_message.message}`
+						}
+						{
+							currentConversation.last_message && currentConversation.last_message.type == "image"
+							&& isUserSend() && currentConversation.last_message?.revoke_at == null
+							&& `You sent ${currentConversation.last_message.attachments.length != 1 ? `${currentConversation.last_message.attachments.length} photos` : 'a photo'}.`
+						}
+						{
+							currentConversation.last_message && currentConversation.last_message.type == "image"
+							&& !isUserSend() && currentConversation.last_message?.revoke_at == null
+							&& currentConversation.last_message?.deleted_messages.length == 0
+							&& `${currentConversation.friend.username} sent ${currentConversation.last_message.attachments.length != 1 ? `${currentConversation.last_message.attachments.length} photos` : 'a photo'}.`
+						}
+						{
+							currentConversation.last_message && currentConversation.last_message?.revoke_at != null
+							&& currentConversation.last_message?.deleted_messages.length == 0
+							&& "Message has been revoked."
+						}
+						{
+							currentConversation.last_message && currentConversation.last_message?.revoke_at == null
+							&& currentConversation.last_message?.deleted_messages.length != 0
+							&& "Message has been deleted."
+						}
 					</p>
 				</div>
 			</div>

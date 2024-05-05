@@ -24,7 +24,7 @@ const MessageDetail = () => {
 						<span className='text-lg dark:text-white'>{selectedConversation.friend.username}</span>
 						<span className='text-sm dark:text-white'>{selectedConversation.last_online != null ? "online" : "offline"}</span>
 					</div>
-					<div className="w-full flex flex-col">
+					<div className="w-full flex flex-col overflow-hidden">
 						<section
 							onClick={() => setIsOpenRecentImage(!isOpenRecentImage)}
 							className={`${isOpenRecentImage ? 'bg-light-gray' : 'bg-white'} w-full flex justify-between items-center border-t border-[#ababab] p-2 hover:bg-light-gray dark:hover:bg-white/30  cursor-pointer`}>
@@ -39,7 +39,7 @@ const MessageDetail = () => {
 						</section>
 						{
 							isOpenRecentImage && (
-								<div className="transition-all grid grid-cols-3 gap-1">
+								<div className="transition-all h-[310px] overflow-y-scroll grid grid-cols-3 gap-1">
 									{
 										imagesData.map((image, index) => (
 											<div key={index}
