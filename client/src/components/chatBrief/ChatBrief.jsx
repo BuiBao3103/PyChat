@@ -55,7 +55,7 @@ const ChatBrief = ({ className = '', currentConversation, joinRoom, leaveRoom })
 							(currentConversation.last_message.type === "text"
 								? `${userSend()}${currentConversation.last_message.message}`
 								: isUserSend()
-								? "You sent a photo."
+								? `You sent ${currentConversation.last_message.attachments != 1 && `${currentConversation.last_message.attachments.length}`} a photo.`
 								: `${currentConversation.friend.username} sent a photo`)}
 						{!currentConversation.last_message && "You two are now friends, chat with each other"}
 					</p>

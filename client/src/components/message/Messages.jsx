@@ -3,13 +3,15 @@ import Message from './Message'
 import useConversation from '../../zustand/useConversation'
 import { useSocketContext } from '../../context/SocketContext'
 import MessageInput from './MessageInput';
-
+import Axios from '../../api/index'
+import { useParams } from 'react-router-dom';
 const Messages = ({ msgConversation, selectedFiles }) => {
 	const [messages, setMessages] = useState([]);
 	const { socket } = useSocketContext();
 	const { selectedConversation } = useConversation();
+	const [loading, setLoading] = useState(false)
 	const messageEnd = useRef();
-
+	const params = useParams()
 	useEffect(() => {
 		setMessages(msgConversation);
 		setTimeout(() => {
@@ -26,10 +28,21 @@ const Messages = ({ msgConversation, selectedFiles }) => {
 		return () => {
 			socket.off('message', handleNewMessage);
 		};
-	}, [socket]);
+	}, [socket, loading]);
 	const scrollToBottom = () => {
 		messageEnd.current.scrollIntoView({ behavior: "smooth" });
 	};
+	const reloadMessage = async () => {
+		const res = await Axios.get(`/api/v1/conversations/${params.conversationID}/messages?sort_by=-time`)
+		if (res.status === 200) {
+			setMessages(res.data.data)
+		}
+	}
+	useEffect(() => {
+		reloadMessage()
+		console.log('reload')
+	}, [])
+	console.log(loading)
 	useEffect(() => {
 		scrollToBottom()
 	}, [messages])
@@ -41,7 +54,7 @@ const Messages = ({ msgConversation, selectedFiles }) => {
 					<div className="w-full h-full overflow-y-auto flex flex-col-reverse">
 						<div className='messageEnd' style={{ float: "left", clear: "both" }} ref={messageEnd}></div> {/* This empty div will always be at the end of your messages list */}
 						{messages.map((item, index) => (
-							<Message message={item} key={index} />
+							<Message message={item} key={index} reloadMessage={reloadMessage} />
 						))}
 					</div>
 				</div>

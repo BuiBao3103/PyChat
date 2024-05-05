@@ -3,12 +3,14 @@ import { PiPaperPlaneTiltBold, PiImage, PiX } from 'react-icons/pi'
 import { useSocketContext } from '../../context/SocketContext'
 import useConversation from '../../zustand/useConversation'
 import { toast } from 'react-toastify'
+import useGetAllImages from '../../hooks/useGetAllImages'
 const MessageInput = ({ scroll, selectedImageFiles }) => {
 	const { selectedConversation, setLoadConversations } = useConversation()
 	const [isLoading, setIsLoading] = useState(false)
 	const [message, setMessage] = useState('')
 	const { socket } = useSocketContext()
 	const [selectedFiles, setSelectedFiles] = useState([]);
+	const { imagesData, getAllImages } = useGetAllImages()
 	const handleFileChange = (e) => {
 		const files = e.target.files;
 		if (files.length === 0) return;
@@ -17,8 +19,8 @@ const MessageInput = ({ scroll, selectedImageFiles }) => {
 				toast.error('Only images are allowed')
 				return;
 			}
-			if (files[i].size > 1024 * 1024 * 2) {
-				toast.error('Only images less or equal than 2MB are allowed')
+			if (files[i].size > 1024 * 1024 * 5) {
+				toast.error('Only images less or equal than 5MB are allowed')
 				return;
 			}
 			if (!selectedFiles.some((e) => e.name === files[i].name)) {
@@ -33,28 +35,38 @@ const MessageInput = ({ scroll, selectedImageFiles }) => {
 	}
 	const sendImages = () => {
 		const imageInputs = document.querySelector('#imageFiles');
+		const user = JSON.parse(localStorage.getItem('user'));
+
 		if (selectedFiles.length > 0) {
-			selectedFiles.forEach((file, index) => {
-				// if(imageInputs.files[0].size <= 1024 * 1024) {
-				socket.emit('message', {
-					user_id: JSON.parse(localStorage.getItem('user')).id,
-					channel_id: selectedConversation.id,
-					imageDatas: [{
-						image: file.split(',')[1],
-						fileExtension: imageInputs.files[index].name.split('.').pop()
-					}],
-					time: Date.now(),
-					type: 'image',
-				});
-				// }else {
-				// 	toast.warning('Only images less or equal than 2MB are allowed')
-				// }
+			const imageDataList = selectedFiles.map((file, index) => {
+				const imageBase64 = file.split(',')[1];
+				const fileExtension = imageInputs.files[index].name.split('.').pop();
+
+				return {
+					image: imageBase64,
+					fileExtension: fileExtension
+				};
 			});
+
+			socket.emit('message', {
+				user_id: user.id,
+				channel_id: selectedConversation.id,
+				imageDatas: imageDataList,
+				time: Date.now(),
+				type: 'image',
+			});
+
+			// Set loadConversations to true and then false after a delay
 			setLoadConversations(true);
+			getAllImages()
 			setTimeout(() => {
 				setLoadConversations(false);
 			}, 500);
+
+			// Reset selectedFiles after sending the images
 			setSelectedFiles([]);
+
+			// Scroll to the bottom
 			scroll.current.scrollIntoView({ behavior: "smooth" });
 		}
 	};
