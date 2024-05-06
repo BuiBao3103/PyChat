@@ -33,6 +33,9 @@ class Conversations(Resource):
                 message='Conversation does not exist!', status_code=400)
         participant = db.session.query(Participant).filter(
             Participant.conversation_id == conversation_id, Participant.user_id == request.user.id).first()
+        if not participant:
+            raise InvalidAPIUsage(
+                message='You are not a participant of this conversation!', status_code=400)
         participant.delete_at = datetime.now()
         db.session.commit()
         response = make_response(
