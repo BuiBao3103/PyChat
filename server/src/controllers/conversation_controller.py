@@ -5,6 +5,7 @@ from src import db
 from flask_restful import Resource
 from flask import request, make_response
 from src.auth import protect
+from datetime import datetime
 
 
 class Conversations(Resource):
@@ -24,39 +25,19 @@ class Conversations(Resource):
                 {'status': 'sucess', 'data': conversation.to_dict()}, 200)
             return response
 
-#     # @staticmethod
-#     # def create():
-#     #     pass
-
-#     # @staticmethod
-#     # def get_all():
-#     #     args = request.args
-#     #     query = db.session.query(Conversation)
-#     #     api_features = APIFeatures(query, args)
-#     #     results, total_count = api_features.filter().sort().limit_fields().paginate()
-#     #     return jsonify(
-#     #         {'status': 'success', 'total_count': total_count,
-#     #          'data': [conversation.to_dict() for conversation in results]}), 200
-
-#     # @staticmethod
-#     # def get_all_on_user(user_id):
-#     #     args = request.args
-#     #     query = db.session.query(Conversation).join(Participant).filter(Participant.user_id == user_id)
-#     #     api_features = APIFeatures(query, args)
-#     #     results, total_count = api_features.filter().sort().limit_fields().paginate()
-#     #     conversations = [conversation.to_dict() for conversation in results]
-#     #     # print()
-#     #     for conversation in conversations:
-#     #         if ConversationType(conversations[0]['type']) == ConversationType.PERSONAL:
-#     #             friend_user_index = 0
-#     #             if conversation['participants'][0]['user']['id'] == current_user.id:
-#     #                 friend_user_index = 1
-#     #             conversation['friend'] = conversation['participants'][friend_user_index]['user']
-#     #             del conversation['participants']
-#     #     return jsonify(
-#     #         {'status': 'success', 'total_count': total_count,
-#     #          'data': conversations}), 200
-#     pass
+    @protect()
+    def delete(self, conversation_id):
+        conversation = Conversation.query.get(conversation_id)
+        if not conversation:
+            raise InvalidAPIUsage(
+                message='Conversation does not exist!', status_code=400)
+        participant = db.session.query(Participant).filter(
+            Participant.conversation_id == conversation_id, Participant.user_id == request.user.id).first()
+        participant.delete_at = datetime.now()
+        db.session.commit()
+        response = make_response(
+            {'status': 'sucess', 'data': None}, 204)
+        return response
 
 
 class UserConversations(Resource):
@@ -91,7 +72,7 @@ class MeConversations(Resource):
         for conversation in items:
             friend_index, user_index = 0, 1
             if conversation['participants'][0]['user']['id'] == request.user.id:
-                 friend_index, user_index = 1, 0
+                friend_index, user_index = 1, 0
             conversation['friend'] = conversation['participants'][friend_index]['user']
             conversation['seen_at'] = conversation['participants'][user_index]['seen_at']
             del conversation['participants']
