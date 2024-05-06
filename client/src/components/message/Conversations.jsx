@@ -19,6 +19,23 @@ const Conversations = ({ conversationsUser }) => {
 	const leaveRoom = useCallback((conversationID) => {
 		socket.emit('leave', { channel_id: conversationID })
 	}, [])
+	const removeConversationById = (conversationID) => {
+		setConversations(conversations.filter(item => item.id !== conversationID))
+	}
+	useEffect(() => {
+		const handleLastMessage = (data) => {
+			removeConversationById(data.conversation.id)
+			setConversations(oldConv => [data.conversation, ...oldConv])
+			// setLoadConversations(true)
+			// setTimeout(() => {
+			// 	setLoadConversations(false);
+			// }, 500);
+		}
+		socket.on('new_mess', handleLastMessage)
+		return () => {
+			socket.off('new_mess', handleLastMessage)
+		}
+	}, [socket])
 	return (
 		<div className="w-full h-full flex flex-col overflow-y-scroll pb-3 scrollChatConversions">
 			{

@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 import useConversation from '../../zustand/useConversation';
 const BlockConfirm = ({ user, handleVisibleBlockModal, type = 'block' }) => {
 
-	const { setLoadingCheckBlock, setSelectedConversation } = useConversation()
+	const { setLoadingCheckBlock, setSelectedConversation,setLoadConversations } = useConversation()
 	const confirmBlock = async () => {
 		try {
 			if (type == 'block') {
@@ -19,11 +19,15 @@ const BlockConfirm = ({ user, handleVisibleBlockModal, type = 'block' }) => {
 					setLoadingCheckBlock([true, 'blocked'])
 				}
 			} else {
-				const res = await Axios.delete(`/api/v1/conversation/${user.id}`)
+				const res = await Axios.delete(`/api/v1/conversations/${user.id}`)
 				if (res.status == 204) {
 					handleVisibleBlockModal('')
 					setSelectedConversation(null)
 					toast.success("Deleted successfully")
+					setLoadConversations(true)
+					setTimeout(() => {
+						setLoadConversations(false)
+					}, 500);
 				}
 			}
 		} catch (error) {
