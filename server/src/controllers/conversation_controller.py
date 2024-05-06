@@ -65,7 +65,7 @@ class MeConversations(Resource):
     def get(self):
         user = request.user
         query = db.session.query(Conversation).join(
-            Participant).filter(Participant.user_id == user.id)
+            Participant).filter(Participant.user_id == user.id).order_by(Conversation.last_message_id.desc())
         api_freatures = APIFeatures(Conversation, request.args)
         items, total_count = api_freatures.perform_query(query)
         items = [item.to_dict() for item in items]
