@@ -6,14 +6,11 @@ import ImagesOverlay from '../caroseul/ImagesOverlay'
 import useGetAllImages from '../../hooks/useGetAllImages'
 const MessageDetail = () => {
 
-	const { selectedConversation, isOpenCarosuel, setIsOpenCarosuel, setSelectedImage } = useConversation()
+	const { selectedConversation, isOpenCarosuel, setIsOpenCarosuel, setSelectedImage, loadingCheckBlock } = useConversation()
 	const { imagesData, getAllImages, loadingImg } = useGetAllImages()
 	const [msgDetail, setMsgDetail] = useState(selectedConversation)
 	const [isOpenRecentImage, setIsOpenRecentImage] = useState(false)
-	const [isVisibleBlockModal, setIsVisibleBlockModal] = useState(false)
-	const handleVisibleBlockModal = () => {
-		setIsVisibleBlockModal(!isVisibleBlockModal)
-	}
+	const [isVisibleModal, setIsVisibleModal] = useState('')
 	useEffect(() => {
 		setMsgDetail(selectedConversation)
 	}, [])
@@ -31,7 +28,7 @@ const MessageDetail = () => {
 					<div className="w-full flex flex-col overflow-hidden">
 						<section
 							onClick={() => setIsOpenRecentImage(!isOpenRecentImage)}
-							className={`${isOpenRecentImage ? 'bg-light-gray' : 'bg-white'} w-full flex justify-between items-center border-t border-[#ababab] p-2 hover:bg-light-gray dark:hover:bg-white/30  cursor-pointer`}>
+							className={`${isOpenRecentImage ? 'bg-light-gray' : 'bg-white'} w-full flex justify-between items-center border-y border-[#ababab] p-2 hover:bg-light-gray dark:hover:bg-white/30  cursor-pointer`}>
 							<span className='dark:text-white'>Recent Uploaded Photos</span>
 							<span>
 								{
@@ -59,22 +56,28 @@ const MessageDetail = () => {
 							)
 						}
 						{/* //create a fake list of images has sent from both user and display as grid view 3 columns with aspect ratio 1:1 */}
-						<section onClick={handleVisibleBlockModal} className='w-full flex justify-between items-center border-y border-[#ababab] p-2 hover:bg-light-gray dark:hover:bg-white/30 cursor-pointer'>
-							<span className='dark:text-white'>Block</span>
-							<span>
-								<PiMinusCircle size={20} className='dark:text-white' />
-							</span>
-						</section>
-						<section onClick={handleVisibleBlockModal} className='w-full flex justify-between items-center border-b border-[#ababab] p-2 hover:bg-light-gray dark:hover:bg-white/30 cursor-pointer'>
-							<span className='dark:text-white'>Delete conversation</span>
-							<span>
-								<PiMinusCircle size={20} className='dark:text-white' />
-							</span>
-						</section>
+						{
+							loadingCheckBlock[1] != 'blocked' && loadingCheckBlock[1] != 'be_blocked' && (
+								<>
+									<section onClick={() => setIsVisibleModal('block')} className='w-full flex justify-between items-center border-b border-[#ababab] p-2 hover:bg-light-gray dark:hover:bg-white/30 cursor-pointer'>
+										<span className='dark:text-white'>Block</span>
+										<span>
+											<PiMinusCircle size={20} className='dark:text-white' />
+										</span>
+									</section>
+									<section onClick={() => setIsVisibleModal('delete')} className='w-full flex justify-between items-center border-b border-[#ababab] p-2 hover:bg-light-gray dark:hover:bg-white/30 cursor-pointer'>
+										<span className='dark:text-white'>Delete conversation</span>
+										<span>
+											<PiMinusCircle size={20} className='dark:text-white' />
+										</span>
+									</section>
+								</>
+							)
+						}
 					</div>
 				</div>
 			</div>
-			{isVisibleBlockModal && <BlockConfirm user={msgDetail} handleVisibleBlockModal={setIsVisibleBlockModal} />}
+			{isVisibleModal != '' && <BlockConfirm user={msgDetail} handleVisibleBlockModal={setIsVisibleModal} type={isVisibleModal} />}
 			{isOpenCarosuel && <ImagesOverlay images={imagesData} />}
 		</>
 	)
