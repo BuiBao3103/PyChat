@@ -7,22 +7,26 @@ import useGetAllImages from '../../hooks/useGetAllImages'
 const MessageDetail = () => {
 
 	const { selectedConversation, isOpenCarosuel, setIsOpenCarosuel, setSelectedImage } = useConversation()
-	const { imagesData, getAllImages } = useGetAllImages()
+	const { imagesData, getAllImages, loadingImg } = useGetAllImages()
+	const [msgDetail, setMsgDetail] = useState(selectedConversation)
 	const [isOpenRecentImage, setIsOpenRecentImage] = useState(false)
 	const [isVisibleBlockModal, setIsVisibleBlockModal] = useState(false)
 	const handleVisibleBlockModal = () => {
 		setIsVisibleBlockModal(!isVisibleBlockModal)
 	}
+	useEffect(() => {
+		setMsgDetail(selectedConversation)
+	}, [])
 	return (
 		<>
 			<div className="min-w-[300px] w-[300px] h-full rounded-xl bg-white dark:bg-primary-dark xl:block hidden">
 				<div className="w-full flex flex-col justify-center items-center gap-3">
 					<div className="w-full flex flex-col justify-center items-center gap-1 p-3">
 						<div className="size-36 rounded-xl overflow-hidden">
-							<img src={selectedConversation.friend.avatar} alt="" className='size-full object-cover' />
+							<img src={msgDetail.friend.avatar} alt="" className='size-full object-cover' />
 						</div>
-						<span className='text-lg dark:text-white'>{selectedConversation.friend.username}</span>
-						<span className='text-sm dark:text-white'>{selectedConversation.last_online != null ? "online" : "offline"}</span>
+						<span className='text-lg dark:text-white'>{msgDetail.friend.username}</span>
+						<span className='text-sm dark:text-white'>{msgDetail.last_online != null ? "online" : "offline"}</span>
 					</div>
 					<div className="w-full flex flex-col overflow-hidden">
 						<section
@@ -70,7 +74,7 @@ const MessageDetail = () => {
 					</div>
 				</div>
 			</div>
-			{isVisibleBlockModal && <BlockConfirm user={selectedConversation} handleVisibleBlockModal={setIsVisibleBlockModal} />}
+			{isVisibleBlockModal && <BlockConfirm user={msgDetail} handleVisibleBlockModal={setIsVisibleBlockModal} />}
 			{isOpenCarosuel && <ImagesOverlay images={imagesData} />}
 		</>
 	)

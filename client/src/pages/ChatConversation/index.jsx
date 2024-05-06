@@ -25,6 +25,7 @@ const Index = () => {
 		}
 		loadLastMessage()
 	}, [loadConversation])
+	// console.log(loadConversation)
 	return (
 		<div className='w-full h-full flex gap-3'>
 			<div className="w-[320px] max-w-[400px] min-w-[320px] h-full bg-white dark:bg-primary-dark rounded-xl flex flex-col">
