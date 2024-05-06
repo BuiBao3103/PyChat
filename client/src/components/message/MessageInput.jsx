@@ -5,8 +5,7 @@ import useConversation from '../../zustand/useConversation'
 import { toast } from 'react-toastify'
 import useGetAllImages from '../../hooks/useGetAllImages'
 const MessageInput = ({ scroll, selectedImageFiles }) => {
-	const { selectedConversation, setLoadConversations } = useConversation()
-	const [isLoading, setIsLoading] = useState(false)
+	const { selectedConversation, setLoadConversations, loadingCheckBlock } = useConversation()
 	const [message, setMessage] = useState('')
 	const { socket } = useSocketContext()
 	const [selectedFiles, setSelectedFiles] = useState([]);
@@ -95,8 +94,15 @@ const MessageInput = ({ scroll, selectedImageFiles }) => {
 		}
 	}
 	const onEnterPress = (e) => {
-		if (e.keyCode == 13 && e.shiftKey == false) {
-			sendMessage(message)
+		if (message !== '') {
+			if (e.keyCode == 13 && e.shiftKey == false) {
+				sendMessage(message)
+			}
+		}
+		if (selectedFiles != null) {
+			if (e.keyCode == 13 && e.shiftKey == false) {
+				sendImages()
+			}
 		}
 	}
 	const deleteImage = (index) => {
@@ -138,6 +144,7 @@ const MessageInput = ({ scroll, selectedImageFiles }) => {
 						accept="image/*"
 						multiple={true}
 						type="file" name='imageFiles'
+						onKeyDown={onEnterPress}
 						onChange={handleFileChange}
 						id='imageFiles' className='w-full h-full absolute opacity-0 cursor-pointer' />
 				</label>

@@ -2,25 +2,32 @@ import React from 'react';
 import Axios from '../../api/index'
 import { toast } from 'react-toastify';
 import useConversation from '../../zustand/useConversation';
-const BlockConfirm = ({ user, handleVisibleBlockModal }) => {
+const BlockConfirm = ({ user, handleVisibleBlockModal, type = 'block' }) => {
 
-	const { setLoadingCheckBlock } = useConversation()
+	const { setLoadingCheckBlock, setSelectedConversation } = useConversation()
 	const confirmBlock = async () => {
 		try {
-			const data = {
-				"userID": JSON.parse(localStorage.getItem('user')).id,
-				"friendID": user.friend.id
-			}
-			const res = await Axios.post(`/api/v1/friendships/block`, data)
-			if (res.status === 200) {
-				handleVisibleBlockModal(false)
-				toast.success("Blocked successfully")
-				setLoadingCheckBlock(true)
+			if (type == 'block') {
+				const data = {
+					"userID": JSON.parse(localStorage.getItem('user')).id,
+					"friendID": user.friend.id
+				}
+				const res = await Axios.post(`/api/v1/friendships/block`, data)
+				if (res.status === 200) {
+					handleVisibleBlockModal('')
+					toast.success("Blocked successfully")
+					setLoadingCheckBlock([true, 'blocked'])
+				}
+			} else {
+				const res = await Axios.delete(`/api/v1/conversation/${user.id}`)
+				if (res.status == 204) {
+					handleVisibleBlockModal('')
+					setSelectedConversation(null)
+					toast.success("Deleted successfully")
+				}
 			}
 		} catch (error) {
 			console.log(error)
-		} finally {
-			setLoadingCheckBlock(false)
 		}
 	}
 
@@ -29,7 +36,7 @@ const BlockConfirm = ({ user, handleVisibleBlockModal }) => {
 			{/* Your modal */}
 			<div className="fixed z-10 inset-0 overflow-y-auto">
 				<div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-					<div onClick={() => handleVisibleBlockModal(false)} className="fixed inset-0 transition-opacity">
+					<div onClick={() => handleVisibleBlockModal('')} className="fixed inset-0 transition-opacity">
 						<div className="absolute inset-0 bg-gray-500 opacity-75"></div>
 					</div>
 					{/* Modal content */}
@@ -55,10 +62,10 @@ const BlockConfirm = ({ user, handleVisibleBlockModal }) => {
 									</svg>
 								</div>
 								<div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-									<h3 className="text-lg leading-6 font-medium text-gray-900">Block {user.friend.username}?</h3>
+									<h3 className="text-lg leading-6 font-medium text-gray-900 first-letter:uppercase">{type} {user.friend.username}?</h3>
 									<div className="mt-2">
 										<p className="text-sm leading-5 text-gray-500">
-											Are you sure you want to block this user? This action cannot be undone.
+											Are you sure you want to {type} this user? This action cannot be undone.
 										</p>
 									</div>
 								</div>
@@ -71,12 +78,12 @@ const BlockConfirm = ({ user, handleVisibleBlockModal }) => {
 									type="button"
 									className="inline-flex justify-center w-full rounded-md border border-transparent px-4 py-2 bg-red-600 text-base leading-6 font-medium text-white shadow-sm hover:bg-red-500 focus:outline-none focus:border-red-700 focus:shadow-outline-red transition ease-in-out duration-150 sm:text-sm sm:leading-5"
 								>
-									Block
+									{type == 'block' ? 'Block' : 'Delete'}
 								</button>
 							</span>
 							<span className="mt-3 flex w-full rounded-md shadow-sm sm:mt-0 sm:w-auto">
 								<button
-									onClick={() => handleVisibleBlockModal(false)}
+									onClick={() => handleVisibleBlockModal('')}
 									type="button"
 									className="inline-flex justify-center w-full rounded-md border border-gray-300 px-4 py-2 bg-white text-base leading-6 font-medium text-gray-700 shadow-sm hover:text-gray-500 focus:outline-none focus:border-primary-300 focus:shadow-outline-blue transition ease-in-out duration-150 sm:text-sm sm:leading-5"
 								>
