@@ -1,11 +1,15 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import DefaultAvatar from '../../assets/defaultAvatar.jpg'
+import React, { useEffect, useState } from 'react'
+import Axios from '../../api/index'
 import { useNavigate } from 'react-router-dom'
 import useConversation from '../../zustand/useConversation'
 import { formatMessageTime } from '../../utils/extractTIme'
 const ChatBrief = ({ className = '', currentConversation, joinRoom, leaveRoom }) => {
 	const navigate = useNavigate()
+	const [conversation, setConversation] = useState(null)
+	const { setLoadingCheckBlock } = useConversation()
+	useEffect(() => {
+		setConversation(currentConversation)
+	}, [])
 	const { setSelectedConversation, selectedConversation } = useConversation()
 	const leaveRoomWithID = (conversation) => {
 		if (conversation != null) {
@@ -14,13 +18,27 @@ const ChatBrief = ({ className = '', currentConversation, joinRoom, leaveRoom })
 			console.log("No conversation")
 		}
 	}
+	// console.log(currentConversation)
 	const userSend = () => {
 		return currentConversation.last_message.user_id == JSON.parse(localStorage.getItem('user')).id ? 'You: ' : ''
 	}
 	const isUserSend = () => {
 		return currentConversation.last_message.user_id == JSON.parse(localStorage.getItem('user')).id
 	}
-	console.log(currentConversation.last_message)
+	const getFriendship = async () => {
+		setLoadingCheckBlock([true, ''])
+		try {
+			const res = await Axios.get(`/api/v1/friendships?user_id=eq:${JSON.parse(localStorage.getItem('user')).id}&friend_id=eq:${currentConversation.friend.id}`)
+			if (res.status === 200) {
+				// setStatus(res.data.data.status)
+				// console.log(res.data.data)
+				setLoadingCheckBlock([false, res.data.data[0].status])
+			}
+		} catch (error) {
+			console.log(error)
+			setLoadingCheckBlock([false, ''])
+		}	
+	}
 	return (
 		<div
 			onClick={() => {
@@ -28,6 +46,7 @@ const ChatBrief = ({ className = '', currentConversation, joinRoom, leaveRoom })
 				leaveRoomWithID(selectedConversation)
 				joinRoom(currentConversation.id)
 				setSelectedConversation(currentConversation)
+				getFriendship()
 			}}
 			className={`${className}  w-full h-auto p-3 flex gap-2 border-b dark:border-ebony-clay hover:bg-light-gray dark:hover:bg-white/30 transition-all cursor-pointer`}
 		>
@@ -69,6 +88,7 @@ const ChatBrief = ({ className = '', currentConversation, joinRoom, leaveRoom })
 						{
 							currentConversation.last_message && currentConversation.last_message.type == "image"
 							&& isUserSend() && currentConversation.last_message?.revoke_at == null
+							&& currentConversation.last_message?.deleted_messages.length == 0
 							&& `You sent ${currentConversation.last_message.attachments.length != 1 ? `${currentConversation.last_message.attachments.length} photos` : 'a photo'}.`
 						}
 						{

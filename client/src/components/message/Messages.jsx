@@ -8,8 +8,8 @@ import { useParams } from 'react-router-dom';
 const Messages = ({ msgConversation, selectedFiles }) => {
 	const [messages, setMessages] = useState([]);
 	const { socket } = useSocketContext();
-	const { selectedConversation } = useConversation();
-	const [loading, setLoading] = useState(false)
+	const [status, setStatus] = useState('')
+	const { selectedConversation, setLoadConversations, loadingCheckBlock } = useConversation();
 	const messageEnd = useRef();
 	const params = useParams()
 	useEffect(() => {
@@ -23,12 +23,16 @@ const Messages = ({ msgConversation, selectedFiles }) => {
 		const handleNewMessage = (data) => {
 			setMessages(oldMsg => [data, ...oldMsg]);
 			scrollToBottom(); // Scroll to bottom after updating messages
+			setLoadConversations(true)
+			setTimeout(() => {
+				setLoadConversations(false);
+			}, 500);
 		};
 		socket.on('message', handleNewMessage);
 		return () => {
 			socket.off('message', handleNewMessage);
 		};
-	}, [socket, loading]);
+	}, [socket]);
 	const scrollToBottom = () => {
 		messageEnd.current.scrollIntoView({ behavior: "smooth" });
 	};
@@ -40,12 +44,11 @@ const Messages = ({ msgConversation, selectedFiles }) => {
 	}
 	useEffect(() => {
 		reloadMessage()
-		console.log('reload')
 	}, [])
-	console.log(loading)
 	useEffect(() => {
 		scrollToBottom()
 	}, [messages])
+	console.log(loadingCheckBlock)
 	return (
 		<>
 			<div className='w-full h-full overflow-hidden flex flex-col gap-2 relative first:!mt-auto'>
@@ -59,7 +62,26 @@ const Messages = ({ msgConversation, selectedFiles }) => {
 					</div>
 				</div>
 			</div>
-			<MessageInput scroll={messageEnd} selectedImageFiles={selectedFiles} />
+			{
+				loadingCheckBlock[1] == 'blocked' || loadingCheckBlock[1] == 'be_blocked' ? (
+					<div className='w-full h-fit flex flex-col justify-center items-center gap-2 border-t py-2'>
+						{
+							loadingCheckBlock[1] == 'blocked' ? (
+								<span className='text-black font-medium'>You have blocked this user</span>
+							) : (
+								<span className='text-black font-medium inline-block pt-2'>This user has blocked you</span>
+							)
+						}
+						{
+							loadingCheckBlock[1] == 'blocked' && (
+								<button className='w-full h-fit text-center bg-primary rounded-md p-2 font-medium text-white hover:opacity-75 transition-opacity'>Unblock</button>
+							)
+						}
+					</div>
+				) : (
+					<MessageInput scroll={messageEnd} selectedImageFiles={selectedFiles} />
+				)
+			}
 		</>
 	);
 };

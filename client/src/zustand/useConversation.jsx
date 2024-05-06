@@ -10,5 +10,7 @@ const useConversation = create((set) => ({
 	setIsOpenCarosuel: (isOpenCarosuel) => set({ isOpenCarosuel }),
 	selectedImage: '0',
 	setSelectedImage: (selectedImage) => set({ selectedImage }),
+	loadingCheckBlock: [false,''],
+	setLoadingCheckBlock: (loadingCheckBlock) => set({ loadingCheckBlock }),
 }))
 export default useConversation

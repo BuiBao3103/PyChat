@@ -1,8 +1,10 @@
 import React from 'react';
 import Axios from '../../api/index'
 import { toast } from 'react-toastify';
+import useConversation from '../../zustand/useConversation';
 const BlockConfirm = ({ user, handleVisibleBlockModal }) => {
 
+	const { setLoadingCheckBlock } = useConversation()
 	const confirmBlock = async () => {
 		try {
 			const data = {
@@ -13,9 +15,12 @@ const BlockConfirm = ({ user, handleVisibleBlockModal }) => {
 			if (res.status === 200) {
 				handleVisibleBlockModal(false)
 				toast.success("Blocked successfully")
+				setLoadingCheckBlock(true)
 			}
 		} catch (error) {
 			console.log(error)
+		} finally {
+			setLoadingCheckBlock(false)
 		}
 	}
 

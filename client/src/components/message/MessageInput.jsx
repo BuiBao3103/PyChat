@@ -10,7 +10,7 @@ const MessageInput = ({ scroll, selectedImageFiles }) => {
 	const [message, setMessage] = useState('')
 	const { socket } = useSocketContext()
 	const [selectedFiles, setSelectedFiles] = useState([]);
-	const { imagesData, getAllImages } = useGetAllImages()
+	const { loadingImg, getAllImages } = useGetAllImages()
 	const handleFileChange = (e) => {
 		const files = e.target.files;
 		if (files.length === 0) return;
@@ -58,11 +58,10 @@ const MessageInput = ({ scroll, selectedImageFiles }) => {
 
 			// Set loadConversations to true and then false after a delay
 			setLoadConversations(true);
-			getAllImages()
 			setTimeout(() => {
 				setLoadConversations(false);
+				// getAllImages()
 			}, 500);
-
 			// Reset selectedFiles after sending the images
 			setSelectedFiles([]);
 
@@ -109,6 +108,7 @@ const MessageInput = ({ scroll, selectedImageFiles }) => {
 		}
 		console.log(selectedImageFiles)
 	}, [selectedImageFiles])
+
 	return (
 		<>
 			<div className="w-full h-16 flex items-center gap-3 relative">
