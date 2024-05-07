@@ -98,7 +98,9 @@ class SearchUsers(Resource):
         q = request.args.get('q')
         query = (db.session.query(User, Friendship.status)
                  .join(Friendship, ((Friendship.friend_id == User.id) & (
-                     Friendship.user_id == request.user.id)), isouter=True))
+                     Friendship.user_id == request.user.id)), isouter=True)
+
+                 )
         if '@gmail.com' in q:
             query = query.filter(User.email == q)
         else:
@@ -107,7 +109,9 @@ class SearchUsers(Resource):
         users = query.all()
         users = [{**user.to_dict(), 'status': status.value if status else 'not_friend'}
                  for user, status in users]
-        users.sort(key=lambda x: ['friends', 'request_received', 'request_sent', 'not_friend'].index(x['status']))
+        users.sort(key=lambda x: ['friends', 'request_received',
+                   'request_sent', 'not_friend', 'blocked'].index(x['status']))
+        users = [user for user in users if user['status'] != 'blocked']
         response = make_response(
             {'status': 'sucess', 'total_count': len(users), 'data': users}, 200)
         return response
