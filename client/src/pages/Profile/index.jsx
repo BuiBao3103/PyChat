@@ -4,15 +4,17 @@ import { MdCameraEnhance, MdPhotoCamera } from 'react-icons/md'
 import { PiPhone, PiEnvelopeSimple } from "react-icons/pi";
 import FriendItem from '../../components/friendItem/FriendItem';
 import Axios from '../../api/index'
-import { useLoaderData, useParams } from 'react-router-dom';
+import { Link, useLoaderData, useNavigate, useParams } from 'react-router-dom';
 import UpdateAvatar from '../../components/avatar/UpdateAvatar';
 import { useAuthContext } from '../../hooks/useAuthContext';
 import UpdateCoverImage from '../../components/avatar/UpdateCoverImage';
+import { toast } from 'react-toastify';
 const Index = () => {
 	const data = useLoaderData()
 	const [user, setUser] = useState(data)
 	const [state, dispatch] = useAuthContext()
 	const params = useParams()
+	const navigate = useNavigate()
 	const [friends, setFriends] = useState([])
 	const [selectedFile, setSelectedFile] = useState(null)
 	const [selectedCoverFile, setSelectedCoverFile] = useState(null)
@@ -46,14 +48,19 @@ const Index = () => {
 	};
 	const getUser = async () => {
 		try {
-			await Axios.get(`api/v1/users/me`).then((res) => {
+			await Axios.get(`api/v1/users/${params.id}`).then((res) => {
+				console.log(res)
 				if (res.status === 200) {
 					setUser(res.data.data)
 					dispatch({ type: "LOGIN", value: res.data.data })
+					// console.log();
+				}else {
+					toast.error(res.data.message)
 				}
 			})
 		} catch (error) {
 			console.log(error)
+			toast.error(error.response.data.message)
 		}
 	}
 	const fakeData = [
@@ -167,9 +174,9 @@ const Index = () => {
 									))
 								}
 							</div>
-							<button className='absolute w-fit px-6 py-3 bg-primary text-white font-bold -bottom-16 right-9 rounded-md group-hover:bottom-7 transition-all duration-300 hover:opacity-60'>
+							<Link to={"/friend_list"} className='absolute w-fit px-6 py-3 bg-primary text-white font-bold -bottom-16 right-9 rounded-md group-hover:bottom-7 transition-all duration-300 hover:opacity-60'>
 								View All
-							</button>
+							</Link>
 						</div>
 					</section>
 				</div>

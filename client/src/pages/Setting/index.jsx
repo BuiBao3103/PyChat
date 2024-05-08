@@ -10,7 +10,7 @@ const Index = ({ onClick }) => {
 	const [blockList, setBlockList] = useState([])
 	const getBlockList = async () => {
 		try {
-			const res = await Axios.get(`/api/v1/friendships?status=blocked`)
+			const res = await Axios.get(`/api/v1/friendships?user_id=${JSON.parse(localStorage.getItem('user')).id}&status=blocked`)
 			if (res.status === 200) {
 				setBlockList(res.data.data)
 			}
