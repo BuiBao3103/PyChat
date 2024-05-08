@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import Axios from '../../api/index'
 import { FaUserCheck } from "react-icons/fa6";
+import { Link } from 'react-router-dom';
 const SearchItem = ({ item, sendReq,cancelReq }) => {
 	const [searchValue, setSearchValue] = useState(item)
 	useEffect(() => {
@@ -10,9 +11,9 @@ const SearchItem = ({ item, sendReq,cancelReq }) => {
 	return (
 		<div className='w-full h-fit p-5 bg-[#f0f0f0] dark:bg-[#3a3b3c] flex justify-between items-center rounded-lg shadow-md'>
 			<div className="w-full flex items-center gap-4">
-				<div className="w-[85px] h-[85px] rounded-full overflow-hidden">
+				<Link to={`/profile/${searchValue.id}`} className="w-[85px] h-[85px] rounded-full overflow-hidden">
 					<img loading='lazy' src={searchValue.avatar} alt="" className='w-full h-full object-cover object-center' />
-				</div>
+				</Link>
 				<div className="flex flex-col">
 					<h1 className='dark:text-white font-medium'>{searchValue.username}</h1>
 					<h1 className='text-sm text-gray-600'>{searchValue.email}</h1>

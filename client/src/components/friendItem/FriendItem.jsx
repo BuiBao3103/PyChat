@@ -1,13 +1,14 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { Link } from 'react-router-dom'
 
 const FriendItem = ({ className, friend, sendReq, cancelReq }) => {
 
 	return (
 		<div className={`${className} p-3 flex flex-col gap-3 justify-center items-center bg-white rounded-lg`}>
-			<div className="size-36 overflow-hidden rounded-full border-2 border-gray-100">
+			<Link to={`/profile/${friend.friend.id}`} className="size-36 overflow-hidden rounded-full border-2 border-gray-100">
 				<img loading='lazy' src={friend.friend.avatar} alt="" className='w-full h-full object-cover object-center' />
-			</div>
+			</Link>
 			<div className="flex flex-col items-center">
 				<span className='font-semibold'>{friend.friend.username}</span>
 				<span className='text-gray-500'>{friend.friend.email}</span>
