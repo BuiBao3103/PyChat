@@ -6,7 +6,7 @@ import useConversation from '../../zustand/useConversation'
 const Conversations = ({ conversationsUser }) => {
 	const [conversations, setConversations] = useState(conversationsUser)
 	const { socket } = useSocketContext()
-	const { selectedConversation, setSelectedConversation } = useConversation()
+	const { selectedConversation, setSelectedConversation, setLoadConversations } = useConversation()
 	useEffect(() => {
 		setConversations(conversationsUser)
 	}, [conversationsUser])
@@ -26,10 +26,10 @@ const Conversations = ({ conversationsUser }) => {
 		const handleLastMessage = (data) => {
 			removeConversationById(data.conversation.id)
 			setConversations(oldConv => [data.conversation, ...oldConv])
-			// setLoadConversations(true)
-			// setTimeout(() => {
-			// 	setLoadConversations(false);
-			// }, 500);
+			setLoadConversations(true)
+			setTimeout(() => {
+				setLoadConversations(false);
+			}, 500);
 		}
 		socket.on('new_mess', handleLastMessage)
 		return () => {
