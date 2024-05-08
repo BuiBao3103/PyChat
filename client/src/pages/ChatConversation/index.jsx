@@ -7,12 +7,15 @@ import { useAuthContext } from '../../hooks/useAuthContext';
 import Axios from '../../api/index'
 import Conversations from '../../components/message/Conversations';
 import { useSocketContext } from '../../context/SocketContext';
+
 const Index = () => {
 
 	const location = useLocation()
 	const { selectedConversation, loadConversation } = useConversation()
 	const conversationsLoader = useLoaderData()
 	const [conversations, setConversations] = useState(conversationsLoader)
+	const [query, setQuery] = useState('')
+
 	useEffect(() => {
 		setConversations(conversationsLoader)
 	}, [])
@@ -25,6 +28,14 @@ const Index = () => {
 		}
 		loadLastMessage()
 	}, [loadConversation])
+	useEffect(() => {		
+		if (query.length > 0) {
+			const search = conversationsLoader.filter(conversation => conversation.friend.username.toLowerCase().includes(query.toLowerCase()))
+			setConversations(search)
+		} else {
+			setConversations(conversationsLoader)
+		}
+	},[query])
 	// console.log(loadConversation)
 	return (
 		<div className='w-full h-full flex gap-3'>
@@ -37,7 +48,7 @@ const Index = () => {
 						</Link> */}
 					</div>
 					<div className="w-full flex gap-2">
-						<input type="search" className='bg-light-gray dark:bg-[#282930] dark:text-white dark:focus:outline-white rounded-md px-3 py-2 w-full focus:outline-primary' placeholder='Search by name' />
+						<input type="search" onChange={(e)=>setQuery(e.target.value)} className='bg-light-gray dark:bg-[#282930] dark:text-white dark:focus:outline-white rounded-md px-3 py-2 w-full focus:outline-primary' placeholder='Search by name' />
 					</div>
 				</div>
 				<Conversations conversationsUser={conversations} />
