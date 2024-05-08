@@ -81,9 +81,15 @@ def handle_text_message(data):
     # Broadcast the message to everyone in the room except the sender
     emit('message', new_message.to_dict(), room=channel_id)
     participants = conversation.participants
+    conversation = conversation.to_dict()
     for participant in participants:
+        friend_user_index = 0
+        if conversation['participants'][0]['user']['id'] == user_id:
+            friend_user_index = 1
+        conversation['friend'] = conversation['participants'][friend_user_index]['user']
+        del conversation['participants']
         if user_session.get(str(participant.id)) is not None:
-            emit('new_mess', {'conversation': conversation.to_dict()},
+            emit('new_mess', {'conversation': conversation},
                  room=user_session[str(participant.id)])
 
 
@@ -118,3 +124,14 @@ def handle_image_message(data):
         db.session.add(attachment)
     db.session.commit()
     emit('message', new_message.to_dict(), room=channel_id)
+    participants = conversation.participants
+    conversation = conversation.to_dict()
+    for participant in participants:
+        friend_user_index = 0
+        if conversation['participants'][0]['user']['id'] == user_id:
+            friend_user_index = 1
+        conversation['friend'] = conversation['participants'][friend_user_index]['user']
+        del conversation['participants']
+        if user_session.get(str(participant.id)) is not None:
+            emit('new_mess', {'conversation': conversation},
+                 room=user_session[str(participant.id)])
