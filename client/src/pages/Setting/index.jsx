@@ -3,10 +3,25 @@ import Overlay from '../../components/overlay'
 import PropTypes from 'prop-types'
 import Toggle from '../../components/toggle'
 import { PiMinusCircle, PiArrowCircleRight, PiMagnifyingGlass } from "react-icons/pi";
+import Axios from '../../api/index'
 const Index = ({ onClick }) => {
 
 	const [visibleBlockList, setVisibleBlockList] = useState(false)
-
+	const [blockList, setBlockList] = useState([])
+	const getBlockList = async () => {
+		try {
+			const res = await Axios.get(`/api/v1/friendships?status=blocked`)
+			if (res.status === 200) {
+				setBlockList(res.data.data)
+			}
+		} catch (error) {
+			console.log(error)
+		}
+	}
+	useEffect(() => {
+		getBlockList()
+	},[])
+	console.log(blockList)
 	return (
 		<Overlay onClick={onClick} isVisibleBlockList={visibleBlockList} setVisibleBlockList={setVisibleBlockList}>
 			<>
@@ -26,9 +41,6 @@ const Index = ({ onClick }) => {
 										<span className='font-medium dark:text-white'>Dark mode</span>
 										<Toggle></Toggle>
 									</div>
-									{/* <div className="w-full flex justify-between items-center p-2 border-b">
-										<span className='font-medium dark:text-white'>Active status</span>
-									</div> */}
 									<div onClick={() => setVisibleBlockList(!visibleBlockList)} className="w-full flex justify-between items-center p-2 rounded-md hover:bg-light-gray dark:hover:bg-white/30 transition-all cursor-pointer">
 										<div className="w-full flex items-center gap-2">
 											<PiMinusCircle size={22} className='dark:text-white' />
@@ -55,13 +67,13 @@ const Index = ({ onClick }) => {
 									{/* </div> */}
 									<div className="w-full h-full overflow-y-scroll flex flex-col gap-1 border-t pt-1">
 										{/* /create an array with 10 elements each item has avatar circle and username and a button to block or unblock base on the data */}
-										{Array.from({ length: 2 }, (_, i) => (
-											<div key={i} className="w-full flex justify-between items-center">
+										{blockList.map((user, index) => (
+											<div key={index} className="w-full flex justify-between items-center">
 												<div className="w-full flex items-center gap-2">
 													<div className="size-16 rounded-full overflow-hidden">
-														<img src={JSON.parse(localStorage.getItem('user')).avatar} alt="Avatar user" className='w-full h-full object-cover object-center' />
+														<img src={user.friend.avatar} alt="Avatar user" className='w-full h-full object-cover object-center' />
 													</div>
-													<span className='font-medium dark:text-white'>Nguoi dung {i+1}</span>
+													<span className='font-medium dark:text-white'>{user.friend.username}</span>
 												</div>
 												<button className='w-fit h-fit py-2 px-3 rounded-md flex items-center justify-center bg-primary font-medium text-white'>Unblock</button>
 											</div>

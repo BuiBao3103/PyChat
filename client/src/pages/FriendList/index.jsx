@@ -98,10 +98,10 @@ const Index = () => {
 		}
 	}
 	return (
-		<div className='w-full h-full bg-white p-3 rounded-xl overflow-hidden'>
+		<div className='w-full h-full bg-white dark:bg-primary-dark p-3 rounded-xl overflow-hidden'>
 			<div className="w-full h-full flex flex-col gap-10">
 				<section className='w-full flex justify-between items-center'>
-					<h1 className='font-bold text-2xl'>Friends</h1>
+					<h1 className='font-bold text-2xl text-black dark:text-white'>Friends</h1>
 					<div className="w-[345px] h-[50px]">
 						<CustomizeInput placeholder={"Search for something"} onChange={setSearch} />
 					</div>
@@ -111,7 +111,7 @@ const Index = () => {
 						{
 							[`All`, `Respond`, `Request`].map((item, index) => (
 								<li key={index}>
-									<button onClick={() => setFilter(item)} className={`w-[120px] h-[40px] text-base hover:bg-gray-200 hover:rounded-md transition-all ${filter === item ? "border-b-2 border-primary font-medium text-primary" : ""}`}>
+									<button onClick={() => setFilter(item)} className={`w-[120px] h-[40px] text-base hover:bg-gray-200 hover:rounded-md transition-all text-black dark:text-white ${filter === item ? "border-b-2 border-primary font-medium text-primary dark:text-primary" : ""}`}>
 										{item}
 									</button>
 								</li>

@@ -58,9 +58,20 @@ const Index = () => {
 			console.error(error);
 		}
 	}
-
+	const loadUsers = async () => {
+		try {
+			const res = await Axios.get(`/api/v1/users`);
+			if (res.status === 200) {
+				console.log(res.data.data)
+			}
+		} catch (error) {
+			console.error(error);
+		}
+	}
+	
 	useEffect(() => {
 		setUsersData(users);
+		loadUsers()
 	}, [users]);
 	return (
 		<div className='w-full h-full bg-white dark:bg-primary-dark rounded-xl p-3 flex flex-col gap-5'>
