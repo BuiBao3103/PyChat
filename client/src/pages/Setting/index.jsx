@@ -8,6 +8,7 @@ const Index = ({ onClick }) => {
 
 	const [visibleBlockList, setVisibleBlockList] = useState(false)
 	const [blockList, setBlockList] = useState([])
+	const [query, setQuery] = useState('')
 	const getBlockList = async () => {
 		try {
 			const res = await Axios.get(`/api/v1/friendships?user_id=${JSON.parse(localStorage.getItem('user')).id}&status=blocked`)
@@ -21,7 +22,15 @@ const Index = ({ onClick }) => {
 	useEffect(() => {
 		getBlockList()
 	},[])
-	console.log(blockList)
+	useEffect(() => {
+		if(query.length > 0){
+			const searchList = blockList.filter(friend => friend.friend.username.toLowerCase().includes(query.toLowerCase()))
+			setBlockList(searchList)
+		}
+		else{
+			getBlockList()
+		}
+	},[query])
 	return (
 		<Overlay onClick={onClick} isVisibleBlockList={visibleBlockList} setVisibleBlockList={setVisibleBlockList}>
 			<>
@@ -59,7 +68,7 @@ const Index = ({ onClick }) => {
 										<div className="w-full flex gap-2 px-2 py-3 border rounded-md">
 											<PiMagnifyingGlass size={25} />
 											<label className='w-full' htmlFor="searchBlockList">
-												<input type="text" placeholder='Search by name' name='searchBlockList' className='w-full focus:outline-none text-base' />
+												<input type="text" onChange={(e)=>setQuery(e.target.value)} placeholder='Search by usernamename' name='searchBlockList' className='w-full focus:outline-none text-base' />
 											</label>
 										</div>
 										<span className="absolute w-[550px] h-px bg-black -left-6 -bottom-3"></span>
