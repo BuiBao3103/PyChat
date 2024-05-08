@@ -264,7 +264,7 @@ class FriendshipsBlock(Resource):
             raise InvalidAPIUsage(
                 message='Error creating unblock friendship', status_code=400)
         response = make_response(
-            {"status": "success", 'data': friendship_user.to_dict()}, 200)
+            {"status": "success", 'data': friendship_user.to_dict()}, 204)
         return response
 
 

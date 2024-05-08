@@ -4,11 +4,14 @@ import PropTypes from 'prop-types'
 import Toggle from '../../components/toggle'
 import { PiMinusCircle, PiArrowCircleRight, PiMagnifyingGlass } from "react-icons/pi";
 import Axios from '../../api/index'
+import useConversation from '../../zustand/useConversation';
+import { toast } from 'react-toastify';
 const Index = ({ onClick }) => {
 
 	const [visibleBlockList, setVisibleBlockList] = useState(false)
 	const [blockList, setBlockList] = useState([])
 	const [query, setQuery] = useState('')
+	const { loadingCheckBlock,setLoadingCheckBlock } = useConversation();
 	const getBlockList = async () => {
 		try {
 			const res = await Axios.get(`/api/v1/friendships?user_id=${JSON.parse(localStorage.getItem('user')).id}&status=blocked`)
@@ -31,6 +34,20 @@ const Index = ({ onClick }) => {
 			getBlockList()
 		}
 	},[query])
+	const handelUnblock = async (friendID) => {
+		try {
+			const userID = JSON.parse(localStorage.getItem('user')).id;
+			const res = await Axios.delete('/api/v1/friendships/block', { data: { userID, friendID } });
+			console.log(res)
+			if (res.status === 204) {
+				toast.success('Unblocked successfully')
+				getBlockList()
+				setLoadingCheckBlock([true, ''])
+			}
+		} catch (error) {
+			console.error(error);
+		}
+	}
 	return (
 		<Overlay onClick={onClick} isVisibleBlockList={visibleBlockList} setVisibleBlockList={setVisibleBlockList}>
 			<>
@@ -84,7 +101,7 @@ const Index = ({ onClick }) => {
 													</div>
 													<span className='font-medium dark:text-white'>{user.friend.username}</span>
 												</div>
-												<button className='w-fit h-fit py-2 px-3 rounded-md flex items-center justify-center bg-primary font-medium text-white'>Unblock</button>
+												<button onClick={() => handelUnblock(user.friend.id)} className='w-fit h-fit py-2 px-3 rounded-md flex items-center justify-center bg-primary font-medium text-white'>Unblock</button>
 											</div>
 										))}
 

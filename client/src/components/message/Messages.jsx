@@ -5,11 +5,12 @@ import { useSocketContext } from '../../context/SocketContext'
 import MessageInput from './MessageInput';
 import Axios from '../../api/index'
 import { useParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
 const Messages = ({ msgConversation, selectedFiles }) => {
 	const [messages, setMessages] = useState([]);
 	const { socket } = useSocketContext();
 	const [status, setStatus] = useState('')
-	const { selectedConversation, setLoadConversations, loadingCheckBlock } = useConversation();
+	const { selectedConversation, setLoadConversations, loadingCheckBlock,setLoadingCheckBlock } = useConversation();
 	const messageEnd = useRef();
 	const params = useParams()
 	useEffect(() => {
@@ -48,7 +49,26 @@ const Messages = ({ msgConversation, selectedFiles }) => {
 	useEffect(() => {
 		scrollToBottom()
 	}, [messages])
-	console.log(loadingCheckBlock)
+	
+	const handelUnblock = async (friendData) => {
+		try {
+			const userID = JSON.parse(localStorage.getItem('user')).id;
+			const friendID = selectedConversation.friend.id
+		
+			const res = await Axios.delete('/api/v1/friendships/block', { data: { userID, friendID } });
+			console.log(res)
+			if (res.status === 204) {
+				setStatus('')
+				toast.success('Unblocked successfully')
+				setLoadingCheckBlock([false, ''])
+			}
+		} catch (error) {
+			console.error(error);
+		}
+	}
+	useEffect(() => {
+		reloadMessage()
+	}, [loadingCheckBlock[0]])
 	return (
 		<>
 			<div className='w-full h-full overflow-hidden flex flex-col gap-2 relative first:!mt-auto'>
@@ -74,7 +94,7 @@ const Messages = ({ msgConversation, selectedFiles }) => {
 						}
 						{
 							loadingCheckBlock[1] == 'blocked' && (
-								<button className='w-full h-fit text-center bg-primary rounded-md p-2 font-medium text-white hover:opacity-75 transition-opacity'>Unblock</button>
+								<button onClick={handelUnblock} className='w-full h-fit text-center bg-primary rounded-md p-2 font-medium text-white hover:opacity-75 transition-opacity'>Unblock</button>
 							)
 						}
 					</div>
