@@ -28,6 +28,7 @@ const Index = () => {
 			setLoading(true)
 			if (res.status === 200) {
 				setList(res.data.data)
+				setSearch('')
 				setTimeout(() => {
 					setLoading(false)
 				}, 1000) // Set the amount of time to show the loading animation (in milliseconds)
@@ -47,6 +48,16 @@ const Index = () => {
 	useEffect(() => {
 		getListByFilter()
 	}, [filter])
+	useEffect(() => {		
+		if(search.length > 0){
+			const searchList = list.filter(friend => friend.friend.username.toLowerCase().includes(search.toLowerCase()))
+			setList(searchList)
+		}
+		else{
+			getListByFilter()
+		}
+		
+	},[search])
 	// console.log(list)
 	const sendReq = async (friendData) => {
 		try {
@@ -69,6 +80,7 @@ const Index = () => {
 				if (res.status === 204) {
 					// console.log(res);
 					getListByFilter()
+
 				}
 			} else {
 				const res = await Axios.post('/api/v1/friendships/unfriend', { userID, friendID })
@@ -103,7 +115,9 @@ const Index = () => {
 				<section className='w-full flex justify-between items-center'>
 					<h1 className='font-bold text-2xl text-black dark:text-white'>Friends</h1>
 					<div className="w-[345px] h-[50px]">
-						<CustomizeInput placeholder={"Search for something"} onChange={setSearch} />
+						<input type="search" value={search} onChange={(e)=>setSearch(e.target.value)} className='bg-light-gray dark:bg-[#282930] dark:text-white dark:focus:outline-white rounded-md px-3 py-2 w-full focus:outline-primary' placeholder='Search by username' />
+
+						{/* <CustomizeInput placeholder={"Search for something"} onChange={setSearch} /> */}
 					</div>
 				</section>
 				<div className="w-full flex flex-col gap-2">
