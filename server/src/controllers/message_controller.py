@@ -10,13 +10,22 @@ from flask_restful import Resource
 
 
 class ConversationMessages(Resource):
+    @protect()
     def get(self, conversation_id):
         conversation = Conversation.query.get(conversation_id)
         if not conversation:
             raise InvalidAPIUsage(
                 message='Conversation not found', status_code=404)
+        participants = conversation.participants
+        user_participant = [p for p in participants if p.user_id ==
+                            request.user.id][0] if participants else None
+        if not user_participant:
+            raise InvalidAPIUsage(
+                message='You are not a participant of this conversation', status_code=403)
         query = db.session.query(Message).filter(
             Message.conversation_id == conversation_id)
+        if user_participant.delete_at:
+            query = query.filter(Message.time > user_participant.delete_at)
         api_freatures = APIFeatures(Message, request.args)
         items, total_count = api_freatures.perform_query(query)
 

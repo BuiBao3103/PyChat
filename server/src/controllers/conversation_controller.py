@@ -27,6 +27,7 @@ class Conversations(Resource):
 
     @protect()
     def delete(self, conversation_id):
+        print(conversation_id)
         conversation = Conversation.query.get(conversation_id)
         if not conversation:
             raise InvalidAPIUsage(
@@ -72,17 +73,13 @@ class MeConversations(Resource):
         api_freatures = APIFeatures(Conversation, request.args)
         items, total_count = api_freatures.perform_query(query)
         items = [item.to_dict() for item in items]
-        return_items = []
         for conversation in items:
             friend_index, user_index = 0, 1
             if conversation['participants'][0]['user']['id'] == request.user.id:
                 friend_index, user_index = 1, 0
-            if conversation['participants'][user_index]['delete_at'] != None:
-                continue
             conversation['friend'] = conversation['participants'][friend_index]['user']
             conversation['seen_at'] = conversation['participants'][user_index]['seen_at']
             del conversation['participants']
-            return_items.append(conversation)
         response = make_response(
-            {'status': 'sucess', 'total_count': len(return_items), 'data': return_items}, 200)
+            {'status': 'sucess', 'total_count': total_count, 'data': items}, 200)
         return response
