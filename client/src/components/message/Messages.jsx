@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import Message from './Message'
 import useConversation from '../../zustand/useConversation'
 import { useSocketContext } from '../../context/SocketContext'
@@ -43,14 +43,12 @@ const Messages = ({ msgConversation, selectedFiles }) => {
 			setMessages(res.data.data)
 		}
 	}
-	useEffect(() => {
-		reloadMessage()
-	}, [])
+	const memoizedReloadMessage = useMemo(() => reloadMessage, [params.conversationID]);
 	useEffect(() => {
 		scrollToBottom()
 	}, [messages])
 	
-	const handelUnblock = async (friendData) => {
+	const handelUnblock = async () => {
 		try {
 			const userID = JSON.parse(localStorage.getItem('user')).id;
 			const friendID = selectedConversation.friend.id
@@ -67,7 +65,7 @@ const Messages = ({ msgConversation, selectedFiles }) => {
 		}
 	}
 	useEffect(() => {
-		reloadMessage()
+		memoizedReloadMessage()
 	}, [loadingCheckBlock[0]])
 	return (
 		<>

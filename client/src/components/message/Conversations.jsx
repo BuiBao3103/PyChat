@@ -24,6 +24,7 @@ const Conversations = ({ conversationsUser }) => {
 	}
 	useEffect(() => {
 		const handleLastMessage = (data) => {
+			// console.log(data)
 			removeConversationById(data.conversation.id)
 			setConversations(oldConv => [data.conversation, ...oldConv])
 			setLoadConversations(true)

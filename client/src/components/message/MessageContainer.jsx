@@ -22,7 +22,6 @@ const MessageContainer = () => {
 		e.preventDefault();
 		setIsDragging(false)
 		const files = e.dataTransfer.files;
-		console.log(files)
 		for (let i = 0; i < files.length; i++) {
 			if (files[i].type.split('/')[0] !== 'image') {
 				toast.error('Only images are allowed')
@@ -37,7 +36,6 @@ const MessageContainer = () => {
 			}
 		}
 	}
-	console.log(selectedFiles)
 	return (
 		<div className='w-full h-full flex flex-row gap-3'>
 			<div className="w-full h-full flex flex-col gap-2 bg-white p-3 rounded-xl relative" onDrop={onDrag} onDragOver={onDragOver} onDragLeave={onDragLeave}>
@@ -60,7 +58,6 @@ const MessageContainer = () => {
 }
 
 export const action = async ({ params }) => {
-	console.log(params.conversationID)
 	const res = await Axios.get(`/api/v1/conversations/${params.conversationID}/messages?sort_by=-time`)
 	if (res.status === 200) {
 		return res.data.data
