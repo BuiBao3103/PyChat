@@ -50,7 +50,7 @@ const Messages = ({ msgConversation, selectedFiles }) => {
 		scrollToBottom()
 	}, [messages])
 	
-	const handelUnblock = async (friendData) => {
+	const handelUnblock = async () => {
 		try {
 			const userID = JSON.parse(localStorage.getItem('user')).id;
 			const friendID = selectedConversation.friend.id
