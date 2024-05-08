@@ -10,7 +10,6 @@ const Conversations = ({ conversationsUser }) => {
 	useEffect(() => {
 		setConversations(conversationsUser)
 	}, [conversationsUser])
-	// console.log(conversations)
 	const joinRoom = useCallback((conversationID) => {
 		console.log(conversationID)
 		socket.emit('join', { channel_id: conversationID })
@@ -24,7 +23,7 @@ const Conversations = ({ conversationsUser }) => {
 	}
 	useEffect(() => {
 		const handleLastMessage = (data) => {
-			// console.log(data)
+			console.log(data)
 			removeConversationById(data.conversation.id)
 			setConversations(oldConv => [data.conversation, ...oldConv])
 			setLoadConversations(true)

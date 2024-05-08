@@ -22,9 +22,6 @@ export const SocketProvider = ({ children }) => {
 			console.log(socket)
 			console.log('run')
 			return () => socket.close()
-			// socket.on("getOnlineUsers", (users) => {
-			// 	setOnlineUsers(users)
-			// })
 		} else {
 			if (socket) {
 				socket.close()

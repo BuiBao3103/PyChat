@@ -9,6 +9,7 @@ import UpdateAvatar from '../../components/avatar/UpdateAvatar';
 import { useAuthContext } from '../../hooks/useAuthContext';
 import UpdateCoverImage from '../../components/avatar/UpdateCoverImage';
 import { toast } from 'react-toastify';
+import EditInfo from '../../components/modal/EditProfile';
 const Index = () => {
 	const data = useLoaderData()
 	const [user, setUser] = useState(data)
@@ -18,6 +19,7 @@ const Index = () => {
 	const [friends, setFriends] = useState([])
 	const [selectedFile, setSelectedFile] = useState(null)
 	const [selectedCoverFile, setSelectedCoverFile] = useState(null)
+	const [isVisibleEditForm, setIsVisibleEditForm] = useState(false)
 	const handleFileChange = (e) => {
 		const file = e.target.files[0];
 		if (file && !file.type.startsWith('image/')) {
@@ -54,7 +56,7 @@ const Index = () => {
 					setUser(res.data.data)
 					dispatch({ type: "LOGIN", value: res.data.data })
 					// console.log();
-				}else {
+				} else {
 					toast.error(res.data.message)
 				}
 			})
@@ -131,7 +133,7 @@ const Index = () => {
 							{
 								JSON.parse(localStorage.getItem('user')).id == params.id && (
 									<section className='h-full flex flex-col place-content-end pb-5'>
-										<button className='w-fit h-fit px-10 py-2 border dark:border-white dark:text-white dark:hover:border-primary border-black rounded-md hover:bg-primary hover:border-primary transition-all hover:text-white'>Edit</button>
+										<button onClick={() => setIsVisibleEditForm(!isVisibleEditForm)} className='w-fit h-fit px-10 py-2 border dark:border-white dark:text-white dark:hover:border-primary border-black rounded-md hover:bg-primary hover:border-primary transition-all hover:text-white'>Edit</button>
 									</section>
 								)
 							}
@@ -186,6 +188,11 @@ const Index = () => {
 			}
 			{
 				selectedCoverFile != null && <UpdateCoverImage file={selectedCoverFile} setSelectedCoverFile={setSelectedCoverFile} />
+			}
+			{
+				isVisibleEditForm && (
+					<EditInfo setIsVisibleEditForm={setIsVisibleEditForm} user={user} setUser={setUser}/>
+				)
 			}
 		</div>
 	)
