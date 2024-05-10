@@ -5,12 +5,7 @@ import useConversation from '../../zustand/useConversation'
 import { formatMessageTime } from '../../utils/extractTIme'
 const ChatBrief = ({ className = '', currentConversation, joinRoom, leaveRoom }) => {
 	const navigate = useNavigate()
-	const [conversation, setConversation] = useState(null)
-	const { setLoadingCheckBlock } = useConversation()
-	useEffect(() => {
-		setConversation(currentConversation)
-	}, [])
-	const { setSelectedConversation, selectedConversation } = useConversation()
+	const { setSelectedConversation, selectedConversation, setLoadingCheckBlock } = useConversation()
 	const leaveRoomWithID = (conversation) => {
 		if (conversation != null) {
 			leaveRoom(conversation.id)
@@ -18,7 +13,6 @@ const ChatBrief = ({ className = '', currentConversation, joinRoom, leaveRoom })
 			console.log("No conversation")
 		}
 	}
-	// console.log(currentConversation)
 	const userSend = () => {
 		return currentConversation.last_message.user_id == JSON.parse(localStorage.getItem('user')).id ? 'You: ' : ''
 	}
@@ -30,15 +24,14 @@ const ChatBrief = ({ className = '', currentConversation, joinRoom, leaveRoom })
 		try {
 			const res = await Axios.get(`/api/v1/friendships?user_id=eq:${JSON.parse(localStorage.getItem('user')).id}&friend_id=eq:${currentConversation.friend.id}`)
 			if (res.status === 200) {
-				// setStatus(res.data.data.status)
-				// console.log(res.data.data)
 				setLoadingCheckBlock([false, res.data.data[0].status])
 			}
 		} catch (error) {
 			console.log(error)
 			setLoadingCheckBlock([false, ''])
-		}	
+		}
 	}
+	// console.log(selectedConversation)
 	return (
 		<div
 			onClick={() => {

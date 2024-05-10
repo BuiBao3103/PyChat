@@ -1,10 +1,8 @@
 import React from 'react'
-import { Outlet, redirect, useActionData } from 'react-router-dom'
+import { Outlet, redirect } from 'react-router-dom'
 import { LoginImg } from '../assets'
 import Axios from '../api/index'
 import { customToast } from "../utils/customToast";
-import { useAuthContext } from '../hooks/useAuthContext'
-import useConversation from '../zustand/useConversation';
 
 const AuthLayout = () => {
 
@@ -26,20 +24,24 @@ const AuthLayout = () => {
 
 export default AuthLayout
 
-export const action = async ({ request }) => {
+export const action = (setLoggedInUser) => async ({ request }) => {
 	const data = await request.formData();
 	const action = request.url.includes("login") ? "login" : "signup"
 	let userInformaiton = {}
 	if (action === "login") {
 		userInformaiton.email = data.get("email")
 		userInformaiton.password = data.get("password")
-		// console.log(userInformaiton)
 	} else {
 		// remove all white space from aa string
 		userInformaiton.firstName = data.get("firstName").replace(/\s/g, '');
 		userInformaiton.lastName = data.get("lastName").replace(/\s/g, '');
 		userInformaiton.email = data.get("email")
 		userInformaiton.password = data.get("password")
+		if (data.get("password") !== data.get("confirmPassword")) {
+			return {
+				invalidPassword: "Password does not match"
+			}
+		}
 		if (userInformaiton.firstName.trim() === "") {
 			return {
 				emptyField: "This field is required"
@@ -50,7 +52,6 @@ export const action = async ({ request }) => {
 				emptyField: "This field is required"
 			}
 		}
-		// console.log(userInformaiton)
 	}
 	let response
 	try {
@@ -59,8 +60,13 @@ export const action = async ({ request }) => {
 		} else {
 			response = await Axios.post("/api/v1/register", userInformaiton)
 		}
-		if (response.status === 200) {
-			// console.log(response)
+		if (response.status == 200) {
+			setLoggedInUser(response)
+			localStorage.setItem("user", JSON.stringify(response.data.data))
+			localStorage.setItem("auth", true)
+			customToast({ type: "success", message: action === 'login' ? "Login successfully" : "Sign up successfully" })
+			return window.location.href = "/conversation"
+			// return redirect("/conversation")
 		}
 	} catch (error) {
 		console.log(error)
@@ -73,8 +79,4 @@ export const action = async ({ request }) => {
 			emailExist: error.response.data.message
 		}
 	}
-	localStorage.setItem("user", JSON.stringify(response.data.data))
-	localStorage.setItem("auth", true)
-	customToast({ type: "success", message: action === 'login' ? "Login successfully" : "Sign up successfully" })
-	return redirect(`/conversation`)
 }

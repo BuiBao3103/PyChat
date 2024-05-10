@@ -12,7 +12,7 @@ const Spinner = () => {
 	}, []);
 
 	return (
-		<div className="fixed top-0 left-0 w-full h-full bg-white bg-opacity-50 z-50 flex flex-col justify-center items-center">
+		<div className="fixed top-0 left-0 w-full h-full bg-black/50 bg-opacity-50 z-50 flex flex-col justify-center items-center">
 			<div className="flex">
 				<div className="relative">
 					<div className="w-12 h-12"></div>

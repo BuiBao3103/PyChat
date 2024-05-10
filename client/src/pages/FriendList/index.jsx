@@ -7,33 +7,38 @@ import Axios from '../../api/index'
 import { toast } from 'react-toastify';
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
+import { useAuthContext } from '../../hooks/useAuthContext';
+import useConversation from '../../zustand/useConversation';
 const Index = () => {
 	const [filter, setFilter] = useState("All")
+	const { setTotalRespond, totalRespond } = useConversation()
 	let friendList = useLoaderData()
 	const [search, setSearch] = useState('')
 	const [loading, setLoading] = useState(false)
-	const debounceSearch = useDebounce(search, 500)
+	const [state, dispatch] = useAuthContext()
 	const [list, setList] = useState(friendList)
 	const getListByFilter = async () => {
 		let url = `/api/v1/friendships?user_id=eq:1&status=friends`
 		try {
 			if (filter === "All") {
-				url = `/api/v1/friendships?user_id=eq:${JSON.parse(localStorage.getItem('user')).id}&status=friends`
+				url = `/api/v1/friendships?user_id=eq:${state.user.id}&status=friends`
 			} else if (filter === "Respond") {
-				url = `/api/v1/friendships?user_id=eq:${JSON.parse(localStorage.getItem('user')).id}&status=request_received`
+				url = `/api/v1/friendships?user_id=eq:${state.user.id}&status=request_received`
 			} else {
-				url = `/api/v1/friendships?user_id=eq:${JSON.parse(localStorage.getItem('user')).id}&status=request_sent`
+				url = `/api/v1/friendships?user_id=eq:${state.user.id}&status=request_sent`
 			}
 			const res = await Axios.get(url)
 			setLoading(true)
 			if (res.status === 200) {
+				if (filter == "Respond") {
+					setTotalRespond(res.data.data.length)
+				}
 				setList(res.data.data)
 				setSearch('')
 				setTimeout(() => {
 					setLoading(false)
 				}, 1000) // Set the amount of time to show the loading animation (in milliseconds)
 			}
-			console.log(loading)
 		} catch (error) {
 			toast.error(error.message)
 		} finally {
@@ -44,24 +49,20 @@ const Index = () => {
 	}
 	useEffect(() => {
 		getListByFilter()
-	}, [])
-	useEffect(() => {
-		getListByFilter()
 	}, [filter])
-	useEffect(() => {		
-		if(search.length > 0){
+	useEffect(() => {
+		if (search.length > 0) {
 			const searchList = list.filter(friend => friend.friend.username.toLowerCase().includes(search.toLowerCase()))
 			setList(searchList)
 		}
-		else{
+		else {
 			getListByFilter()
 		}
-		
-	},[search])
+	}, [search])
 	// console.log(list)
 	const sendReq = async (friendData) => {
 		try {
-			const userID = JSON.parse(localStorage.getItem('user')).id;
+			const userID = state.user.id;
 			const friendID = friendData.friend.id;
 			if (friendData.status === 'not_friend') {
 				const res = await Axios.post('/api/v1/friendships/request', { userID, friendID });
@@ -80,7 +81,6 @@ const Index = () => {
 				if (res.status === 204) {
 					// console.log(res);
 					getListByFilter()
-
 				}
 			} else {
 				const res = await Axios.post('/api/v1/friendships/unfriend', { userID, friendID })
@@ -96,7 +96,7 @@ const Index = () => {
 	};
 	const cancelReq = async (friendData) => {
 		try {
-			const userID = JSON.parse(localStorage.getItem('user')).id;
+			const userID = state.user.id;
 			const friendID = friendData.friend.id;
 			if (friendData.status === 'request_received') {
 				const res = await Axios.delete('/api/v1/friendships/accept', { data: { userID, friendID } });
@@ -115,9 +115,7 @@ const Index = () => {
 				<section className='w-full flex justify-between items-center'>
 					<h1 className='font-bold text-2xl text-black dark:text-white'>Friends</h1>
 					<div className="w-[345px] h-[50px]">
-						<input type="search" value={search} onChange={(e)=>setSearch(e.target.value)} className='bg-light-gray dark:bg-[#282930] dark:text-white dark:focus:outline-white rounded-md px-3 py-2 w-full focus:outline-primary' placeholder='Search by username' />
-
-						{/* <CustomizeInput placeholder={"Search for something"} onChange={setSearch} /> */}
+						<input type="search" value={search} onChange={(e) => setSearch(e.target.value)} className='bg-light-gray dark:bg-[#282930] dark:text-white dark:focus:outline-white rounded-md px-3 py-2 w-full focus:outline-primary' placeholder='Search by username' />
 					</div>
 				</section>
 				<div className="w-full flex flex-col gap-2">
@@ -125,8 +123,15 @@ const Index = () => {
 						{
 							[`All`, `Respond`, `Request`].map((item, index) => (
 								<li key={index}>
-									<button onClick={() => setFilter(item)} className={`w-[120px] h-[40px] text-base hover:bg-gray-200 hover:rounded-md transition-all text-black dark:text-white ${filter === item ? "border-b-2 border-primary font-medium text-primary dark:text-primary" : ""}`}>
+									<button onClick={() => setFilter(item)} className={`w-[120px] h-[40px] text-base hover:bg-gray-200 hover:rounded-md transition-all text-black dark:text-white relative ${filter === item ? "border-b-2 border-primary font-medium text-primary dark:text-primary" : ""}`}>
 										{item}
+										{
+											totalRespond > 0 && item === "Respond" && (
+												<span className='absolute top-0 right-0 size-5 rounded-full bg-black text-white flex justify-center items-center text-sm p-1'>
+													{item === "Respond" ? `${totalRespond}` : ''}
+												</span>
+											)
+										}
 									</button>
 								</li>
 							))

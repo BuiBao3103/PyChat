@@ -14,5 +14,7 @@ const useConversation = create((set) => ({
 	setLoadingCheckBlock: (loadingCheckBlock) => set({ loadingCheckBlock }),
 	loadingDeletedConversation: false,
 	setLoadingDeletedConversation: (loadingDeletedConversation) => set({ loadingDeletedConversation }),
+	totalRespond: 0,
+	setTotalRespond: (totalRespond) => set({ totalRespond }),
 }))
 export default useConversation

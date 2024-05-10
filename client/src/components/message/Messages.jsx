@@ -9,8 +9,7 @@ import { toast } from 'react-toastify';
 const Messages = ({ msgConversation, selectedFiles }) => {
 	const [messages, setMessages] = useState([]);
 	const { socket } = useSocketContext();
-	const [status, setStatus] = useState('')
-	const { selectedConversation, setLoadConversations, loadingCheckBlock,setLoadingCheckBlock } = useConversation();
+	const { selectedConversation, setLoadConversations, loadingCheckBlock, setLoadingCheckBlock, loadConversation } = useConversation();
 	const messageEnd = useRef();
 	const params = useParams()
 	useEffect(() => {
@@ -24,16 +23,12 @@ const Messages = ({ msgConversation, selectedFiles }) => {
 		const handleNewMessage = (data) => {
 			setMessages(oldMsg => [data, ...oldMsg]);
 			scrollToBottom(); // Scroll to bottom after updating messages
-			setLoadConversations(true)
-			setTimeout(() => {
-				setLoadConversations(false);
-			}, 500);
 		};
 		socket.on('message', handleNewMessage);
 		return () => {
 			socket.off('message', handleNewMessage);
 		};
-	}, [socket]);
+	}, [loadConversation]);
 	const scrollToBottom = () => {
 		messageEnd.current.scrollIntoView({ behavior: "smooth" });
 	};
@@ -43,20 +38,18 @@ const Messages = ({ msgConversation, selectedFiles }) => {
 			setMessages(res.data.data)
 		}
 	}
-	const memoizedReloadMessage = useMemo(() => reloadMessage, [params.conversationID]);
 	useEffect(() => {
 		scrollToBottom()
 	}, [messages])
-	
+
 	const handelUnblock = async () => {
 		try {
 			const userID = JSON.parse(localStorage.getItem('user')).id;
 			const friendID = selectedConversation.friend.id
-		
+
 			const res = await Axios.delete('/api/v1/friendships/block', { data: { userID, friendID } });
 			console.log(res)
 			if (res.status === 204) {
-				setStatus('')
 				toast.success('Unblocked successfully')
 				setLoadingCheckBlock([false, ''])
 			}
@@ -64,9 +57,6 @@ const Messages = ({ msgConversation, selectedFiles }) => {
 			console.error(error);
 		}
 	}
-	useEffect(() => {
-		memoizedReloadMessage()
-	}, [loadingCheckBlock[0]])
 	return (
 		<>
 			<div className='w-full h-full overflow-hidden flex flex-col gap-2 relative first:!mt-auto'>
@@ -85,16 +75,20 @@ const Messages = ({ msgConversation, selectedFiles }) => {
 					<div className='w-full h-fit flex flex-col justify-center items-center gap-2 border-t py-2'>
 						{
 							loadingCheckBlock[1] == 'blocked' ? (
-								<span className='text-black font-medium'>You have blocked this user</span>
+								<div className="w-full h-full flex flex-col gap-3 justify-end p-2 absolute top-0 rounded-md bg-black/80 items-center z-20">
+									<span className='text-white font-medium'>You have blocked this user</span>
+									<button onClick={handelUnblock} className='w-full h-fit text-center bg-primary rounded-md p-2 font-medium text-white hover:opacity-75 transition-opacity'>Unblock</button>
+								</div>
 							) : (
-								<span className='text-black font-medium inline-block pt-2'>This user has blocked you</span>
+								<div className="w-full h-full flex flex-col gap-3 justify-center p-2 absolute top-0 rounded-md bg-black/80 items-center z-20">
+									<span className='text-white font-medium inline-block pt-2'>This user has blocked you</span>
+								</div>
 							)
 						}
-						{
+						{/* {
 							loadingCheckBlock[1] == 'blocked' && (
-								<button onClick={handelUnblock} className='w-full h-fit text-center bg-primary rounded-md p-2 font-medium text-white hover:opacity-75 transition-opacity'>Unblock</button>
 							)
-						}
+						} */}
 					</div>
 				) : (
 					<MessageInput scroll={messageEnd} selectedImageFiles={selectedFiles} />

@@ -1,11 +1,9 @@
 import React, { useState } from 'react'
 import Messages from './Messages'
 import MessageDetail from './MessageDetail'
-import useConversation from '../../zustand/useConversation'
-import { useLoaderData, useParams } from 'react-router-dom'
+import { useLoaderData } from 'react-router-dom'
 import Axios from '../../api/index'
 const MessageContainer = () => {
-	const params = useParams()
 	const loader = useLoaderData()
 	const [isDragging, setIsDragging] = useState(false)
 	const [selectedFiles, setSelectedFiles] = useState([]);

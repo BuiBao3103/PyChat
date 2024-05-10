@@ -112,7 +112,6 @@ const MessageInput = ({ scroll, selectedImageFiles }) => {
 		if (selectedImageFiles.length > 0) {
 			setSelectedFiles(selectedImageFiles)
 		}
-		console.log(selectedImageFiles)
 	}, [selectedImageFiles])
 
 	return (

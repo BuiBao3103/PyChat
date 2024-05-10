@@ -1,16 +1,9 @@
 import { redirect } from "react-router-dom";
 import { customToast } from "./customToast";
-// export const getTokenDuration = () => {
-// 	const storedExpirationDate = localStorage.getItem("expiration");
-// 	const expirationDate = new Date(storedExpirationDate);
-// 	const now = new Date();
-// 	const duration = expirationDate.getTime() - now.getTime();
-// 	return duration;
-// };
 
 export const getAuthToken = () => {
 	const auth = localStorage.getItem("auth");
-	
+
 	if (!auth) {
 		return null;
 	}
@@ -28,6 +21,13 @@ export const tokenLoader = () => {
 };
 
 export const authChecker = () => {
+	if (window.location.pathname == "/") {
+		setTimeout(() => {
+			customToast({ type: "error", message: "Please login to continue" })
+		}, 1);
+		return redirect("/login");
+	}
+	// if()
 	if (!getAuthToken()) {
 		console.log("not login yet")
 		setTimeout(() => {

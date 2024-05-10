@@ -6,14 +6,17 @@ import ImagesOverlay from '../caroseul/ImagesOverlay'
 import useGetAllImages from '../../hooks/useGetAllImages'
 const MessageDetail = () => {
 
-	const { selectedConversation, isOpenCarosuel, setIsOpenCarosuel, setSelectedImage, loadingCheckBlock } = useConversation()
-	const { imagesData, getAllImages, loadingImg } = useGetAllImages()
+	const { selectedConversation, isOpenCarosuel, setIsOpenCarosuel, setSelectedImage, loadingCheckBlock, loadConversation } = useConversation()
+	const { imagesData, getAllImages } = useGetAllImages()
 	const [msgDetail, setMsgDetail] = useState(selectedConversation)
 	const [isOpenRecentImage, setIsOpenRecentImage] = useState(false)
 	const [isVisibleModal, setIsVisibleModal] = useState('')
 	useEffect(() => {
 		setMsgDetail(selectedConversation)
-	}, [])
+	}, [selectedConversation])
+	useEffect(() => {
+		getAllImages()
+	}, [loadConversation])
 	return (
 		<>
 			<div className="min-w-[300px] w-[300px] h-full rounded-xl bg-white dark:bg-primary-dark xl:block hidden">
@@ -40,7 +43,7 @@ const MessageDetail = () => {
 						</section>
 						{
 							isOpenRecentImage && (
-								<div className="transition-all h-[310px] overflow-y-scroll grid grid-cols-3 gap-1">
+								<div className="transition-all h-full max-h-[310px] overflow-y-scroll grid grid-cols-3 gap-1">
 									{
 										imagesData.map((image, index) => (
 											<div key={index}

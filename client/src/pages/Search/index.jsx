@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import CustomizeInput from '../../components/input/CustomizeInput'
-import { PiX } from "react-icons/pi";
 import SearchItem from '../../components/searchItem/SearchItem';
-import { useLoaderData } from 'react-router-dom';
-import useConversation from '../../zustand/useConversation';
 import useSearch from '../../hooks/useSearch';
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
@@ -58,20 +55,9 @@ const Index = () => {
 			console.error(error);
 		}
 	}
-	const loadUsers = async () => {
-		try {
-			const res = await Axios.get(`/api/v1/users`);
-			if (res.status === 200) {
-				console.log(res.data.data)
-			}
-		} catch (error) {
-			console.error(error);
-		}
-	}
-	
+
 	useEffect(() => {
 		setUsersData(users);
-		loadUsers()
 	}, [users]);
 	return (
 		<div className='w-full h-full bg-white dark:bg-primary-dark rounded-xl p-3 flex flex-col gap-5'>

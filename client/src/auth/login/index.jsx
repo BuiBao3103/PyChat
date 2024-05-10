@@ -29,13 +29,13 @@ const Index = () => {
 	return (
 		<div className='w-full md:px-10 md:py-20 p-10 h-full'>
 			<header className="w-full flex flex-col justify-center items-center gap-px">
-				<h1 className="text-6xl font-oleo-script-regular">
+				<h1 className="text-5xl font-oleo-script-regular">
 					Welcome back
 				</h1>
-				<h4 className='text-base'>Chat, share and do more.</h4>
+				<h4 className='text-sm'>Chat, share and do more.</h4>
 			</header>
 			<main className='mt-8'>
-				<Form className='space-y-5' method='POST'>
+				<Form className='space-y-3' method='POST'>
 					<div>
 						<label htmlFor="email" className="block font-medium leading-6 text-gray-900">Email</label>
 						<div className="mt-2">

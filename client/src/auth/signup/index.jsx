@@ -4,10 +4,9 @@ import { FcGoogle } from 'react-icons/fc'
 import SocialMediaButton from '../../components/button/SocialMediaButton'
 import { Link, Form, useNavigation, useActionData, redirect } from 'react-router-dom'
 import { PiEye, PiEyeClosed } from "react-icons/pi";
-import { customToast } from '../../utils/customToast'
-import Axios from '../../api/index'
 const Index = () => {
 	const [isVisiblePassword, setIsVisiblePassword] = useState(false)
+	const [isVisibleConfirmPassword, setIsVisibleConfirmPassword] = useState(false)
 	const data = useActionData()
 	const navigate = useNavigation()
 	let isSigningup = navigate.formData?.get("email") != null && navigate.formData?.get("password") != null && navigate.formData?.get("firstName") && navigate.formData?.get("lastName")
@@ -28,15 +27,15 @@ const Index = () => {
 		}
 	]
 	return (
-		<div className="w-full md:px-10 md:py-20 px-10 py-5 h-full">
+		<div className="w-full md:px-10 md:py-10 px-10 py-5 h-full">
 			<header className="w-full flex flex-col justify-center items-center gap-px">
-				<h1 className="text-6xl font-oleo-script-regular">
+				<h1 className="text-5xl font-oleo-script-regular">
 					Are you new here?
 				</h1>
-				<h4 className='text-base'>Be part of something great, join us!</h4>
+				<h4 className='text-sm'>Be part of something great, join us!</h4>
 			</header>
 			<main className='mt-4 md:mt-8'>
-				<Form className='space-y-3 md:space-y-5' method='POST'>
+				<Form className='space-y-3' method='POST'>
 					<div className="w-full flex justify-between gap-4">
 						<div className='w-full relative'>
 							<label htmlFor="firstName" className="block font-medium leading-6 text-gray-900"><span className='text-red-400'>*</span>First Name</label>
@@ -119,6 +118,31 @@ const Index = () => {
 							)
 						}
 					</div>
+					<div className='relative'>
+						<label htmlFor="confirmPassword" className="block font-medium leading-6 text-gray-900"><span className='text-red-400'>*</span>Confirm Password</label>
+						<div className="mt-2 relative">
+							<input
+								id="confirmPassword"
+								name="confirmPassword" placeholder='Confirm your password'
+								type={!isVisibleConfirmPassword ? 'password' : 'text'}
+								autoComplete="password" required
+								className="block w-full rounded-md p-3 border focus:outline-primary" />
+							<span
+								onClick={() => setIsVisibleConfirmPassword(!isVisibleConfirmPassword)}
+								className='block absolute top-[28%] right-4'>
+								{
+									!isVisibleConfirmPassword ? <PiEye size={25} /> : <PiEyeClosed size={25} />
+								}
+							</span>
+						</div>
+						{
+							data && data.invalidConfirmPassword && (
+								<p className='text-[12px] text-red-500 absolute top-1 right-0'>
+									*{data.invalidConfirmPassword}
+								</p>
+							)
+						}
+					</div>
 					<button className='w-full border border-primary py-3 rounded-lg bg-primary transition-all hover:bg-transparent group block' type="submit">
 						<span className='font-medium text-white group-hover:text-primary'>
 							{
@@ -127,7 +151,7 @@ const Index = () => {
 						</span>
 					</button>
 				</Form>
-				<div className="space-y-3 md:space-y-6 mt-5">
+				<div className="space-y-3 md:space-y-3 mt-3">
 					<div className="w-full flex justify-center items-center">
 						<span className='h-px w-full bg-gray-400'></span>
 						<span className='w-72 text-center text-base'>Or sign up with</span>
@@ -142,7 +166,7 @@ const Index = () => {
 					</div>
 				</div>
 			</main>
-			<footer className='w-full text-center mt-3 md:mt-6 font-medium'>
+			<footer className='w-full text-center mt-3 font-medium'>
 				<p>
 					Don't have account?
 					<Link to={"/login"}>
