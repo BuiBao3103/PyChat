@@ -27,7 +27,6 @@ const IconMenu = ({ to, Icon, title }) => {
 			</NavLink>
 			<Tooltip id="my-tooltip" style={{ backgroundColor: "#3fbf9e", fontWeight: "500", zIndex: 1000 }} />
 		</>
-
 	)
 }
 IconMenu.propTypes = {

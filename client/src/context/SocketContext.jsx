@@ -11,12 +11,12 @@ export const SocketProvider = ({ children }) => {
 	const [socket, setSocket] = useState(null)
 	const [state, dispatch] = useAuthContext()
 	useEffect(() => {
-		const socketConnect = io("http://localhost:5000", {
-			query: {
-				userID: state.user?.id
-			},
-		})
 		if (state.user) {
+			const socketConnect = io("http://localhost:5000", {
+				query: {
+					userID: state.user?.id
+				},
+			})
 			setSocket(socketConnect)
 			console.log(socket)
 			console.log('run')
