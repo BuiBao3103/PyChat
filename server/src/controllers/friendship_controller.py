@@ -7,8 +7,8 @@ from src.errors import InvalidAPIUsage
 from src import db
 from flask_restful import Resource
 from flask import request, make_response
-
-
+from sqlalchemy import and_
+from sqlalchemy.orm import aliased
 class Friendships(Resource):
     def get(self, friendship_id=None):
         if friendship_id == None:
@@ -149,16 +149,20 @@ class FriendshipsAccept(Resource):
                 or friendship_friend.status != FriendshipStatus.REQUEST_SENT):
             raise InvalidAPIUsage(
                 message='Friend is not request!', status_code=400)
+        print(friendship_user.to_dict())
+        print(friendship_friend.to_dict())
         try:
             friendship_user.status = FriendshipStatus.FRIENDS
             friendship_friend.status = FriendshipStatus.FRIENDS
             db.session.add_all([friendship_user, friendship_friend])
             # check if conversation exist
+            participant1 = aliased(Participant)
+            participant2 = aliased(Participant)
+
             conversation = (db.session.query(Conversation)
-                .join(Participant, Conversation.id == Participant.conversation_id)
-                .filter(Participant.user_id.in_([friend_id, user_id]))
-                .first())
-            
+                            .join(participant1, and_(Conversation.id == participant1.conversation_id, participant1.user_id == user_id))
+                            .join(participant2, and_(Conversation.id == participant2.conversation_id, participant2.user_id == friend_id))
+                            .first())
             if not conversation:
                 conversation = Conversation()
                 db.session.add(conversation)
