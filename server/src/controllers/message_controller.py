@@ -7,7 +7,7 @@ from datetime import datetime
 from flask import request, make_response
 from src.util.api_features import APIFeatures
 from flask_restful import Resource
-
+from sqlalchemy import not_
 
 class ConversationMessages(Resource):
     @protect()
@@ -22,8 +22,15 @@ class ConversationMessages(Resource):
         if not user_participant:
             raise InvalidAPIUsage(
                 message='You are not a participant of this conversation', status_code=403)
+            
+        # Subquery to get IDs of deleted messages by the user
+        subquery = db.session.query(DeletedMessage.message_id).filter_by(user_id=request.user.id).subquery()
+
+        # Query to retrieve messages not deleted by the user
         query = db.session.query(Message).filter(
-            Message.conversation_id == conversation_id)
+            Message.conversation_id == conversation_id,
+            ~Message.id.in_(subquery)
+        )
         if user_participant.delete_at:
             query = query.filter(Message.time > user_participant.delete_at)
         api_freatures = APIFeatures(Message, request.args)
