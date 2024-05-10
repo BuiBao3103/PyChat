@@ -47,7 +47,6 @@ const Message = ({ message, reloadMessage }) => {
 	}
 	return (
 		<>
-			{msg.deleted_messages.length === 0 && (
 				<div className={`chat ${fromMe ? 'chat-end' : 'chat-start'} relative group`}>
 					<div className="chat-image avatar">
 						<div className="w-10 rounded-full">
@@ -127,7 +126,6 @@ const Message = ({ message, reloadMessage }) => {
 						/>
 					)}
 				</div >
-			)}
 		</>
 	);
 
