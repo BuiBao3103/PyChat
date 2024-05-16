@@ -68,15 +68,16 @@ def handle_message(data):
     conversation = conversation.to_dict()
 
     for participant in conversation['participants']:
-        conversation_temp = conversation.copy()  # Move inside the loop
-        friend_index, user_index = 0, 1
-        if conversation_temp['participants'][0]['user']['id'] == participant['user_id']:
-            friend_index, user_index = 1, 0
-        conversation_temp['friend'] = conversation_temp['participants'][friend_index]['user']
-        conversation_temp['seen_at'] = conversation_temp['participants'][user_index]['seen_at']
-        del conversation_temp['participants']  # Correct variable name here
-        emit('new_conversation_coming', conversation_temp,
-             room=user_session[str(participant['user_id'])])  # Correct variable name here
+        if str(participant['user_id']) in user_session:
+            conversation_temp = conversation.copy()
+            friend_index, user_index = 0, 1
+            if conversation_temp['participants'][0]['user']['id'] == participant['user_id']:
+                friend_index, user_index = 1, 0
+            conversation_temp['friend'] = conversation_temp['participants'][friend_index]['user']
+            conversation_temp['seen_at'] = conversation_temp['participants'][user_index]['seen_at']
+            del conversation_temp['participants']
+            emit('new_conversation_coming', conversation_temp,
+                 room=user_session[str(participant['user_id'])])
 
 
 @socketio.on('seen')
@@ -88,7 +89,7 @@ def handle_seen(data):
     participant.seen_at = datetime.now()
     db.session.commit()
     conversation = Conversation.query.get(data['channel_id'])
-    conversation = conversation.to_dict()# Move inside the loop
+    conversation = conversation.to_dict()  # Move inside the loop
     friend_index, user_index = 0, 1
     if conversation['participants'][0]['user']['id'] == participant['user_id']:
         friend_index, user_index = 1, 0
