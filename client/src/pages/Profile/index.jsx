@@ -13,9 +13,7 @@ import EditInfo from '../../components/modal/EditProfile';
 const Index = () => {
 	const data = useLoaderData()
 	const [user, setUser] = useState(data)
-	const [state, dispatch] = useAuthContext()
 	const params = useParams()
-	const navigate = useNavigate()
 	const [friends, setFriends] = useState([])
 	const [selectedFile, setSelectedFile] = useState(null)
 	const [selectedCoverFile, setSelectedCoverFile] = useState(null)
@@ -51,13 +49,8 @@ const Index = () => {
 	const getUser = async () => {
 		try {
 			await Axios.get(`api/v1/users/${params.id}`).then((res) => {
-				console.log(res)
 				if (res.status === 200) {
 					setUser(res.data.data)
-					if (params.id == JSON.parse(localStorage.getItem('user')).id) {
-						dispatch({ type: "LOGIN", value: res.data.data })
-					}
-					// console.log();
 				} else {
 					toast.error(res.data.message)
 				}
@@ -67,18 +60,6 @@ const Index = () => {
 			toast.error(error.response.data.message)
 		}
 	}
-	const fakeData = [
-		{
-			Icon: PiPhone,
-			title: 'Phone Number',
-			value: '0344248396'
-		}, {
-			Icon: PiEnvelopeSimple,
-			title: 'Personal Email',
-			value: user.email
-		}
-	]
-
 	useEffect(() => {
 		const getFriends = async () => {
 			try {
@@ -93,7 +74,7 @@ const Index = () => {
 			}
 		}
 		getFriends()
-	}, [])
+	}, [params.id])
 	useEffect(() => {
 		getUser()
 	}, [selectedFile, selectedCoverFile, params.id])

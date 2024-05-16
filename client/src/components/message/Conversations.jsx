@@ -2,15 +2,15 @@ import React, { useCallback, useEffect, useState } from 'react'
 import ChatBrief from '../chatBrief/ChatBrief'
 import { useSocketContext } from '../../context/SocketContext'
 import useConversation from '../../zustand/useConversation'
-import { useAuthContext } from '../../hooks/useAuthContext'
 
 const Conversations = ({ conversationsUser }) => {
 	const [conversations, setConversations] = useState(conversationsUser)
 	const { socket } = useSocketContext()
-	const { selectedConversation, loadConversation } = useConversation()
+	const { selectedConversation, loadConversation, setCountConversations } = useConversation()
 	useEffect(() => {
 		setConversations(conversationsUser)
-	}, [conversationsUser])
+		setCountConversations(conversationsUser)
+	}, [])
 	const joinRoom = useCallback((conversationID) => {
 		console.log(conversationID)
 		socket.emit('join', { channel_id: conversationID })
@@ -20,21 +20,20 @@ const Conversations = ({ conversationsUser }) => {
 		socket.emit('leave', { channel_id: conversationID })
 	}, [])
 	const removeConversationById = (conversationID) => {
-		setConversations(conversations.filter(item => item.id !== conversationID))
+		setConversations(conversations.filter(item => item.id != conversationID))
 	}
-	console.log(conversations)
-	// useEffect(() => {
-	// 	const handleLastMessage = (data) => {
-	// 		// console.log(data)
-	// 		console.log("new message coming")
-	// 		removeConversationById(data.conversation.id)
-	// 		setConversations(oldConv => [data.conversation, ...oldConv])
-	// 	}
-	// 	socket.on('new_conversation_coming', handleLastMessage)
-	// 	return () => {
-	// 		socket.off('new_conversation_coming', handleLastMessage)
-	// 	}
-	// }, [loadConversation])
+	// console.log(conversations)
+	useEffect(() => {
+		const handleLastMessage = (data) => {
+			removeConversationById(data.id)
+			setConversations(oldConv => [data, ...oldConv])
+		}
+		socket.on('new_conversation_coming', handleLastMessage)
+		return () => {
+			socket.off('new_conversation_coming', handleLastMessage)
+		}
+	}, [loadConversation])
+
 	return (
 		<div className="w-full h-full flex flex-col overflow-y-scroll pb-3 scrollChatConversions">
 			{

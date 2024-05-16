@@ -11,7 +11,7 @@ import { useAuthContext } from '../../hooks/useAuthContext';
 import useConversation from '../../zustand/useConversation';
 const SideBar = () => {
 	const [visibleSetting, setVisibleSetting] = useState(false)
-	const { selectedConversation, setSelectedConversation } = useConversation()
+	const { selectedConversation, setSelectedConversation, conversations } = useConversation()
 	const [state, dispatch] = useAuthContext()
 	const sideMenu = [
 		{

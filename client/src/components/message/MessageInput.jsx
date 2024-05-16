@@ -5,7 +5,7 @@ import useConversation from '../../zustand/useConversation'
 import { toast } from 'react-toastify'
 import useGetAllImages from '../../hooks/useGetAllImages'
 const MessageInput = ({ scroll, selectedImageFiles }) => {
-	const { selectedConversation, setLoadConversations, loadingCheckBlock } = useConversation()
+	const { selectedConversation, setLoadConversations } = useConversation()
 	const [message, setMessage] = useState('')
 	const { socket } = useSocketContext()
 	const [selectedFiles, setSelectedFiles] = useState([]);

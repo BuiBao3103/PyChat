@@ -9,23 +9,11 @@ import Conversations from '../../components/message/Conversations';
 const Index = () => {
 
 	const location = useLocation()
-	const { selectedConversation, loadConversation } = useConversation()
+	const { selectedConversation, setConversations } = useConversation()
 	const conversationsLoader = useLoaderData()
-	const [conversations, setConversations] = useState(conversationsLoader)
 	const [query, setQuery] = useState('')
-	const [debouncedQuery, setDebouncedQuery] = useState('')
-
-	useEffect(() => {
-		const handler = setTimeout(() => {
-			setDebouncedQuery(query)
-		}, 300) // 300ms debounce time
-		return () => {
-			clearTimeout(handler)
-		}
-	}, [query])
-
 	const filteredConversations = conversationsLoader.filter(conversation =>
-		conversation.friend.username.toLowerCase().includes(debouncedQuery.toLowerCase())
+		conversation.friend.username.toLowerCase().includes(query.toLowerCase())
 	);
 	return (
 		<div className='w-full h-full flex gap-3'>
@@ -33,9 +21,6 @@ const Index = () => {
 				<div className="w-full h-[120px] flex flex-col gap-3 p-3">
 					<div className="w-full flex justify-between items-center gap-2">
 						<span className='font-bold text-2xl dark:text-white'>Chat</span>
-						{/* <Link to={"/conversation/to"}>
-							<PiNotePencil size={35} className=' dark:text-white cursor-pointer' />
-						</Link> */}
 					</div>
 					<div className="w-full flex gap-2">
 						<input type="search" onChange={(e) => setQuery(e.target.value)} className='bg-light-gray dark:bg-[#282930] dark:text-white dark:focus:outline-white rounded-md px-3 py-2 w-full focus:outline-primary' placeholder='Search by name' />
