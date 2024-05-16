@@ -17,12 +17,9 @@ document.addEventListener('DOMContentLoaded', function () {
 			userID: user_send_id
 		}
 	});
-
-
 	socket.emit('join', { channel_id: channel_id });
 
 	const sendButton = document.querySelector('#sendButton')
-
 	sendButton?.addEventListener('click', function () {
 		const messageInput = document.querySelector('#messageInput');
 		const message = messageInput.value.trim();
@@ -62,7 +59,10 @@ document.addEventListener('DOMContentLoaded', function () {
 			reader.readAsDataURL(file);
 		}
 	})
-
+	const seenButton = document.querySelector('#seenButton')
+	seenButton?.addEventListener('click', function () {
+		socket.emit('seen', { conversation_id: channel_id, user_id: user_send_id });
+	})
 	socket.on('message', function (data) {
 		if (data.type == 'text') {
 			if (data.user_id == user_send_id)
