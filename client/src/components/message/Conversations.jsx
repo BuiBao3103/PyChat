@@ -2,11 +2,14 @@ import React, { useCallback, useEffect, useState } from 'react'
 import ChatBrief from '../chatBrief/ChatBrief'
 import { useSocketContext } from '../../context/SocketContext'
 import useConversation from '../../zustand/useConversation'
+import { useAuthContext } from '../../hooks/useAuthContext'
 
 const Conversations = ({ conversationsUser }) => {
 	const [conversations, setConversations] = useState(conversationsUser)
 	const { socket } = useSocketContext()
 	const { selectedConversation, setSelectedConversation, setLoadConversations } = useConversation()
+	const [state, dispatch] = useAuthContext()
+	// console.log(state.user)
 	useEffect(() => {
 		setConversations(conversationsUser)
 	}, [conversationsUser])
@@ -35,7 +38,7 @@ const Conversations = ({ conversationsUser }) => {
 		return () => {
 			socket.off('new_mess', handleLastMessage)
 		}
-	}, [socket])
+	}, [state.user])
 	return (
 		<div className="w-full h-full flex flex-col overflow-y-scroll pb-3 scrollChatConversions">
 			{

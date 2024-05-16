@@ -16,7 +16,7 @@ const FriendItem = ({ className, friend, sendReq, cancelReq }) => {
 			<div className="w-full flex gap-2">
 				{/* //create one button with unfriend when friend.status == 'friends' */}
 				{
-					friend.status === 'friends' && (
+					window.location.pathname.includes('profile') == false && friend.status === 'friends' && (
 						<button
 							onClick={() => sendReq(friend)}
 							className='w-full bg-primary text-white py-2 rounded-lg font-medium hover:opacity-75 transition-opacity'>Unfriend</button>

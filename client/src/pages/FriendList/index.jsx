@@ -21,11 +21,11 @@ const Index = () => {
 		let url = `/api/v1/friendships?user_id=eq:1&status=friends`
 		try {
 			if (filter === "All") {
-				url = `/api/v1/friendships?user_id=eq:${state.user.id}&status=friends`
+				url = `/api/v1/friendships?user_id=eq:${JSON.parse(localStorage.getItem('user')).id}&status=friends`
 			} else if (filter === "Respond") {
-				url = `/api/v1/friendships?user_id=eq:${state.user.id}&status=request_received`
+				url = `/api/v1/friendships?user_id=eq:${JSON.parse(localStorage.getItem('user')).id}&status=request_received`
 			} else {
-				url = `/api/v1/friendships?user_id=eq:${state.user.id}&status=request_sent`
+				url = `/api/v1/friendships?user_id=eq:${JSON.parse(localStorage.getItem('user')).id}&status=request_sent`
 			}
 			const res = await Axios.get(url)
 			setLoading(true)
@@ -62,7 +62,7 @@ const Index = () => {
 	// console.log(list)
 	const sendReq = async (friendData) => {
 		try {
-			const userID = state.user.id;
+			const userID = JSON.parse(localStorage.getItem('user')).id;
 			const friendID = friendData.friend.id;
 			if (friendData.status === 'not_friend') {
 				const res = await Axios.post('/api/v1/friendships/request', { userID, friendID });

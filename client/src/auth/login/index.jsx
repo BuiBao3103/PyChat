@@ -3,7 +3,7 @@ import { FcGoogle } from "react-icons/fc";
 import { FaFacebook, FaInstagram } from "react-icons/fa";
 import SocialMediaButton from '../../components/button/SocialMediaButton';
 import { PiEye, PiEyeClosed } from "react-icons/pi";
-import { Link, Form, useNavigation, useActionData, useLoaderData } from 'react-router-dom';
+import { Link, Form, useNavigation, useActionData, redirect } from 'react-router-dom';
 import { toast } from 'react-toastify';
 const Index = () => {
 	const [isVisiblePassword, setIsVisiblePassword] = useState(false)
@@ -70,7 +70,7 @@ const Index = () => {
 							<label htmlFor="remember-me" className='order-1 font-medium'>Remember me</label>
 							<input id='remember-me' type="checkbox" className='w-5 h-5' />
 						</div>
-						<button type="button">
+						<button onClick={() => toast.info("This function is currently unavailabel")} type="button">
 							<span className='hover:underline text-primary font-medium'>Forgot password?</span>
 						</button>
 					</div>

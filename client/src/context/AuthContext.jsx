@@ -1,10 +1,9 @@
 import { createContext, useEffect, useMemo, useReducer } from "react";
-import Axios from '../api/index'
 export const AuthContext = createContext()
 
 const initialState = {
 	user: JSON.parse(localStorage.getItem('user')) || null,
-	auth: localStorage.getItem('auth') || false,
+	auth: JSON.parse(localStorage.getItem('auth')) || false,
 }
 
 const reducer = (state, action) => {

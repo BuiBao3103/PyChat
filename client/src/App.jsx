@@ -30,9 +30,9 @@ import { useAuthContext } from './hooks/useAuthContext.jsx';
 
 
 function App() {
-	const [state,dispatch] = useAuthContext()
+	const [state, dispatch] = useAuthContext()
 	const setLoggedInUser = (res) => {
-		dispatch({type: "LOGIN", value: res.data.data})
+		dispatch({ type: "LOGIN", value: res.data.data })
 	}
 	const router = createBrowserRouter([
 		{
@@ -116,7 +116,7 @@ function App() {
 						</Suspense>
 					),
 					action: authAction(setLoggedInUser),
-	
+
 				},
 				{
 					path: ROUTE.SIGNUP,

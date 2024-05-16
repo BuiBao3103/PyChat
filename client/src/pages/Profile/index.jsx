@@ -54,7 +54,9 @@ const Index = () => {
 				console.log(res)
 				if (res.status === 200) {
 					setUser(res.data.data)
-					dispatch({ type: "LOGIN", value: res.data.data })
+					if (params.id == JSON.parse(localStorage.getItem('user')).id) {
+						dispatch({ type: "LOGIN", value: res.data.data })
+					}
 					// console.log();
 				} else {
 					toast.error(res.data.message)
@@ -94,7 +96,7 @@ const Index = () => {
 	}, [])
 	useEffect(() => {
 		getUser()
-	}, [selectedFile, selectedCoverFile])
+	}, [selectedFile, selectedCoverFile, params.id])
 	return (
 		<div className='w-full h-full rounded-xl bg-white dark:bg-primary-dark p-3 overflow-hidden'>
 			<div className="w-full h-full flex flex-col gap-2">
@@ -158,7 +160,6 @@ const Index = () => {
 												<InformationLine title={"First name"} value={user.first_name} />
 												<InformationLine title={"Last name"} value={user.last_name} />
 												<InformationLine title={"Email"} value={user.email} />
-												{/* <InformationLine title={"Phone number"} value={"0344248396"} /> */}
 											</>
 										)
 									}
@@ -176,9 +177,13 @@ const Index = () => {
 									))
 								}
 							</div>
-							<Link to={"/friend_list"} className='absolute w-fit px-6 py-3 bg-primary text-white font-bold -bottom-16 right-9 rounded-md group-hover:bottom-7 transition-all duration-300 hover:opacity-60'>
-								View All
-							</Link>
+							{
+								JSON.parse(localStorage.getItem('user')).id == params.id && (
+									<Link to={"/friend_list"} className='absolute w-fit px-6 py-3 bg-primary text-white font-bold -bottom-16 right-9 rounded-md group-hover:bottom-7 transition-all duration-300 hover:opacity-60'>
+										View All
+									</Link>
+								)
+							}
 						</div>
 					</section>
 				</div>
@@ -191,7 +196,7 @@ const Index = () => {
 			}
 			{
 				isVisibleEditForm && (
-					<EditInfo setIsVisibleEditForm={setIsVisibleEditForm} user={user} setUser={setUser}/>
+					<EditInfo setIsVisibleEditForm={setIsVisibleEditForm} user={user} setUser={setUser} />
 				)
 			}
 		</div>

@@ -1,7 +1,7 @@
 import axios from "axios"
 
 export default axios.create({
-	baseURL: "http://127.0.0.1:5000/",
+	baseURL: `${import.meta.env.VITE_SERVER_URL}`,
 	headers: {
 		'Accept': 'application/json',
 		'Content-Type': 'application/json; charset=utf-8'

@@ -8,7 +8,7 @@ const useGetTotal = () => {
 	const [total, setTotal] = useState(0)
 	const getTotal = async () => {
 		try {
-			const res = await Axios.get(`/api/v1/friendships?user_id=eq:${state.user.id}&status=request_received`)
+			const res = await Axios.get(`/api/v1/friendships?user_id=eq:${JSON.parse(localStorage.getItem('user')).id}&status=request_received`)
 			if (res.status === 200) {
 				setTotal(res.data.data.length)
 				setTotalRespond(res.data.data.length)
