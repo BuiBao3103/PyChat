@@ -27,7 +27,7 @@ class Conversations(Resource):
 
     @protect()
     def delete(self, conversation_id):
-        print(conversation_id)
+       
         conversation = Conversation.query.get(conversation_id)
         if not conversation:
             raise InvalidAPIUsage(

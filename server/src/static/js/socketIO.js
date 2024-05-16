@@ -77,10 +77,10 @@ document.addEventListener('DOMContentLoaded', function () {
 				messageContainer.appendChild(createImageDiv(data.attachments[0].url, 'start'));
 		}
 	});
-	socket.on('new_mess', function (data) {
+	socket.on('new_conversation_coming', function (data) {
 		console.log(data)
-		if (data.conversation.id != channel_id && data.conversation.last_message.user_id != user_send_id)
-			createToast(null, data.conversation.last_message.message, 'room: ' + data.conversation.id, 'fa-solid fa-message')
+		// if (data.conversation.id != channel_id && data.conversation.last_message.user_id != user_send_id)
+		// 	createToast(null, data.conversation.last_message.message, 'room: ' + data.conversation.id, 'fa-solid fa-message')
 	})
 
 });
