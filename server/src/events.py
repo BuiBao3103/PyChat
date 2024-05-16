@@ -1,6 +1,6 @@
 from flask import session
 from src import socketio, db
-from flask_socketio import join_room, leave_room, send, emit
+from flask_socketio import join_room, leave_room, send, emit, rooms
 from src.models import Message, Conversation, MessageType, User, Attachment
 from flask import request
 from datetime import datetime
@@ -9,33 +9,32 @@ from io import BytesIO
 from PIL import Image
 from cloudinary import uploader
 
+# Dictionary to store user session IDs
 user_session = {}
 
 
 @socketio.on('connect')
 def handle_connect():
     user_id = request.args.get('userID')
-    if user_id is None:
-        return
-    session['user_id'] = user_id  # Store user_id in session
-    user = User.query.get(user_id)
-    user.last_online = None
-    db.session.commit()
-    session_id = request.sid
-    user_session[user_id] = session_id
-    print(user_session)
-    print('Client connected')
+    if user_id:
+        session['user_id'] = user_id
+        user = User.query.get(user_id)
+        if user:
+            user.last_online = None
+            db.session.commit()
+        session_id = request.sid
+        user_session[user_id] = session_id
 
 
 @socketio.on('disconnect')
 def handle_disconnect():
-    user_id = session.get('user_id')  # Retrieve user_id from session
+    user_id = session.get('user_id')
     if user_id:
         user = User.query.get(user_id)
-        user.last_online = datetime.now()
-        db.session.commit()
-        del user_session[str(user_id)]
-    print('Client disconnected')
+        if user:
+            user.last_online = datetime.now()
+            db.session.commit()
+            user_session.pop(str(user_id), None)
 
 
 @socketio.on('join')
@@ -55,11 +54,25 @@ def handle_leave(data):
 @socketio.on('message')
 def handle_message(data):
     message_type = MessageType(data['type'])
-    print(message_type)
+    message = None
     if message_type == MessageType.TEXT:
-        handle_text_message(data)
+        message = handle_text_message(data)
     elif message_type == MessageType.IMAGE:
-        handle_image_message(data)
+        message = handle_image_message(data)
+
+    emit('message', message.to_dict(), room=data['channel_id'])
+
+    # conversation = Conversation.query.get(data['channel_id'])
+    # participants = conversation.participants
+
+    # users_in_room = rooms()[data['channel_id']]
+
+    # # Compare users in the room with users from the database
+    # for participant in participants:
+    #     if str(participant.user.id) not in users_in_room:
+    #         # User is not in the room, emit a notification
+    #         emit('new_message', {'user_id': participant.user.id},
+    #              room=user_session.get(str(participant.user.id)))
 
 
 def handle_text_message(data):
@@ -78,19 +91,7 @@ def handle_text_message(data):
     db.session.refresh(new_message)
     conversation.last_message_id = new_message.id
     db.session.commit()
-    # Broadcast the message to everyone in the room except the sender
-    emit('message', new_message.to_dict(), room=channel_id)
-    participants = conversation.participants
-    conversation = conversation.to_dict()
-    for participant in participants:
-        friend_user_index = 0
-        if conversation['participants'][0]['user']['id'] == user_id:
-            friend_user_index = 1
-        conversation['friend'] = conversation['participants'][friend_user_index]['user']
-        del conversation['participants']
-        if user_session.get(str(participant.id)) is not None:
-            emit('new_mess', {'conversation': conversation},
-                 room=user_session[str(participant.id)])
+    return new_message
 
 
 def handle_image_message(data):
@@ -123,15 +124,4 @@ def handle_image_message(data):
             message_id=new_message.id, url=upload_result['url'])
         db.session.add(attachment)
     db.session.commit()
-    emit('message', new_message.to_dict(), room=channel_id)
-    participants = conversation.participants
-    conversation = conversation.to_dict()
-    for participant in participants:
-        friend_user_index = 0
-        if conversation['participants'][0]['user']['id'] == user_id:
-            friend_user_index = 1
-        conversation['friend'] = conversation['participants'][friend_user_index]['user']
-        del conversation['participants']
-        if user_session.get(str(participant.id)) is not None:
-            emit('new_mess', {'conversation': conversation},
-                 room=user_session[str(participant.id)])
+    return new_message

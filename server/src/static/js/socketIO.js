@@ -78,6 +78,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		}
 	});
 	socket.on('new_mess', function (data) {
+		console.log(data)
 		if (data.conversation.id != channel_id && data.conversation.last_message.user_id != user_send_id)
 			createToast(null, data.conversation.last_message.message, 'room: ' + data.conversation.id, 'fa-solid fa-message')
 	})
