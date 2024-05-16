@@ -7,9 +7,7 @@ import { useAuthContext } from '../../hooks/useAuthContext'
 const Conversations = ({ conversationsUser }) => {
 	const [conversations, setConversations] = useState(conversationsUser)
 	const { socket } = useSocketContext()
-	const { selectedConversation, setSelectedConversation, setLoadConversations } = useConversation()
-	const [state, dispatch] = useAuthContext()
-	// console.log(state.user)
+	const { selectedConversation, loadConversation } = useConversation()
 	useEffect(() => {
 		setConversations(conversationsUser)
 	}, [conversationsUser])
@@ -24,21 +22,19 @@ const Conversations = ({ conversationsUser }) => {
 	const removeConversationById = (conversationID) => {
 		setConversations(conversations.filter(item => item.id !== conversationID))
 	}
-	useEffect(() => {
-		const handleLastMessage = (data) => {
-			console.log(data)
-			removeConversationById(data.conversation.id)
-			setConversations(oldConv => [data.conversation, ...oldConv])
-			setLoadConversations(true)
-			setTimeout(() => {
-				setLoadConversations(false);
-			}, 500);
-		}
-		socket.on('new_mess', handleLastMessage)
-		return () => {
-			socket.off('new_mess', handleLastMessage)
-		}
-	}, [state.user])
+	console.log(conversations)
+	// useEffect(() => {
+	// 	const handleLastMessage = (data) => {
+	// 		// console.log(data)
+	// 		console.log("new message coming")
+	// 		removeConversationById(data.conversation.id)
+	// 		setConversations(oldConv => [data.conversation, ...oldConv])
+	// 	}
+	// 	socket.on('new_conversation_coming', handleLastMessage)
+	// 	return () => {
+	// 		socket.off('new_conversation_coming', handleLastMessage)
+	// 	}
+	// }, [loadConversation])
 	return (
 		<div className="w-full h-full flex flex-col overflow-y-scroll pb-3 scrollChatConversions">
 			{

@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import { PiNotePencil } from "react-icons/pi";
-import { Link, Outlet, useActionData, useLoaderData, useLocation } from 'react-router-dom';
+import { Outlet, useLoaderData, useLocation } from 'react-router-dom';
 import NewConversation from '../NewConversation'
 import useConversation from '../../zustand/useConversation';
 import { useAuthContext } from '../../hooks/useAuthContext';
 import Axios from '../../api/index'
 import Conversations from '../../components/message/Conversations';
-import { useSocketContext } from '../../context/SocketContext';
 
 const Index = () => {
 
@@ -15,28 +13,20 @@ const Index = () => {
 	const conversationsLoader = useLoaderData()
 	const [conversations, setConversations] = useState(conversationsLoader)
 	const [query, setQuery] = useState('')
+	const [debouncedQuery, setDebouncedQuery] = useState('')
 
 	useEffect(() => {
-		setConversations(conversationsLoader)
-	}, [])
-	useEffect(() => {
-		const loadLastMessage = async () => {
-			const res = await Axios.get(`/api/v1/users/me/conversations`)
-			if (res.status === 200) {
-				setConversations(res.data.data)
-			}
+		const handler = setTimeout(() => {
+			setDebouncedQuery(query)
+		}, 300) // 300ms debounce time
+		return () => {
+			clearTimeout(handler)
 		}
-		loadLastMessage()
-	}, [loadConversation])
-	useEffect(() => {		
-		if (query.length > 0) {
-			const search = conversationsLoader.filter(conversation => conversation.friend.username.toLowerCase().includes(query.toLowerCase()))
-			setConversations(search)
-		} else {
-			setConversations(conversationsLoader)
-		}
-	},[query])
-	// console.log(loadConversation)
+	}, [query])
+
+	const filteredConversations = conversationsLoader.filter(conversation =>
+		conversation.friend.username.toLowerCase().includes(debouncedQuery.toLowerCase())
+	);
 	return (
 		<div className='w-full h-full flex gap-3'>
 			<div className="w-[320px] max-w-[400px] min-w-[320px] h-full bg-white dark:bg-primary-dark rounded-xl flex flex-col">
@@ -48,10 +38,10 @@ const Index = () => {
 						</Link> */}
 					</div>
 					<div className="w-full flex gap-2">
-						<input type="search" onChange={(e)=>setQuery(e.target.value)} className='bg-light-gray dark:bg-[#282930] dark:text-white dark:focus:outline-white rounded-md px-3 py-2 w-full focus:outline-primary' placeholder='Search by name' />
+						<input type="search" onChange={(e) => setQuery(e.target.value)} className='bg-light-gray dark:bg-[#282930] dark:text-white dark:focus:outline-white rounded-md px-3 py-2 w-full focus:outline-primary' placeholder='Search by name' />
 					</div>
 				</div>
-				<Conversations conversationsUser={conversations} />
+				<Conversations conversationsUser={filteredConversations} />
 			</div>
 			{
 				location.pathname.includes("to") ? <NewConversation /> :

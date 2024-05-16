@@ -25,6 +25,6 @@ export function formatMessageTime(messageTime) {
     } else {
         // More than a day ago, format as "dd/mm"
         const options = { day: '2-digit', month: '2-digit' };
-        return messageTime.toLocaleDateString('en-GB', options);
+        return messageTime.toLocaleDateString('vi-VN', options);
     }
 }

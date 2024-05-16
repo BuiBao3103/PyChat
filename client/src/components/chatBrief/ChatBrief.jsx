@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import Axios from '../../api/index'
 import { useNavigate } from 'react-router-dom'
 import useConversation from '../../zustand/useConversation'
@@ -31,7 +31,6 @@ const ChatBrief = ({ className = '', currentConversation, joinRoom, leaveRoom })
 			setLoadingCheckBlock([false, ''])
 		}
 	}
-	// console.log(selectedConversation)
 	return (
 		<div
 			onClick={() => {
