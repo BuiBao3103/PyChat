@@ -76,8 +76,26 @@ def handle_message(data):
         conversation_temp['seen_at'] = conversation_temp['participants'][user_index]['seen_at']
         del conversation_temp['participants']  # Correct variable name here
         emit('new_conversation_coming', conversation_temp,
-            room=user_session[str(participant['user_id'])])  # Correct variable name here
+             room=user_session[str(participant['user_id'])])  # Correct variable name here
 
+
+@socketio.on('seen')
+def handle_seen(data):
+    conversation_id = data['conversation_id']
+    user_id = data['user_id']
+    participant = db.session.query(participant).filter_by(
+        conversation_id=conversation_id, user_id=user_id).first()
+    participant.seen_at = datetime.now()
+    db.session.commit()
+    conversation = Conversation.query.get(data['channel_id'])
+    conversation = conversation.to_dict()# Move inside the loop
+    friend_index, user_index = 0, 1
+    if conversation['participants'][0]['user']['id'] == participant['user_id']:
+        friend_index, user_index = 1, 0
+    conversation['friend'] = conversation['participants'][friend_index]['user']
+    conversation['seen_at'] = conversation['participants'][user_index]['seen_at']
+    del conversation['participants']  # Correct variable name here
+    emit('seen', conversation, room=user_session[str(data['user_id'])])
 
 
 def handle_text_message(data):
