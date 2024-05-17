@@ -9,7 +9,8 @@ import { toast } from 'react-toastify';
 const Messages = ({ msgConversation, selectedFiles }) => {
 	const [messages, setMessages] = useState([]);
 	const { socket } = useSocketContext();
-	const { selectedConversation, setLoadConversations, loadingCheckBlock, setLoadingCheckBlock, loadConversation } = useConversation();
+	const { selectedConversation, loadingCheckBlock, setLoadingCheckBlock, loadConversation } = useConversation();
+	const [activeEleType, setActiveEleType] = useState(null);
 	const messageEnd = useRef();
 	const params = useParams()
 	useEffect(() => {
@@ -57,6 +58,7 @@ const Messages = ({ msgConversation, selectedFiles }) => {
 			console.error(error);
 		}
 	}
+
 	return (
 		<>
 			<div className='w-full h-full overflow-hidden flex flex-col gap-2 relative first:!mt-auto'>
@@ -65,7 +67,7 @@ const Messages = ({ msgConversation, selectedFiles }) => {
 					<div className="w-full h-full overflow-y-auto flex flex-col-reverse">
 						<div className='messageEnd' style={{ float: "left", clear: "both" }} ref={messageEnd}></div> {/* This empty div will always be at the end of your messages list */}
 						{messages.map((item, index) => (
-							<Message message={item} key={index} reloadMessage={reloadMessage} />
+							<Message message={item} key={index} reloadMessage={reloadMessage} eleType={index} setActiveEleType={setActiveEleType} activeEleType={activeEleType} />
 						))}
 					</div>
 				</div>
@@ -85,10 +87,6 @@ const Messages = ({ msgConversation, selectedFiles }) => {
 								</div>
 							)
 						}
-						{/* {
-							loadingCheckBlock[1] == 'blocked' && (
-							)
-						} */}
 					</div>
 				) : (
 					<MessageInput scroll={messageEnd} selectedImageFiles={selectedFiles} />

@@ -4,22 +4,7 @@ import PropTypes from 'prop-types'
 import { Tooltip } from 'react-tooltip'
 import useConversation from '../../zustand/useConversation'
 const IconMenu = ({ to, Icon, title }) => {
-	const { totalRespond, countConversations } = useConversation()
-	const countNotNullSeenAt = () => {
-		let count = 0;
-		// Loop through each object in jsonData
-		countConversations.forEach(item => {
-			// Check if seen_at is not null
-			if (item.seen_at !== null) {
-				count++;
-			}
-		});
-		return count;
-	};
-	useEffect(() => {
-		countNotNullSeenAt()
-	}, [countConversations])
-	console.log(countNotNullSeenAt(),totalRespond)
+	const { totalRespond } = useConversation()
 	return (
 		<>
 			<NavLink
@@ -29,13 +14,6 @@ const IconMenu = ({ to, Icon, title }) => {
 				data-tooltip-place="right"
 				data-tooltip-offset={20}
 				to={to} className={`w-[55px] h-[55px] flex justify-center items-center rounded-lg hover:bg-primary group transition-all relative`}>
-				{
-					countNotNullSeenAt() > 0 && title == "Chat" && (
-						<span className='absolute -top-2 -right-2 size-5 rounded-full bg-black text-white flex justify-center items-center text-sm p-1'>
-							{countNotNullSeenAt()}
-						</span>
-					)
-				}
 				{
 					totalRespond > 0 && title == "Friends List" && (
 						<span className='absolute -top-2 -right-2 size-5 rounded-full bg-black text-white flex justify-center items-center text-sm p-1'>

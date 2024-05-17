@@ -1,67 +1,104 @@
-import React, { useEffect, useState } from 'react'
-import Axios from '../../api/index'
-import { useNavigate } from 'react-router-dom'
-import useConversation from '../../zustand/useConversation'
+import React, { useEffect, useState, useCallback } from 'react';
+import Axios from '../../api/index';
+import { useNavigate } from 'react-router-dom';
+import useConversation from '../../zustand/useConversation';
 import { formatMessageTime } from '../../utils/extractTIme'
-import { useSocketContext } from '../../context/SocketContext'
-const ChatBrief = ({ className = '', currentConversation, joinRoom, leaveRoom }) => {
-	const navigate = useNavigate()
-	const [conversation, setConversation] = useState(currentConversation)
+import { useSocketContext } from '../../context/SocketContext';
+
+const ChatBrief = ({ className = '', currentConversation }) => {
+	const navigate = useNavigate();
+	const [conversation, setConversation] = useState(currentConversation);
+	const { setSelectedConversation, selectedConversation, setLoadingCheckBlock } = useConversation();
+	const [loading, setLoading] = useState(false);
+	const { socket } = useSocketContext();
+
 	useEffect(() => {
-		setConversation(currentConversation)
-	}, [])
-	const { setSelectedConversation, selectedConversation, setLoadingCheckBlock } = useConversation()
-	const [loading, setLoading] = useState(false)
-	const { socket } = useSocketContext()
-	const leaveRoomWithID = (conversation) => {
-		if (conversation != null) {
-			leaveRoom(conversation.id)
-		} else {
-			console.log("No conversation")
+		setConversation(currentConversation);
+	}, [currentConversation]);
+
+	const joinRoom = useCallback((conversationID) => {
+		socket.emit('join', { channel_id: conversationID });
+	}, [socket]);
+
+	const leaveRoom = useCallback((conversationID) => {
+		socket.emit('leave', { channel_id: conversationID });
+	}, [socket]);
+
+	const leaveRoomWithID = useCallback((conversation) => {
+		if (conversation) {
+			leaveRoom(conversation.id);
 		}
-	}
-	const userSend = () => {
-		return currentConversation.last_message.user_id == JSON.parse(localStorage.getItem('user')).id ? 'You: ' : ''
-	}
-	const isUserSend = () => {
-		return currentConversation.last_message.user_id == JSON.parse(localStorage.getItem('user')).id
-	}
-	const getFriendship = async () => {
-		setLoadingCheckBlock([true, ''])
+	}, [leaveRoom]);
+	// console.log(currentConversation)
+	const userSend = () => currentConversation.last_message.user_id === JSON.parse(localStorage.getItem('user')).id ? 'You: ' : '';
+
+	const isUserSend = () => currentConversation.last_message.user_id === JSON.parse(localStorage.getItem('user')).id;
+
+	const getFriendship = useCallback(async () => {
+		setLoadingCheckBlock([true, '']);
 		try {
-			const res = await Axios.get(`/api/v1/friendships?user_id=eq:${JSON.parse(localStorage.getItem('user')).id}&friend_id=eq:${currentConversation.friend.id}`)
+			const userId = JSON.parse(localStorage.getItem('user')).id;
+			const friendId = currentConversation.friend.id;
+			const res = await Axios.get(`/api/v1/friendships?user_id=eq:${userId}&friend_id=eq:${friendId}`);
 			if (res.status === 200) {
-				setLoadingCheckBlock([false, res.data.data[0].status])
+				setLoadingCheckBlock([false, res.data.data[0].status]);
 			}
 		} catch (error) {
-			console.log(error)
-			setLoadingCheckBlock([false, ''])
+			console.error(error);
+			setLoadingCheckBlock([false, '']);
 		}
-	}
-	const isUserSeen = () => {
-		if (conversation.seen_at == null) {
-			socket.emit("seen", {
-				conversation_id: conversation.id,
-				user_id: JSON.parse(localStorage.getItem('user')).id
-			})
-			setConversation({ ...conversation, seen_at: new Date() })
+	}, [currentConversation, setLoadingCheckBlock]);
+
+	const isUserSeen = useCallback(() => {
+		// if (!conversation.seen_at) {
+		// 	const userId = JSON.parse(localStorage.getItem('user')).id;
+		// 	socket.emit("seen", {
+		// 		conversation_id: conversation.id,
+		// 		user_id: userId
+		// 	});
+		// 	setConversation(prev => ({ ...prev, seen_at: new Date() }));
+		// }
+		// setLoading(true);
+		console.log('seen')
+		// setTimeout(() => setLoading(false), 500);
+	}, []);
+
+	const handleConversationClick = () => {
+		navigate(`/conversation/${conversation.id}`);
+		leaveRoomWithID(selectedConversation);
+		joinRoom(conversation.id);
+		setSelectedConversation(conversation);
+		getFriendship();
+		isUserSeen();
+	};
+
+	const renderLastMessage = () => {
+		const { last_message: lastMessage } = conversation;
+		if (!lastMessage) return '';
+
+		const isUser = isUserSend();
+		const isDeleted = lastMessage?.deleted_messages.length !== 0;
+		const isRevoked = lastMessage?.revoke_at !== null;
+		const message = lastMessage.message;
+
+		if (isRevoked) return 'Message has been revoked.';
+		if (isDeleted) return 'Message has been deleted.';
+
+		switch (lastMessage.type) {
+			case 'text':
+				return `${isUser ? userSend() : ''}${message}`;
+			case 'image':
+				const photoCount = lastMessage.attachments.length;
+				return `${isUser ? 'You sent' : `${conversation.friend.username} sent`} ${photoCount > 1 ? `${photoCount} photos` : 'a photo'}.`;
+			default:
+				return '';
 		}
-		setLoading(true)
-		setTimeout(() => {
-			setLoading(false)
-		}, 500);
-	}
+	};
+	console.log(currentConversation)
 	return (
 		<div
-			onClick={() => {
-				navigate(`/conversation/${conversation.id}`)
-				leaveRoomWithID(selectedConversation)
-				joinRoom(conversation.id)
-				setSelectedConversation(conversation)
-				getFriendship()
-				isUserSeen()
-			}}
-			className={`${className}  w-full h-auto p-3 flex gap-2 border-b dark:border-ebony-clay hover:bg-light-gray dark:hover:bg-white/30 transition-all cursor-pointer`}
+			onClick={handleConversationClick}
+			className={`${className} w-full h-auto p-3 flex gap-2 border-b dark:border-ebony-clay hover:bg-light-gray dark:hover:bg-white/30 transition-all cursor-pointer`}
 		>
 			<div className="size-[60px] rounded-full relative">
 				<img
@@ -70,8 +107,7 @@ const ChatBrief = ({ className = '', currentConversation, joinRoom, leaveRoom })
 					className="w-full h-full object-cover object-center rounded-full"
 				/>
 				<div
-					className={`size-4 border-[3px] border-white absolute bottom-0 right-0 rounded-full ${conversation.friend.last_online == null ? "bg-primary-900" : "hidden"
-						}`}
+					className={`size-4 border-[3px] border-white absolute bottom-0 right-0 rounded-full ${!conversation.friend.last_online ? "bg-primary-900" : "hidden"}`}
 				/>
 			</div>
 			<div className="flex-1 h-full flex flex-col justify-center items-center">
@@ -82,54 +118,16 @@ const ChatBrief = ({ className = '', currentConversation, joinRoom, leaveRoom })
 					</span>
 				</div>
 				<div className="w-full flex justify-between items-center gap-1">
-					<p className={`text-sm w-[200px] truncate text-[#8d8d8d]`}>
-						{
-							conversation.last_message
-							&& conversation.last_message.type == "text"
-							&& isUserSend()
-							&& conversation.last_message?.revoke_at == null
-							&& conversation.last_message?.deleted_messages.length == 0
-							&& `${userSend()}${conversation.last_message.message}`
-						}
-						{
-							conversation.last_message
-							&& conversation.last_message.type == "text"
-							&& !isUserSend() && conversation.last_message?.deleted_messages.length == 0
-							&& conversation.last_message?.revoke_at == null
-							&& `${conversation.last_message.message}`
-						}
-						{
-							conversation.last_message && conversation.last_message.type == "image"
-							&& isUserSend() && conversation.last_message?.revoke_at == null
-							&& conversation.last_message?.deleted_messages.length == 0
-							&& `You sent ${conversation.last_message.attachments.length != 1 ? `${conversation.last_message.attachments.length} photos` : 'a photo'}.`
-						}
-						{
-							conversation.last_message && conversation.last_message.type == "image"
-							&& !isUserSend() && conversation.last_message?.revoke_at == null
-							&& conversation.last_message?.deleted_messages.length == 0
-							&& `${conversation.friend.username} sent ${conversation.last_message.attachments.length != 1 ? `${conversation.last_message.attachments.length} photos` : 'a photo'}.`
-						}
-						{
-							conversation.last_message && conversation.last_message?.revoke_at != null
-							&& conversation.last_message?.deleted_messages.length == 0
-							&& "Message has been revoked."
-						}
-						{
-							conversation.last_message && conversation.last_message?.revoke_at == null
-							&& conversation.last_message?.deleted_messages.length != 0
-							&& "Message has been deleted."
-						}
+					<p className="text-sm w-[200px] truncate text-[#8d8d8d]">
+						{renderLastMessage()}
 					</p>
-					{
-						conversation.seen_at == null && (
-							<span className='size-3 rounded-full bg-primary'></span>
-						)
-					}
+					{!conversation.seen_at && (
+						<span className='size-3 rounded-full bg-primary'></span>
+					)}
 				</div>
 			</div>
 		</div>
 	);
-}
+};
 
-export default ChatBrief
+export default ChatBrief;

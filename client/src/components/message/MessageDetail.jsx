@@ -14,9 +14,9 @@ const MessageDetail = () => {
 	useEffect(() => {
 		setMsgDetail(selectedConversation)
 	}, [selectedConversation])
-	useEffect(() => {
-		getAllImages()
-	}, [loadConversation])
+	// useEffect(() => {
+	// 	getAllImages()
+	// }, [loadConversation])
 	return (
 		<>
 			<div className="min-w-[300px] w-[300px] h-full rounded-xl bg-white dark:bg-primary-dark xl:block hidden">

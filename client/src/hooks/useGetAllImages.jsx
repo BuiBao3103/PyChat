@@ -21,7 +21,7 @@ const useGetAllImages = () => {
 	}
 	useEffect(() => {
 		if (selectedConversation?.id) getAllImages();
-	}, [selectedConversation?.id, setImagesData])
+	}, [])
 
 	return { imagesData, getAllImages, loadingImg };
 }

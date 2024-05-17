@@ -4,17 +4,19 @@ import { extractTime } from '../../utils/extractTIme'
 import { PiDotsThreeCircle } from "react-icons/pi";
 import Axios from '../../api/index'
 import DeleteModalConfirm from '../modal/DeleteMessageConfirm'
-import { useSocketContext } from '../../context/SocketContext';
-const Message = ({ message, reloadMessage }) => {
+const Message = ({ message, reloadMessage, eleType, setActiveEleType, activeEleType }) => {
 
-	const { selectedConversation, setIsOpenCarosuel, setLoadConversations } = useConversation()
+	const { selectedConversation, setIsOpenCarosuel } = useConversation()
 	const [msg, setMsg] = useState(message)
 	const [type, setType] = useState("")
 	const formattedTime = extractTime(msg.time)
 	const fromMe = msg.user_id === JSON.parse(localStorage.getItem('user')).id
-	const [isVisibleMenu, setIsVisibleMenu] = useState(false)
 	function handleVisibleMenu() {
-		setIsVisibleMenu(!isVisibleMenu)
+		if (activeEleType !== eleType) {
+			setActiveEleType(eleType);
+		}else {
+			setActiveEleType(null);
+		}
 	}
 	useEffect(() => {
 		setMsg(message)
@@ -24,7 +26,7 @@ const Message = ({ message, reloadMessage }) => {
 			if (type == "Delete") {
 				const res = await Axios.delete(`api/v1/messages/${msg.id}`)
 				if (res.status === 204) {
-					setIsVisibleMenu(false)
+					setActiveEleType(null);
 					setType("")
 					reloadMessage()
 				}
@@ -32,7 +34,7 @@ const Message = ({ message, reloadMessage }) => {
 				const res = await Axios.patch(`/api/v1/messages/${msg.id}/revoke`)
 				if (res.status === 200) {
 					setMsg(res.data.data)
-					setIsVisibleMenu(false)
+					setActiveEleType(null);
 					setType("")
 				}
 			}
@@ -89,7 +91,7 @@ const Message = ({ message, reloadMessage }) => {
 					>
 						<PiDotsThreeCircle size={30} className="text-black" />
 					</span>
-					{isVisibleMenu && (
+					{activeEleType == eleType && (
 						<div
 							className={`absolute ${msg.type === 'text' ? '-top-[6.2rem]' : 'top-[15%]'} 
 								${!fromMe ? '-right-20 translate-x-[15%]' : '-left-10 -translate-x-1/2'}
