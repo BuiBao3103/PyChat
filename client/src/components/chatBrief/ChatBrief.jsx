@@ -29,7 +29,6 @@ const ChatBrief = ({ className = '', currentConversation }) => {
 			leaveRoom(conversation.id);
 		}
 	}, [leaveRoom]);
-	// console.log(currentConversation)
 	const userSend = () => currentConversation.last_message.user_id === JSON.parse(localStorage.getItem('user')).id ? 'You: ' : '';
 
 	const isUserSend = () => currentConversation.last_message.user_id === JSON.parse(localStorage.getItem('user')).id;
@@ -44,23 +43,21 @@ const ChatBrief = ({ className = '', currentConversation }) => {
 				setLoadingCheckBlock([false, res.data.data[0].status]);
 			}
 		} catch (error) {
-			console.error(error);
 			setLoadingCheckBlock([false, '']);
 		}
 	}, [currentConversation, setLoadingCheckBlock]);
 
 	const isUserSeen = useCallback(() => {
-		// if (!conversation.seen_at) {
-		// 	const userId = JSON.parse(localStorage.getItem('user')).id;
-		// 	socket.emit("seen", {
-		// 		conversation_id: conversation.id,
-		// 		user_id: userId
-		// 	});
-		// 	setConversation(prev => ({ ...prev, seen_at: new Date() }));
-		// }
-		// setLoading(true);
-		console.log('seen')
-		// setTimeout(() => setLoading(false), 500);
+		if (!conversation.seen_at) {
+			const userId = JSON.parse(localStorage.getItem('user')).id;
+			socket.emit("seen", {
+				conversation_id: conversation.id,
+				user_id: userId
+			});
+			setConversation(prev => ({ ...prev, seen_at: new Date() }));
+		}
+		setLoading(true);
+		setTimeout(() => setLoading(false), 500);
 	}, []);
 
 	const handleConversationClick = () => {
@@ -94,7 +91,6 @@ const ChatBrief = ({ className = '', currentConversation }) => {
 				return '';
 		}
 	};
-	console.log(currentConversation)
 	return (
 		<div
 			onClick={handleConversationClick}

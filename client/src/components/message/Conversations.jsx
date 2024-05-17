@@ -13,10 +13,8 @@ const Conversations = ({ conversationsUser }) => {
 	const removeConversationById = (conversationID) => {
 		setConversations(conversations.filter(item => item.id != conversationID))
 	}
-	// console.log(conversations)
 	useEffect(() => {
 		const handleLastMessage = (data) => {
-			console.log(data)
 			removeConversationById(data.id)
 			setConversations(oldConv => [data, ...oldConv])
 		}

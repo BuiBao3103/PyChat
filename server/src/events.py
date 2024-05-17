@@ -65,8 +65,16 @@ def handle_message(data):
     emit('message', message.to_dict(), room=data['channel_id'])
 
     conversation = Conversation.query.get(data['channel_id'])
+    participants = conversation.participants
+    for participant in participants:
+        if participant.user_id == data['user_id']:
+            participant.seen_at = datetime.now()
+        else:
+            participant.seen_at = None
+    db.session.commit()
+    db.session.refresh(conversation)
     conversation = conversation.to_dict()
-
+    
     for participant in conversation['participants']:
         if str(participant['user_id']) in user_session:
             conversation_temp = conversation.copy()
@@ -98,8 +106,7 @@ def handle_text_message(data):
     conversation = Conversation.query.get(channel_id)
     message = data['message']
     new_message = Message(user_id=user_id, message=message,
-                          conversation_id=conversation.id, time=datetime.fromtimestamp(
-                              time),
+                          conversation_id=conversation.id, time=datetime.fromtimestamp(time),
                           type=message_type)
     db.session.add(new_message)
     db.session.commit()

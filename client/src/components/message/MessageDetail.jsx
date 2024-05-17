@@ -26,7 +26,7 @@ const MessageDetail = () => {
 							<img src={msgDetail.friend.avatar} alt="" className='size-full object-cover' />
 						</div>
 						<span className='text-lg dark:text-white'>{msgDetail.friend.username}</span>
-						<span className='text-sm dark:text-white'>{msgDetail.last_online != null ? "online" : "offline"}</span>
+						{/* <span className='text-sm dark:text-white'>{msgDetail.last_online != null ? "online" : "offline"}</span> */}
 					</div>
 					<div className="w-full flex flex-col overflow-hidden">
 						<section
