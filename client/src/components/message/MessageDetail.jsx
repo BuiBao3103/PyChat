@@ -4,6 +4,7 @@ import useConversation from '../../zustand/useConversation'
 import BlockConfirm from '../modal/BlockConfirm'
 import ImagesOverlay from '../caroseul/ImagesOverlay'
 import useGetAllImages from '../../hooks/useGetAllImages'
+import { formatMessageTime } from '../../utils/extractTIme'
 const MessageDetail = () => {
 
 	const { selectedConversation, isOpenCarosuel, setIsOpenCarosuel, setSelectedImage, loadingCheckBlock, loadConversation } = useConversation()
@@ -26,7 +27,7 @@ const MessageDetail = () => {
 							<img src={msgDetail.friend.avatar} alt="" className='size-full object-cover' />
 						</div>
 						<span className='text-lg dark:text-white'>{msgDetail.friend.username}</span>
-						{/* <span className='text-sm dark:text-white'>{msgDetail.last_online != null ? "online" : "offline"}</span> */}
+						<span className='text-sm dark:text-white'>{msgDetail.friend.last_online == null ? "online" : "offline " + formatMessageTime(new Date(msgDetail.friend.last_online))}</span>
 					</div>
 					<div className="w-full flex flex-col overflow-hidden">
 						<section
