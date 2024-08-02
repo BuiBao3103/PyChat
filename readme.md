@@ -1,6 +1,6 @@
+# System Architecture
 
-
-
+![system architecture](https://github.com/BuiBao3103/PyChat/blob/main/system%20architecture.png)
 # Project Setup Guide
 
 This guide will walk you through setting up the project environment for both the server and client components.
